@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "useDefineForClassFields": true,
+     // 解析非相对模块名的基准目录
+     "baseUrl": ".",
+    // 从 tslib 导入辅助工具函数（比如 __extends， __rest等）
+    "importHelpers": true,
+    // 模块名到基于 baseUrl的路径映射的列表。
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "types": ["element-plus/global"],
+    "lib": ["esnext", "dom","DOM.Iterable","ScriptHost"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "exclude": [
+    "node_modules"
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
