@@ -7,7 +7,8 @@ export const fileHeaders = {
 }
 // 创建一个新的axios实例
 const http = axios.create({
-  baseURL: 'http://222.200.186.124:3389/protein',
+  // baseURL: 'http://222.200.186.124:3389/protein',
+  baseURL: `${import.meta.env.VITE_APP_BASE_API}`,
   timeout: 30000,
   headers: commonHeaders
 })

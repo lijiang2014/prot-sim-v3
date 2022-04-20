@@ -1,6 +1,5 @@
 <template>
   <el-container class="home-container">
-    <!-- 头部区域 -->
     <el-header class="header">
       <router-link to="/home" class="logo">
         <span> .logo. </span>
@@ -98,7 +97,6 @@
         >Login</el-button
       >
     </el-header>
-    <!-- 页面主体区域 -->
     <el-container>
       <!-- 侧边栏区域 -->
 
@@ -404,32 +402,6 @@ let jumpStar = () => {
   font-size: calc(12px + 1vmin);
   // font-family: Arial, Helvetica, sans-serif;
 }
-.el-menu {
-  // background-color: #333744;
-  width: 80%;
-  background-color: #333744;
-  display: flex;
-  justify-self: flex-end;
-  margin: 0;
-  padding: 0;
-  padding-left: 20px;
-  border: 0;
-  font-size: 20px;
-
-  .toggle-button {
-    background-color: #4a5064;
-
-    line-height: 25px;
-    color: #fff;
-    text-align: center;
-    letter-spacing: 0.1em;
-    cursor: pointer;
-  }
-}
-
-.el-menu-item {
-  font-size: 18px;
-}
 
 .el-header {
   background-color: #333744;
@@ -463,10 +435,10 @@ let jumpStar = () => {
 </style>
 
 <style lang="less">
-/deep/ .el-menu--popup-bottom-start .popper {
+:deep(.el-menu--popup-bottom-start) .popper {
   margin-top: 0px;
 }
-/deep/ .el-menu--collapse .el-menu .el-submenu,
+:deep(.el-menu--collapse) .el-menu .el-submenu,
 .el-menu--popup {
   min-width: 100px;
 }

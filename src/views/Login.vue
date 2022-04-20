@@ -92,10 +92,18 @@
  * 验证码发送以及成功后的防治再次触发 （60s）
  * starlightLogin
  */
-import { sendEmailCode, login, LoginRequest } from "../api/api";
-import { ref, reactive, watch } from "vue";
-import { ElNotification as $Notify, ElMessage, FormRules } from "element-plus";
-import { useRouter } from "vue-router";
+import { sendEmailCode, login, LoginRequest } from '../api/api'
+import { RedirectLoginURL } from '../api/starlight'
+import { ref, reactive, watch } from 'vue'
+import { ElNotification as $Notify, ElMessage , FormRules} from 'element-plus'
+import { useRouter } from 'vue-router'
+import { utils } from '@/utils/utils'
+const $router = useRouter()
+
+const bihuToken = utils.checkStarlightLog()
+if (bihuToken) {
+  $router.push('/home')
+}
 
 const loginForm: LoginRequest = reactive({
   username: "",
@@ -109,39 +117,27 @@ const loginFormRules = reactive({
     { type: "email", message: "邮箱格式不正确", trigger: "blur" },
   ],
   password: [
-    { required: true, message: "请输入验证码", trigger: "blur" },
-    { pattern: regExpCode, message: "验证码格式不对", trigger: "blur" },
-  ],
-} as FormRules);
-let verifiedUsername = ref(false);
-let verifiedCode = ref(false);
-let codeSent = ref(false);
-const $router = useRouter();
-watch(
-  () => loginForm,
-  (newVal, oldVal) => {
-    verifiedUsername.value = regExpEmail.test(newVal.username);
-    verifiedCode.value = regExpCode.test(newVal.password);
-    console.log(verifiedUsername.value, verifiedCode.value);
-  },
-  { deep: true }
-);
-const toSendCode = async () => {
-  const res = await sendEmailCode(loginForm.username).catch((err) => {
-    console.log("err:", err, "123@45.cn will pass the mock test!");
-    $Notify({
-      type: "error",
-      title: "验证码发送失败，请稍后再试",
-      message: err,
-    });
-  });
-  if (!res) {
-    return;
-  }
-  console.log("mock sendCode 123456");
-  console.log("res", res);
-  codeSent.value = true;
-};
+    { required: true,message: '请输入验证码', trigger: 'blur', },
+    { pattern: regExpCode, message: '验证码格式不对', trigger: 'blur'},]
+} as FormRules )
+let verifiedUsername = ref(false)
+let verifiedCode = ref(false)
+let codeSent = ref(false)
+watch(()=> loginForm, (newVal, oldVal) => {
+  verifiedUsername.value = regExpEmail.test(newVal.username)
+  verifiedCode.value = regExpCode.test(newVal.password)
+  console.log(verifiedUsername.value, verifiedCode.value );
+}, {deep: true})
+const  toSendCode = async () => {
+  const res = await sendEmailCode(loginForm.username).catch(err => {
+    console.log("err:", err, "123@45.cn will pass the mock test!")
+    $Notify({ type: 'error', title: '验证码发送失败，请稍后再试', message: err})
+  })
+  if (!res) { return }
+  console.log("mock sendCode 123456")
+  console.log("res", res)
+  codeSent.value = true
+}
 const submit = async () => {
   console.log("mock submit ", loginForm);
   const res = await login(loginForm).catch((err) => {
@@ -168,20 +164,8 @@ const submit = async () => {
 };
 const centerDialogVisible = ref(false);
 const starlightLogin = async () => {
-  centerDialogVisible.value = true;
-};
-let jumpStar = () => {
-  centerDialogVisible.value = false;
-  let param1 = "https://starlight.nscc-gz.cn/#/login";
-  let param2 = "longTerm";
-  let param3 = "http://localhost:8080/#/welcome";
-  let param4 = 2;
-  window.location.href = `
-          ${param1}?redirect=%2Fstarlight&token_type=${param2}&redirect_url=${param3}&cookie_exp=${param4}
-          `;
-};
-let enterHome=()=>{
-  $router.push("/home");
+  const href = RedirectLoginURL()
+  window.location.href = href
 }
 </script>
 <style lang="less" scoped>
