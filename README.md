@@ -8,6 +8,14 @@
 > https://www.jianshu.com/p/4b6a0ded25da
 > https://github.com/xuqinglong/vue3/
 
+## 本地开发说明
+
+需要设置 /etc/hosts:
+
+127.0.0.1 localhost bio.nscc-gz.cn
+
+启动项目后，通过 http://bio.nscc-gz.cn:3000/ 访问项目
+
 # Vue 3 + TypeScript + Vite
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 ## Recommended IDE Setup
@@ -41,6 +49,17 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
 
 添加
 
+- [x] Framework
+  - [x] 通过 env 来配置项目
+  - [x] 通过 vuex 来记录状态
+  > https://vuex.vuejs.org/zh/guide/composition-api.html
+  > Example About Page
+  - [ ] Element UI 按需引入 ~Later
+  > https://blog.csdn.net/sayUonly/article/details/121100230
+  - [ ] i18N ~Later
+- [x] Starlight Login
 - [ ] Apps
 - [ ] GraphPPIS
+  - [ ] 手动模式
+  - [ ] iframe 模式
 - [ ] Queue

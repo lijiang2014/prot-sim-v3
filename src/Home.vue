@@ -1,6 +1,7 @@
 <script  lang="ts" setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { utils } from './utils/utils';
 
 const $route = useRoute()
 const $router = useRouter()
@@ -152,6 +153,7 @@ activePath.value = $route.path
 
 const logout = () => {
   window.sessionStorage.clear()
+  utils.clearCookie('Bihu-Token',  'nscc-gz.cn')
   $router.push('/login')
 }
 

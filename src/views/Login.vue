@@ -63,9 +63,17 @@
   * starlightLogin
  */
 import { sendEmailCode, login, LoginRequest } from '../api/api'
+import { RedirectLoginURL } from '../api/starlight'
 import { ref, reactive, watch } from 'vue'
 import { ElNotification as $Notify, ElMessage , FormRules} from 'element-plus'
 import { useRouter } from 'vue-router'
+import { utils } from '@/utils/utils'
+const $router = useRouter()
+
+const bihuToken = utils.checkStarlightLog()
+if (bihuToken) {
+  $router.push('/home')
+}
 
 const loginForm: LoginRequest = reactive({username: '', password: ''}) as LoginRequest
 const regExpEmail = /^\w{3,}(\.\w+)*@[A-z 0-9]+(\.[A-z]{2,5}){1,2}$/
@@ -81,7 +89,6 @@ const loginFormRules =   reactive({
 let verifiedUsername = ref(false)
 let verifiedCode = ref(false)
 let codeSent = ref(false)
-const $router = useRouter()
 watch(()=> loginForm, (newVal, oldVal) => {
   verifiedUsername.value = regExpEmail.test(newVal.username)
   verifiedCode.value = regExpCode.test(newVal.password)
@@ -120,7 +127,8 @@ const submit = async () => {
   $router.push('/home')
 }
 const starlightLogin = async () => {
-
+  const href = RedirectLoginURL()
+  window.location.href = href
 }
 </script>
 <style lang="less" scoped>
