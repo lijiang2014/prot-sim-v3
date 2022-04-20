@@ -16,14 +16,14 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/welcome',
     children: [
       { path: '/welcome',
-        component: () => import('@/views/Welcome.vue'),
+        component: () => import('@/views/Welcome/Welcome.vue'),
       },
       // 结构预测
       { path: '/predict/structure/', component: () => import('@/views/structure/prediction.vue')},
       { path: '/predict/structure/result/', component: About},
       { path: '/predict/structure/queue/', component: About},
       // 结构相似性
-      { path: '/structure_similarity/submit', component: About},
+      { path: '/structure_similarity/submit', component: ()=>import('@/views/similarity/structureSimilarity.vue')},
       { path: '/structure_similarity/search', component: About},
       { path: '/structure_similarity/DUF', component: About},
       { path: '/structure_similarity/results', component: About},
@@ -61,6 +61,11 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "About" */ '../components/About.vue'),
+  },
+  {
+    path:'/404',
+    name:'404',
+    component:()=>import(/* webpackChunkName: "About" */ '../components/About.vue'),
   },
   {
     path: '/:currentPath(.*)*', // 路由未匹配到，进入这个
