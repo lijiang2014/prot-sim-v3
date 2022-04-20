@@ -110,11 +110,11 @@ export default defineComponent({
   background-color: white;
 }
 
-/deep/ .el-menu--popup-bottom-start .popper {
+:deep(.el-menu--popup-bottom-start) .popper  {
   margin-top: 0px;
 }
-/deep/ .el-menu--collapse .el-menu .el-submenu,
-.el-menu--popup {
+:deep( .el-menu--collapse) .el-menu .el-submenu,
+:deep(.el-menu--popup) {
   min-width: 100px;
 }
 </style>
