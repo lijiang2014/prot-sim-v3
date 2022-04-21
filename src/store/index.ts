@@ -9,7 +9,7 @@ export const key: InjectionKey<Store<State>> = Symbol()
 
 export const store = createStore<State>({
   state:{
-    isLogin:false
+    isLogin:false,
   },
   mutations: {
     loginChange(state,payload){

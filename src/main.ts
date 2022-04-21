@@ -9,6 +9,8 @@ import initStorePersistence from '@/store/persistence'
 
 import '@/assets/global.css'
 
+import i18n from './i18n'
+
 const app = createApp(App)
 for (const name in icons){
 	app.component(name,(icons as any)[name])
@@ -17,5 +19,5 @@ for (const name in icons){
 initStorePersistence(store)
 app.use(store, key)
 app.use(ElementPlus)
-app.use(router)
+app.use(router).use(i18n)
 app.mount('#app')

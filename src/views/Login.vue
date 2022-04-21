@@ -1,6 +1,5 @@
 <template>
   <div class="login_container">
-    <el-button @click="enterHome">直接进入主页</el-button>
     <div class="login_box">
       <div class="avatar_box">
         <img src="../assets/logo.png" />
@@ -12,17 +11,19 @@
         :rules="loginFormRules"
       >
         <el-form-item prop="username">
-          <el-row style="width:100%">
+          <el-row style="width: 100%">
             <el-col :span="18">
+              <!-- 请输入邮箱地址 -->
               <el-input
                 ref="usernameRef"
                 prefix-icon="el-icon-user-solid"
                 v-model="loginForm['username']"
-                placeholder="请输入邮箱地址"
+                :placeholder="$t('login.username')"   
                 autofocus
                 style="ime-mode: disabled"
               ></el-input>
             </el-col>
+            <!-- 获取验证码 -->
             <el-col :span="6">
               <el-button
                 class="get"
@@ -30,17 +31,18 @@
                 plain
                 :disabled="!verifiedUsername"
                 @click="toSendCode"
-                >获取验证码</el-button
+                >{{$t('login.getCode')}}</el-button
               >
             </el-col>
           </el-row>
         </el-form-item>
+        <!-- 请输入验证码 -->
         <el-form-item prop="password">
           <el-input
             prefix-icon="el-icon-lock"
             v-model="loginForm.password"
             type="password"
-            placeholder="请输入验证码"
+            :placeholder="$t('login.password')"  
             :disabled="!codeSent"
           ></el-input>
         </el-form-item>
@@ -48,40 +50,50 @@
           <el-row style="width: 100%">
             <el-col :span="12" class="jump">
               <el-link type="primary" @click="starlightLogin"
-                >星光平台登录</el-link
+                >{{$t('login.starLogin')}}</el-link
               >
+              <!-- 星光平台登录 -->
             </el-col>
             <el-col :span="12" class="submit">
               <el-button
                 type="primary"
                 @click="submit"
                 :disabled="!verifiedCode"
-                >提交</el-button
+                >{{$t('login.submit')}}</el-button
               >
+              <!-- 提交 -->
             </el-col>
           </el-row>
         </el-form-item>
       </el-form>
+<!-- 直接进入主页 -->
+      <el-link class="enter-home" @click="enterHome">{{$t('login.quickEnter')}} </el-link>
+      <div class="lang-sel">
+        <Lang-sel></Lang-sel>
+      </div>
     </div>
     <el-dialog
       v-model="centerDialogVisible"
-      title="确认信息"
+      :title="$t('login.confirmTitle')"
       width="30%"
       center
       draggable
       top="35vh"
     >
+    <!-- 确认后将跳转到星光平台（https://starlight.nscc-gz.cn）进行用户登录；计算将使用您在星光平台上的资源进行；并将授权
+        ProtSim 平 -->
+        <!-- 《星光平台第三方授权说明》（链接到星光说明页面（ -->
       <span
-        >确认后将跳转到星光平台（https://starlight.nscc-gz.cn）进行用户登录；计算将使用您在星光平台上的资源进行；并将授权
-        ProtSim 平台使用您在星光平台上的接口权限（一类权限）;详情可见<a
+        >{{$t('login.confirmMessage')}}<a
           href="javascript:;"
-          >《星光平台第三方授权说明》（链接到星光说明页面（暂无））</a
+          >{{$t('login.explainBook')}}</a
         ></span
       >
+      <!-- 取消  确认 -->
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="centerDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="jumpStar">Confirm</el-button>
+          <el-button @click="centerDialogVisible = false">{{$t('login.cancel')}}</el-button>
+          <el-button type="primary" @click="jumpStar">{{$t('login.confirm')}} </el-button>
         </span>
       </template>
     </el-dialog>
@@ -92,17 +104,19 @@
  * 验证码发送以及成功后的防治再次触发 （60s）
  * starlightLogin
  */
-import { sendEmailCode, login, LoginRequest } from '../api/api'
-import { RedirectLoginURL } from '../api/starlight'
-import { ref, reactive, watch } from 'vue'
-import { ElNotification as $Notify, ElMessage , FormRules} from 'element-plus'
-import { useRouter } from 'vue-router'
-import { utils } from '@/utils/utils'
-const $router = useRouter()
-
-const bihuToken = utils.checkStarlightLog()
+import { sendEmailCode, login, LoginRequest } from "../api/api";
+import { RedirectLoginURL } from "../api/starlight";
+import { ref, reactive, watch, getCurrentInstance, onMounted, computed } from "vue";
+import { ElNotification as $Notify, ElMessage, FormRules } from "element-plus";
+import { useRouter } from "vue-router";
+import { utils } from "@/utils/utils";
+import LangSel from '../components/common/LangSel.vue'
+import { useI18n } from "vue-i18n";
+const $router = useRouter();
+let i18=useI18n()
+const bihuToken = utils.checkStarlightLog();
 if (bihuToken) {
-  $router.push('/home')
+  $router.push("/home");
 }
 
 const loginForm: LoginRequest = reactive({
@@ -111,47 +125,69 @@ const loginForm: LoginRequest = reactive({
 }) as LoginRequest;
 const regExpEmail = /^\w{3,}(\.\w+)*@[A-z 0-9]+(\.[A-z]{2,5}){1,2}$/;
 const regExpCode = /^[0-9]{6}$/;
+// 请输入邮箱地址邮箱格式不正确请输入验证码验证码格式不对
+let i18username=computed(()=>i18.t('login.username'))
+let i18wrongName=computed(()=>i18.t('login.wrongName'))
+let i18password=computed(()=>i18.t('login.password'))
+let i18wrongWord=computed(()=>i18.t('login.wrongWord'))
+let i18sendFail=computed(()=>i18.t('login.sendFail'))
+let i18checkWrong=computed(()=>i18.t('login.checkWrong'))
+let i18loginOk=computed(()=>i18.t('login.loginOk'))
+
 const loginFormRules = reactive({
   username: [
-    { required: true, message: "请输入邮箱地址", trigger: "blur" },
-    { type: "email", message: "邮箱格式不正确", trigger: "blur" },
+    { required: true, message: i18username, trigger: "blur" },
+    { type: "email", message: i18wrongName, trigger: "blur" },
   ],
   password: [
-    { required: true,message: '请输入验证码', trigger: 'blur', },
-    { pattern: regExpCode, message: '验证码格式不对', trigger: 'blur'},]
-} as FormRules )
-let verifiedUsername = ref(false)
-let verifiedCode = ref(false)
-let codeSent = ref(false)
-watch(()=> loginForm, (newVal, oldVal) => {
-  verifiedUsername.value = regExpEmail.test(newVal.username)
-  verifiedCode.value = regExpCode.test(newVal.password)
-  console.log(verifiedUsername.value, verifiedCode.value );
-}, {deep: true})
-const  toSendCode = async () => {
-  const res = await sendEmailCode(loginForm.username).catch(err => {
-    console.log("err:", err, "123@45.cn will pass the mock test!")
-    $Notify({ type: 'error', title: '验证码发送失败，请稍后再试', message: err})
-  })
-  if (!res) { return }
-  console.log("mock sendCode 123456")
-  console.log("res", res)
-  codeSent.value = true
-}
+    { required: true, message: i18password, trigger: "blur" },
+    { pattern: regExpCode, message: i18wrongWord, trigger: "blur" },
+  ],
+} as FormRules);
+let verifiedUsername = ref(false);
+let verifiedCode = ref(false);
+let codeSent = ref(false);
+watch(
+  () => loginForm,
+  (newVal, oldVal) => {
+    verifiedUsername.value = regExpEmail.test(newVal.username);
+    verifiedCode.value = regExpCode.test(newVal.password);
+    console.log(verifiedUsername.value, verifiedCode.value);
+  },
+  { deep: true }
+);
+// 验证码发送失败，请稍后再试
+const toSendCode = async () => {
+  const res = await sendEmailCode(loginForm.username).catch((err) => {
+    console.log("err:", err, "123@45.cn will pass the mock test!");
+    $Notify({
+      type: "error",
+      title: i18sendFail,
+      message: err,
+    });
+  });
+  if (!res) {
+    return;
+  }
+  console.log("mock sendCode 123456");
+  console.log("res", res);
+  codeSent.value = true;
+};
+// 验证码校验出错
 const submit = async () => {
   console.log("mock submit ", loginForm);
   const res = await login(loginForm).catch((err) => {
     console.log("err:", err, "123456 will pass the mock test!");
-    $Notify({ type: "error", title: "验证码校验出错", message: err });
+    $Notify({ type: "error", title: i18checkWrong, message: err });
   });
   if (!res) {
     return;
   }
   console.log("res", res);
   if (res.status === 200) {
-     ElMessage({
+    ElMessage({
       showClose: true,
-      message: "Login Success!",
+      message: i18loginOk,
       type: "success",
       center: true,
       duration: 1000,
@@ -160,13 +196,19 @@ const submit = async () => {
   // 保存token
   window.sessionStorage.setItem("token", res.token);
   //  跳转
-  $router.push("/home");
+  $router.push("/");
 };
 const centerDialogVisible = ref(false);
 const starlightLogin = async () => {
-  const href = RedirectLoginURL()
-  window.location.href = href
-}
+  centerDialogVisible.value = true;
+};
+let jumpStar = async () => {
+  const href = RedirectLoginURL();
+  window.location.href = href;
+};
+let enterHome = () => {
+  $router.push("/");
+};
 </script>
 <style lang="less" scoped>
 .login_container {
@@ -230,5 +272,16 @@ const starlightLogin = async () => {
 .pop-window {
   position: absolute;
   top: 50%;
+}
+.enter-home {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  color: #409eff
+}
+.lang-sel{
+  position: absolute;
+  left: 20px;
+  top: 20px;
 }
 </style>
