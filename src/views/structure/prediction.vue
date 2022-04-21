@@ -88,7 +88,7 @@
 import { ref, } from 'vue'
 import { FormRules,ElMessage, FormInstance } from 'element-plus'
 import { checkPredictStructureProjectName, submitPredictStruct } from '@/api/api'
-import { colorSeq, structurePredictRequest  } from '@/utils/structure'
+import { colorSeq, structurePredictRequest  } from '@/app-model/structure'
 import { useRouter } from 'vue-router'
 
 const $router = useRouter()
@@ -154,7 +154,7 @@ const getFormResponse = async () => {
   if (!res) {
     return
   }
-  if (res.uploadOk) {
+  if (res.data.uploadOk) {
     $router.push('/predict/structure/queue/')
   } else {
     ElMessage.error( 'Your input Sequence may be wrong, please try check and try again!')

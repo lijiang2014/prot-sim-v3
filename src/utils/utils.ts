@@ -1,4 +1,9 @@
+
+import { values } from "lodash"
+
 export const utils = {
+  // Cookie Functions
+
   /*
   * @name: 设置cookie 值
   * @param: cname string cookie名称 
@@ -44,5 +49,38 @@ export const utils = {
       window.sessionStorage.setItem('bihu-token', token)
     }
     return token
+  },
+  // enum Functions
+  // > https://gitee.com/mycssweb/enum-array
+  /**
+   * 获取枚举的不重复数组
+   */
+  getEnumArray(e: any): any[]{
+    const arr: any[] = []
+    for (const key in e) {
+      const haveKey = arr.find(item => {
+        return item.key === e[key] || Number(item.key) === Number(e[key])
+      })
+      if(!haveKey){
+        const isNaN = Number.isNaN(Number(key))
+        const obj = {
+          key: isNaN ? e[key] : Number(key),
+          value: isNaN? key: e[key]
+        }
+        arr.push(obj)
+      }
+    }
+    return arr
+  },
+  /**
+ * 直接从枚举改造数组中取值
+ */
+  getValueByEnum(key: string | number, obj: any[]): string {
+    for (const forkey in obj) {
+      if (key === obj[forkey].key) {
+        return obj[forkey].value
+      }
+    }
+    return ''
   }
 }

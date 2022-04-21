@@ -1,7 +1,8 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
-import { structurePredictRequest } from '@/utils/structure'
-
+import { structurePredictRequest } from '@/app-model/structure'
+import axios, { AxiosRequestConfig } from 'axios'
+import $request from '@/utils/starlightRequest'
 // Mock apis
 
 export interface LoginRequest {
@@ -29,6 +30,42 @@ export const login = (r: LoginRequest): Promise<any> => {
       resolve("ok")    
     } else {
       reject("false")
+    }
+  })
+}
+
+export const uploadFile = (spath: string,file: File, settings?: AxiosRequestConfig): Promise<any>  => {
+  // 原 bioSim API 启用
+  if (spath.startsWith('platform://')){
+    const data = new FormData()
+    data.append('file', file)
+    // Not A real file upload API.
+    return http.post('api/similarity/upload_pdb/', data)
+  }
+  // 原 starlight API TODO
+  if (spath.startsWith('file://')){
+    let settings = {} as AxiosRequestConfig
+    settings
+    return $request(settings)
+  }
+  return new Promise((resolve, reject) => {
+    if (spath == "ok") {
+      resolve("ok")    
+    } else {
+      reject("false")
+    }
+  })
+}
+
+
+export const submitAppTask = (app: string, params: any, runtime_params: any): Promise<any>  => {
+  return $request({
+    url: '/api/job/submit/',
+    method: 'post',
+    data: {
+      app,
+      params,
+      runtime_params
     }
   })
 }
