@@ -10,7 +10,9 @@
 
     <el-sub-menu v-else ref="subMenu" :index="resolvePath(item.path)" popper-append-to-body>
       <template #title>
-        <item v-if="item.meta" :icon="icon" :title="generateTitle(item.meta?.title as string)" />
+        <div class="title">
+          <item v-if="item.meta" :icon="icon" :title="generateTitle(item.meta?.title as string)" />
+        </div>
       </template>
       <nav-item
         v-for="child in item.children"
@@ -112,3 +114,9 @@ export default defineComponent({
 
 
 </script>
+
+<style scoped>
+.title{
+  padding-right: 20px;
+}
+</style>

@@ -1,21 +1,22 @@
 import { InjectionKey } from 'vue'
-import { createStore, Store } from 'vuex'
+import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
 export interface State {
-  count: number
+  isLogin:boolean
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
 
 export const store = createStore<State>({
-  state() {
-    return {
-      count: 0
-    }
+  state:{
+    isLogin:false,
   },
   mutations: {
-    increment(state) {
-      state.count++
+    loginChange(state,payload){
+      state.isLogin=payload      
     }
   }
 })
+export function useStore () {
+  return baseUseStore(key)
+}

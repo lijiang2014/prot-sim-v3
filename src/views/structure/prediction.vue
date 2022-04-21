@@ -59,8 +59,11 @@
             ></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm()"
+            <el-button type="primary" @click="submitForm()" v-if="store.state.isLogin"
               >Summit</el-button
+            >
+            <el-button type="primary" disabled v-if="!store.state.isLogin"
+              >login to use</el-button
             >
             <el-button @click="resetForm()">Reset</el-button>
             <el-button @click="ExampleFrom()">Example</el-button>
@@ -90,7 +93,8 @@ import { FormRules,ElMessage, FormInstance } from 'element-plus'
 import { checkPredictStructureProjectName, submitPredictStruct } from '@/api/api'
 import { colorSeq, structurePredictRequest  } from '@/utils/structure'
 import { useRouter } from 'vue-router'
-
+import {useStore} from '@/store'
+let store = useStore()
 const $router = useRouter()
 const dialogVisible = ref(false)
 const newSeq = ref('')
