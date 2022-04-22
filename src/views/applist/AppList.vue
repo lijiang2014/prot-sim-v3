@@ -4,21 +4,19 @@
     <div class="box">
       <div
         class="app-list"
-        :style="`transform:translateX(-${transform * 34.1}%)`"
+        :style="`transform:translateX(-${transform * (24+1.3)}%)`"
       >
-        <template v-for="(i, n) in 7" :key="n">
-          <div class="contain">
+        <template v-for="item in appList">
+          <div class="contain" v-if="item.title == title" :key="item.name">
             <el-card :body-style="{ padding: '20px' }">
-              <img
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                class="image"
+              <el-image
+                :src="imgUrl + item.icon"
+                fit="scale-down"
+                class="img"
               />
-              <div style="padding: 14px">
-                <span>好吃的汉堡{{ i }}</span>
-                <div class="bottom clearfix">
-                  <time class="time">{{ "2121" }}</time>
-                  <el-button type="text" class="button">操作按钮</el-button>
-                </div>
+              <div class="text">
+                <div>{{item.name}}</div>
+                <el-button type="primary">使用</el-button>
               </div>
             </el-card>
           </div>
@@ -30,11 +28,22 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from "@vue/reactivity";
+import { computed } from "@vue/runtime-core";
 import ListHead from "./ListHead.vue";
-defineProps<{title:string}>()
+let {title,appList}=defineProps<{ title: string; appList: any }>();
+let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
+let init=computed(()=>{
+  let num=0
+  for(let item of appList){
+    if(item.title==title){
+      num++
+    }
+  }
+  return num
+})
 let btnClick = (num) => {
-  if (transform.value >= 4 && num > 0) return;
+  if(transform.value+num>=init.value-3)return 
   if (transform.value + num >= 0) {
     transform.value += num;
   }
@@ -54,8 +63,15 @@ let btnClick = (num) => {
 }
 .contain {
   height: 400px;
-  width: 31.8%;
-  margin-right: 2.3%;
+  width: 24%;
+  margin-right: 1.33%;
   flex-shrink: 0;
+}
+.img {
+  width: 100%;
+  height: 150px;
+}
+.text {
+  text-align: center;
 }
 </style>
