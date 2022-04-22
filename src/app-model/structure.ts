@@ -60,17 +60,17 @@ export function colorSeq(seq: string): colorSeq {
 export interface baseRequest {
   proj_name: string;
   email?: string;
-  platform: string[],
+  platform?: string[],
 }
 
 export enum RoseTTAFoldMode {
   pyrosetta = 'pyrosetta' 
 }
 
-export interface structurePredictRequest {
-  proj_name: string
-  email?: string
-  platform: string[]
+export interface structurePredictRequest extends baseRequest {
+  // proj_name: string
+  // email?: string
+  // platform: string[]
   protein_seq: string
   RoseTTAFold_mode: RoseTTAFoldMode
 }

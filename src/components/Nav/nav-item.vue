@@ -99,7 +99,6 @@ export default defineComponent({
       if (showingChildren.length === 0) {
         onlyOneChild.value = { ... parent,  }
         noShowingChildren.value = true
-        console.log("ooc",onlyOneChild.value)
         return true
       }
       return false

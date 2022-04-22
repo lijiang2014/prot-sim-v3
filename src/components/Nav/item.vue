@@ -15,7 +15,6 @@ export default defineComponent({
   },
   render() {
     let icontext = []
-    console.log(this.$props)
     if (this.$props.icon) {
       icontext.push(
         h('svg-icon', { "icon-class": this.$props.icon})

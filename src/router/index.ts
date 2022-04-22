@@ -86,6 +86,11 @@ export const routes: Array<RouteRecordRaw> = [
         component: About
       },
       { 
+        path: '/later/graph-ppis', 
+        meta: { hidden: false, title: 'graph-ppis'},
+        component: () => import('@/views/app/graph-ppis/form.vue')
+      },
+      {
         path: '/later/Contacts',
         meta: { title: 'Contacts' },
         component: About
@@ -117,18 +122,9 @@ export const routes: Array<RouteRecordRaw> = [
     ]
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "About" */ '../components/About.vue'),
-  },
-  {
     path:'/404',
     name:'404',
-    component:()=>import(/* webpackChunkName: "About" */ '../components/About.vue'),
+    component:()=>import('@/components/notfound.vue'),
   },
   {
     path: '/:currentPath(.*)*', // 路由未匹配到，进入这个
