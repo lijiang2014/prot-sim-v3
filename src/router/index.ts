@@ -49,7 +49,7 @@ export const routes: Array<RouteRecordRaw> = [
       { 
         path: '/queue/all',
         meta: { title: 'Jobs' },
-        component: About
+        component: ()=>import('@/views/queue/all.vue')
       },
     ]
   },
