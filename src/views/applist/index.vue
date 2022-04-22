@@ -1,18 +1,27 @@
 <template>
   <div class="welcome">
-    <div>
-      <App-list :title="`热门应用`"></App-list>
-    </div>
-    <div>
-      <App-list :title="`结构预测`"></App-list>
-    </div>
-    <div>
-      <App-list :title="`结构相似度`"></App-list>
-    </div>
+      <div>
+        <App-list :title="'结构预测'" :appList="state.appList"></App-list>
+      </div>
+      <div>
+        <App-list :title="'相似性比对'" :appList="state.appList"></App-list>
+      </div>
+      <div>
+        <App-list :title="'位点预测'" :appList="state.appList"></App-list>
+      </div>
   </div>
 </template>
 <script lang="ts" setup>
 import AppList from './AppList.vue'
+import {getApps} from '../../api/api'
+import { reactive, ref } from '@vue/reactivity'
+let state=reactive({
+  appList:[]
+})
+getApps('1',{mock:1}).then((res)=>{
+  state.appList=res.spec
+  console.log(res.spec)
+})
 </script>
 <style lang="less" scoped>
 .welcome{
