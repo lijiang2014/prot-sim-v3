@@ -18,98 +18,85 @@ export const routes: Array<RouteRecordRaw> = [
       { 
         path: '/welcome',
         meta: { title: 'Home' },
-        component: () => import('@/views/Welcome.vue')
+        component: () => import('@/views/applist/index.vue')
       },
     ]
   },
   // Structure Prediction
   {
-    path: '/predict', redirect: '/predict/structure/', meta: { hidden: false, title: 'Structure Prediction'},
+    path: '/app', meta: { hidden: false, title: '应用列表'},
     component: Layout,
     children:[
       // 结构预测
       { 
         path: '/predict/structure/',
-        meta: { title: 'Submit' },
+        meta: { title: '结构预测' },
         component: () => import('@/views/structure/prediction.vue')
       },
       { 
         path: '/predict/structure/queue/',
-        meta: { title: 'Queue' },
-        component: About
+        meta: { title: '相似性计算' },
+        component: ()=>import('@/views/similarity/structureSimilarity.vue')
       },
-      { 
-        path: '/predict/structure/example/',
-        meta: { title: 'Example' },
-        component: About
-      },
-    ]
-  },
-  // Structure Similarly
-  {
-    path: '/structure_similarity', redirect: '/structure_similarity/submit', meta: { hidden: false, title: 'Structure Similarly'},
-    component: Layout,
-    children:[
-      // 结构相似性
-      { 
-        path: '/structure_similarity/submit',
-        meta: { title: 'Submit' },
-        component: About
-      },{ 
-        path: '/structure_similarity/search',
-        meta: { title: 'search', hidden: true },
-        component: About
-      },{ 
-        path: '/structure_similarity/DUF', 
-        meta: { title: 'DUF'},
-        component: About},
-      { path: '/structure_similarity/results', component: About},
-      { path: '/structure_similarity/plot/', component: About},
     ]
   },
   // Queue
   {
-    path: '/queue', redirect: '/queue/all', meta: { hidden: false, title: 'Queue'},
+    path: '/jobs', meta: { hidden: false, title: 'Jobs'},
     component: Layout,
     children:[
       // 结构预测
       { 
         path: '/queue/all',
-        meta: { title: 'Queue' },
+        meta: { title: 'Jobs' },
         component: About
       },
     ]
   },
   // BLAST
   {
-    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'BLAST'},
+    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'Doc'},
     component: Layout,
     children:[
       // 序列相似性 blast
-      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'BLAST'}},
-      { path: '/sequence/blast/queue', component: About},
-      { path: '/sequence/blast/res', component: About},
-      { path: '/sequence/blast/res/jackhmmer', component: About},
-      { path: '/sequence/blast/cdd_searchSave', component: About},
-      { path: '/sequence/blast/cdd_searchSave_result', component: About},
-      { path: '/phylogenetic/plot/', component: About},      
-    ]
-  },
-  // Test
-  {
-    path: '/test',   meta: { hidden: false, title: 'TEST'},
-    component: Layout,
-    children:[
-      { path: '/test/pdbe-molstar', component: About, meta: { hidden: false, title: 'pdbe-molstar'}},
-      { path: '/test/svg-msa', component: About, meta: { hidden: false, title: 'svg-msa'}},
-      { 
-        path: '/test/graph-ppis', 
-        meta: { hidden: false, title: 'graph-ppis'},
-        component: () => import('@/views/app/graph-ppis/form.vue')},
+      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'Doc'}},
     ]
   },
   // About
-  { path: '/about', component: About, meta: { hidden: false, title: 'ABOUT'} },
+  {
+    path: '/about', redirect: '/about/about', meta: { hidden: false, title: 'About'},
+    component: Layout,
+    children:[
+      { path: '/about/about', component: About, meta: { hidden: false, title: 'About'}},
+    ]
+  },
+  // ...
+  {
+    path: '/later', meta: { hidden: false, title: '. . .'},
+    component: Layout,
+    children:[
+      { 
+        path: '/later/dataset',
+        meta: { title: 'dataset' },
+        component: About
+      },
+      { 
+        path: '/later/Papers',
+        meta: { title: 'Papers' },
+        component: About
+      },
+      { 
+        path: '/later/graph-ppis', 
+        meta: { hidden: false, title: 'graph-ppis'},
+        component: () => import('@/views/app/graph-ppis/form.vue')
+      },
+      {
+        path: '/later/Contacts',
+        meta: { title: 'Contacts' },
+        component: About
+      },
+    ]
+  },
   // Hidden
   {
     path: '/hide',
@@ -133,6 +120,11 @@ export const routes: Array<RouteRecordRaw> = [
       // molstar
       { path: '/molstar', component: About},
     ]
+  },
+  {
+    path:'/404',
+    name:'404',
+    component:()=>import('@/components/notfound.vue'),
   },
   {
     path: '/:currentPath(.*)*', // 路由未匹配到，进入这个

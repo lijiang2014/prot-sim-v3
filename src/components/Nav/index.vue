@@ -8,11 +8,11 @@
     text-color="#fff"
     active-text-color="#409EFF"
   >
-    <template v-for="route in routes" >
+    <template v-for="route in routes" :key="route">
       <!-- <el-menu-item v-if="!route.meta?.hidden" :index="route.path">
         <template #title>{{route.name}}</template>
       </el-menu-item> -->
-      <nav-item v-if="!route.meta?.hidden" :index="route.path" :item="route"></nav-item>
+      <Nav-item v-if="!route.meta?.hidden" :index="route.path" :item="route"></Nav-item>
     </template>
   </el-menu>
 </template>
@@ -110,11 +110,11 @@ export default defineComponent({
   background-color: white;
 }
 
-/deep/ .el-menu--popup-bottom-start .popper {
+:deep(.el-menu--popup-bottom-start) .popper  {
   margin-top: 0px;
 }
-/deep/ .el-menu--collapse .el-menu .el-submenu,
-.el-menu--popup {
+:deep( .el-menu--collapse) .el-menu .el-submenu,
+:deep(.el-menu--popup) {
   min-width: 100px;
 }
 </style>
