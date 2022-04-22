@@ -116,7 +116,8 @@ const $router = useRouter();
 let i18=useI18n()
 const bihuToken = utils.checkStarlightLog();
 if (bihuToken) {
-  $router.push("/home");
+  window.sessionStorage.setItem("token", bihuToken);
+  $router.push("/");
 }
 
 const loginForm: LoginRequest = reactive({
@@ -126,13 +127,13 @@ const loginForm: LoginRequest = reactive({
 const regExpEmail = /^\w{3,}(\.\w+)*@[A-z 0-9]+(\.[A-z]{2,5}){1,2}$/;
 const regExpCode = /^[0-9]{6}$/;
 // 请输入邮箱地址邮箱格式不正确请输入验证码验证码格式不对
-let i18username=computed(()=>i18.t('login.username'))
-let i18wrongName=computed(()=>i18.t('login.wrongName'))
-let i18password=computed(()=>i18.t('login.password'))
-let i18wrongWord=computed(()=>i18.t('login.wrongWord'))
-let i18sendFail=computed(()=>i18.t('login.sendFail'))
-let i18checkWrong=computed(()=>i18.t('login.checkWrong'))
-let i18loginOk=computed(()=>i18.t('login.loginOk'))
+let i18username=computed(()=>i18.t('login.username')).value
+let i18wrongName=computed(()=>i18.t('login.wrongName')).value
+let i18password=computed(()=>i18.t('login.password')).value
+let i18wrongWord=computed(()=>i18.t('login.wrongWord')).value
+let i18sendFail=computed(()=>i18.t('login.sendFail')).value
+let i18checkWrong=computed(()=>i18.t('login.checkWrong')).value
+let i18loginOk=computed(()=>i18.t('login.loginOk')).value
 
 const loginFormRules = reactive({
   username: [

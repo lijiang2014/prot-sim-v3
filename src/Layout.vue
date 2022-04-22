@@ -7,26 +7,20 @@
         <span>蛋白质设计</span>
       </router-link>
       <head-nav></head-nav>
-      <Lang-sel></Lang-sel>
+      <lang-sel></lang-sel>
       <el-button class="header" type="text" @click="logout" v-if="store.state.isLogin">Logout</el-button>
       <el-button class="header" type="text" @click="loginHandle" v-if="!store.state.isLogin">Login</el-button>
     </el-header>
     <el-container>
-      <!-- 侧边栏区域 -->
 
       <el-container style="padding-bottom: 20px">
-        <!-- 右侧内容区 -->
         <el-main>
-          <!-- 路由占位符 -->
           <router-view></router-view>
         </el-main>
-
-        <!-- 注脚 -->
         <!-- <el-footer>Footer</el-footer> -->
       </el-container>
     </el-container>
     <!-- 登录弹窗 -->
-    <!-- #region  -->
     <el-dialog
       v-model="centerDialogVisible"
       title="用户登录"
@@ -85,13 +79,11 @@
         top="30vh"
         append-to-body
       >
-        <span
-          >确认后将跳转到星光平台（https://starlight.nscc-gz.cn）进行用户登录；计算将使用您在星光平台上的资源进行；并将授权
-          ProtSim 平台使用您在星光平台上的接口权限（一类权限）;详情可见<a
-            href="javascript:;"
-            >《星光平台第三方授权说明》（链接到星光说明页面（暂无））</a
-          ></span
-        >
+        <span>
+          确认后将跳转到星光平台（https://starlight.nscc-gz.cn）进行用户登录；计算将使用您在星光平台上的资源进行；并将授权
+          ProtSim 平台使用您在星光平台上的接口权限（一类权限）;详情可见
+          <a href="javascript:;">《星光平台第三方授权说明》（链接到星光说明页面（暂无））</a>
+        </span>
         <template #footer>
           <span class="dialog-footer">
             <el-button @click="starTip = false">Cancel</el-button>
@@ -102,14 +94,12 @@
       <template #footer>
         <div class="login-foot">
           
-        <el-link type="primary" @click="starlightLogin"
-          >通过星光平台登录</el-link
-        >
+        <el-link type="primary" @click="starlightLogin">
+          通过星光平台登录
+        </el-link>
         <span class="dialog-footer">
           <el-button @click="centerDialogVisible = false">Cancel</el-button>
-          <el-button type="primary" @click="submit" :disabled="!verifiedCode"
-            >提交</el-button
-          >
+          <el-button type="primary" @click="submit" :disabled="!verifiedCode">提交</el-button>
         </span>
         </div>
       </template>
@@ -120,162 +110,35 @@
 </template>
 
 <script  lang="ts" setup>
-import { defineComponent, ref,reactive,watch, onMounted} from 'vue'
+// components
 import HeadNav from './components/Nav/index.vue'
-import { useRoute, useRouter } from 'vue-router'
-import { utils } from './utils/utils';
 import LangSel from './components/common/LangSel.vue'
-
+import { ref,reactive,watch, onMounted} from 'vue'
+import {useStore} from '@/store'
+import { useRoute, useRouter } from 'vue-router'
+import { ElNotification as $Notify, ElMessage , FormRules} from 'element-plus'
+import { utils } from './utils/utils';
+import { sendEmailCode, login, LoginRequest } from '@/api/api'
+import { RedirectLoginURL } from '@/api/starlight'
 const $route = useRoute()
 const $router = useRouter()
 
-const menuList = ref([
-        {
-          //结构预测，// 一级菜单
-          id: 10,
-          name: 'Structure Prediction',
-          path: 'predict/structure/',
-          children: [
-            {
-              // 二级菜单
-              id: 11,
-              name: 'Sumbit',
-              path: 'predict/structure/',
-              children: [],
-              order: null,
-            },
-            {
-              id: 12,
-              name: 'Queue',
-              path: 'predict/structure/queue/',
-              children: [],
-              order: null,
-            },
-            {
-              id: 13,
-              name: 'Example',
-              path: 'predict/structure/result',
-              children: [],
-              order: null,
-            },
-          ],
-          order: 1,
-        },
-        {
-          //结构相似，// 一级菜单
-          id: 20,
-          name: 'Structure Similarly',
-          path: 'structure_similarity/',
-          children: [
-            // 二级菜单
-            {
-              id: 21,
-              name: 'Submit',
-              path: 'structure_similarity/submit',
-              children: [],
-              order: 1,
-            },
-            {
-              id: 22,
-              name: 'DUF-SPalignNS',
-              path: 'structure_similarity/DUF',
-              children: [],
-              order: null,
-            },
-          ],
-          order: 3,
-        },
-        // 序列相似
-        {
-          name: 'BLAST',
-          path: '/sequence/blast',
-          children: [
-            // 二级菜单
-            {
-              id: 21,
-              name: 'Submit',
-              path: 'sequence/blast',
-
-              order: 1,
-            },
-            {
-              id: 32,
-              name: 'Queue',
-              path: 'sequence/blast/queue',
-
-              order: 1,
-            },
-            {
-              id: 33,
-              name: 'Conserved Domains',
-              path: 'sequence/blast/cdd_submit',
-
-              order: 1,
-            },
-            {
-              id: 34,
-              name: 'Conserved Domains(Queue)',
-              path: 'sequence/blast/cdd_searchSave',
-
-              order: 1,
-            },
-          ],
-        },
-
-        {
-          //test，// 一级菜单
-          id: 30,
-          name: 'Test',
-          path: 'test/',
-          children: [
-            // 二级菜单
-            {
-              id: 31,
-              name: 'svg-msa',
-              path: 'test/svg-msa',
-              children: [],
-              order: 1,
-            },
-            {
-              id: 32,
-              name: 'pdbeMolstar',
-              path: 'test/pdbe-molstar',
-              children: [],
-              order: 1,
-            },
-            {
-              id: 33,
-              name: 'phylotree',
-              path: 'test/phylotree',
-              children: [],
-            },
-          ],
-          order: 2,
-        },
-      ])
-const isCollapsed = ref(false)
-const activePath = ref('/welcome')
-
-activePath.value = $route.path
-
-const saveNavState = (navpath: string) => {
-  activePath.value = navpath
-  window.sessionStorage.setItem('activePath', navpath)
-}
-
-
-
-//登录相关
-//#region
-import {useStore} from '@/store'
 let store=useStore()
 onMounted(()=>{
-  if(sessionStorage.token){
+  if(window.sessionStorage.getItem('token')){
     store.commit('loginChange',true)
-  }else{
-    store.commit('loginChange',false)
+    return
   }
+  const bihuToken = utils.checkStarlightLog();
+  if (bihuToken) {
+    window.sessionStorage.setItem("token", bihuToken);
+    store.commit('loginChange',true)
+    return
+  }
+  store.commit('loginChange',false)
 })
+const activePath = ref('/welcome')
+activePath.value = $route.path
 
 const logout = () => {
   window.sessionStorage.clear()
@@ -284,9 +147,6 @@ const logout = () => {
   store.commit('loginChange',false)
 }
 
-import { sendEmailCode, login, LoginRequest } from '@/api/api'
-import { RedirectLoginURL } from '@/api/starlight'
-import { ElNotification as $Notify, ElMessage , FormRules} from 'element-plus'
 
 let centerDialogVisible=ref(false)
 const loginHandle =()=>{
@@ -294,7 +154,7 @@ const loginHandle =()=>{
 }
 const bihuToken = utils.checkStarlightLog()
 if (bihuToken) {
-  $router.push('/home')
+  $router.push('/')
 }
 
 const loginForm: LoginRequest = reactive({
