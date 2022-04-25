@@ -95,6 +95,16 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'Contacts' },
         component: About
       },
+      {
+        path: '/later/test/svg-msa',
+        meta: { title: 'svg-msa' },
+        component: ()=>import('@/views/test/svg-msa/index.vue')
+      },
+      {
+        path: '/later/test/tc',
+        meta: { title: 'tc' },
+        component: ()=>import('@/views/test/tc/index.vue')
+      },
     ]
   },
   // Hidden

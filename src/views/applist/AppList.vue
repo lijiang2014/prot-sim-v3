@@ -4,7 +4,7 @@
     <div class="box">
       <div
         class="app-list"
-        :style="`transform:translateX(-${transform * (24+1.3)}%)`"
+        :style="`transform:translateX(-${transform * (24 + 1.3)}%)`"
       >
         <template v-for="item in appList">
           <div class="contain" v-if="item.title == title" :key="item.name">
@@ -15,7 +15,7 @@
                 class="img"
               />
               <div class="text">
-                <div>{{item.name}}</div>
+                <div>{{ item.name }}</div>
                 <el-button type="primary">使用</el-button>
               </div>
             </el-card>
@@ -28,22 +28,19 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from "@vue/reactivity";
-import { computed } from "@vue/runtime-core";
+import { computed, onMounted, watch, watchEffect } from "@vue/runtime-core";
 import ListHead from "./ListHead.vue";
-let {title,appList}=defineProps<{ title: string; appList: any }>();
+let props = defineProps<{ title: string; appList: any }>();
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
-let init=computed(()=>{
-  let num=0
-  for(let item of appList){
-    if(item.title==title){
-      num++
+let btnClick = (num) => {
+  let n = 0;
+  for (let item of props.appList) {
+    if (item.title == props.title) {
+      n++;
     }
   }
-  return num
-})
-let btnClick = (num) => {
-  if(transform.value+num>=init.value-3)return 
+  if (transform.value + num >= n - 3) return;
   if (transform.value + num >= 0) {
     transform.value += num;
   }
