@@ -22,6 +22,7 @@ export default defineConfig({
         modifyVars: {
           hack: `true; @import "${path.join(__dirname, './src/assets/less/base.less')}";`
         },
+        additionalData: '@import "./src/assets/less/global.less";',
         javascriptEnabled: true
       }
     }

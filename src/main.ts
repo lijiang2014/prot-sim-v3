@@ -8,6 +8,7 @@ import * as icons  from '@element-plus/icons-vue'
 import initStorePersistence from '@/store/persistence'
 
 import '@/assets/global.css'
+import '@/assets/index.css'
 
 import i18n from './i18n'
 
