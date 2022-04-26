@@ -22,7 +22,7 @@
 <script lang='ts' setup>
 import {useI18n} from 'vue-i18n'
 let {locale}=useI18n()
-let switching=(lang)=>{
+let switching=(lang:string)=>{
     if(locale.value===lang)return
     locale.value=lang
     window.localStorage.lang=lang

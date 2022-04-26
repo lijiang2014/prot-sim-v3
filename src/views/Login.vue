@@ -69,7 +69,7 @@
 <!-- 直接进入主页 -->
       <el-link class="enter-home" @click="enterHome">{{$t('login.quickEnter')}} </el-link>
       <div class="lang-sel">
-        <Lang-sel></Lang-sel>
+        <lang-sel></lang-sel>
       </div>
     </div>
     <el-dialog
@@ -112,11 +112,14 @@ import { useRouter } from "vue-router";
 import { utils } from "@/utils/utils";
 import LangSel from '../components/common/LangSel.vue'
 import { useI18n } from "vue-i18n";
+import { useStore } from "@/store";
+const store = useStore()
 const $router = useRouter();
 let i18=useI18n()
 const bihuToken = utils.checkStarlightLog();
 if (bihuToken) {
   window.sessionStorage.setItem("token", bihuToken);
+  store.commit("setToken",bihuToken)
   $router.push("/");
 }
 

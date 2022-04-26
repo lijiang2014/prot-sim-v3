@@ -1,5 +1,6 @@
 import {createI18n} from 'vue-i18n'
-import {zh,en} from './lang'
+import {zh} from './zh'
+import {en} from './en'
 let initLang=''
 if(window.localStorage.lang=='en'){
     initLang='en'
@@ -8,6 +9,7 @@ if(window.localStorage.lang=='en'){
 }
 let i18n=createI18n({
     locale:initLang||'zh',
+    fallbackLocal: 'en',
     messages:{
         'en':en,
         'zh':zh
