@@ -24,9 +24,17 @@ export const store = createStore<State>({
   mutations: {
     loginChange(state,payload){
       state.isLogin=payload      
+    },
+    setToken(state,token:string){
+      state.user.token=token      
+    },
+    increment(state){
+      state.count++      
     }
   }
 })
 export function useStore () {
   return baseUseStore(key)
 }
+
+export default store

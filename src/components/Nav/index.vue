@@ -2,16 +2,12 @@
   <el-menu
     :default-active="defaultActive"
     class="el-menu-vertical-demo"
-    @select="selectMenuItem"
     mode="horizontal"
     background-color="#333744"
     text-color="#fff"
     active-text-color="#409EFF"
   >
-    <template v-for="route in routes" :key="route">
-      <!-- <el-menu-item v-if="!route.meta?.hidden" :index="route.path">
-        <template #title>{{route.name}}</template>
-      </el-menu-item> -->
+    <template v-for="(route, index ) in routes" :key="index">
       <Nav-item v-if="!route.meta?.hidden" :index="route.path" :item="route"></Nav-item>
     </template>
   </el-menu>
@@ -32,16 +28,13 @@ export default defineComponent({
     const router = useRouter()
     const routes = asyncRoutes
     const defaultActive = computed(() => route.name?.toString())
-    const selectMenuItem = (mtype: string) => {
-      console.log("selectMenuItem", mtype)
-      // router.push({
-      //   name: mtype
-      // })
-    }
+    // const selectMenuItem = (mtype: string) => {
+    //   console.log("selectMenuItem", mtype)
+    // }
     return {
       routes,
       defaultActive,
-      selectMenuItem,
+      // selectMenuItem,
     }
   }
 })

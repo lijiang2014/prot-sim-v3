@@ -83,7 +83,7 @@
             </el-select>
           </el-form-item>
           <el-form-item>   
-            <el-button type="primary" @click="submitForm()">Summit</el-button>
+            <el-button type="primary" @click="submitForm()">Submit</el-button>
             <el-button @click="resetForm()">Reset</el-button>
           </el-form-item>
         </el-form>
@@ -96,8 +96,8 @@ import { ref } from 'vue';
 import { StarlightRuntimeParams, GraphPPISParams as appParams,  stringFile, createJobName } from '@/app-model/graph-ppis';
 import { genFileId,ElMessage, UploadFile, } from 'element-plus'
 import type { FormRules, FormInstance, UploadInstance, UploadProps, UploadRawFile ,UploadFiles,} from 'element-plus'
-import { useStore } from 'vuex';
-import { key } from '@/store';
+// import { useStore } from 'vuex';
+import { useStore } from '@/store';
 import { submitAppTask, uploadFile } from '@/api/api';
 const appname = 'graph-ppis'
 
@@ -138,9 +138,9 @@ const runtimeForm = ref( {
   jobname: createJobName(appname),
  } as StarlightRuntimeParams )
 const appForm = ref( {
-  chain: '',
+  chain: 'E',
   mode: 'fast',
-  pdbID: '',
+  pdbID: '1r8s',
   pdb: new stringFile()
   // _pdb: '',
  } as appParams )
@@ -178,11 +178,12 @@ const appRules = ref({
 const runtimeFormRef = ref<FormInstance>()
 const formRef = ref<FormInstance>()
 
-const store = useStore(key)
+// const store = useStore(key)
+const store = useStore()
 const state = store.state
 const count = ref(0)
 count.value = store.state.count
-
+console.log(store.state.user)
 const resetForm = () => {
 }
 const submitForm = async () => {
@@ -215,12 +216,20 @@ const submitForm = async () => {
   }
   if (!pass) {return}
   // submit Form
-  const res = await submitAppTask(appname, appForm, runtimeForm).catch(err => {
+  console.log(appname, appForm.value, runtimeForm.value)
+  // change File Format
+  let params :any = Object.assign({}, appForm.value)
+  if (! appForm.value.pdb!.uri){
+    params.pdb = ""
+  }
+  const res = await submitAppTask(appname, params, runtimeForm.value).catch(err => {
     console.log("err", err)
     pass = false
   })
   console.log(res)
   // TODO redirect to res..JobID result page
+  // 请求网址: https://starlight.nscc-gz.cn/api/job/running/k8s_venus/graph-ppis-25113148
+
 }
 
 </script>

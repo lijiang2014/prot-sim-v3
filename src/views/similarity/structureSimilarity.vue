@@ -88,7 +88,7 @@
 
           <el-form-item>
             <el-button v-if="store.state.isLogin" type="primary" @click="submitForm('ruleForm')"
-              >Summit</el-button
+              >Submit</el-button
             >
             <el-button v-if="!store.state.isLogin" type="primary" disabled
               >Login To Use</el-button

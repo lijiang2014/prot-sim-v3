@@ -18,6 +18,6 @@ for (const name in icons){
 
 initStorePersistence(store)
 app.use(store, key)
-app.use(ElementPlus)
-app.use(router).use(i18n)
+app.use(ElementPlus).use(i18n)
+app.use(router)
 app.mount('#app')
