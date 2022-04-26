@@ -28,7 +28,7 @@ let molstar = (app_id) => {
     // window.viewer = Viewer;
     // window.dizhi = pdb;
     console.log(viewer.loadStructureFromUrl, pdb);
-    viewer.loadStructureFromUrl("/public/model_1.pdb", "pdb");
+    viewer.loadStructureFromUrl("/model_1.pdb", "pdb");
     // viewer.loadPdb("7bv2");
   });
 };
@@ -38,7 +38,7 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 #molstar_large {
   width: 100%;
   height: 100%;

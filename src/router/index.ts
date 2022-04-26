@@ -105,6 +105,16 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'tc' },
         component: ()=>import('@/views/test/tc/index.vue')
       },
+      {
+        path: '/later/test/pdbMolstar',
+        meta: { title: 'pdb-molstar' },
+        component: ()=>import('@/views/test/pdbMolstar/index.vue')
+      },
+      {
+        path: '/later/test/example',
+        meta: { title: 'example' },
+        component: ()=>import('@/views/test/example/index.vue')
+      },
     ]
   },
   // Hidden
