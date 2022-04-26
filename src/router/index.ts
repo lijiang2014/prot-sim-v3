@@ -96,6 +96,11 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/app/graph-ppis/result.vue')
       },
       {
+        path: '/later/graph-ppis/result/:id', 
+        meta: { hidden: true, title: 'graph-ppis-result'},
+        component: () => import('@/views/app/graph-ppis/result.vue'),
+      },
+      {
         path: '/later/test/svg-msa',
         meta: { title: 'svg-msa' },
         component: ()=>import('@/views/test/svg-msa/index.vue')
