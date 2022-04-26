@@ -1,8 +1,8 @@
 import axios from 'axios'
-import { key} from '@/store'
-import { useStore } from 'vuex';
 import { ElNotification } from 'element-plus'
-const store = useStore(key)
+// 无法在组件外使用 store
+// import {useStore} from '@/store'
+import store from '@/store'
 
 export const BaseURL = `${import.meta.env.VITE_APP_BASE_STARLIGHT}`
 
@@ -34,6 +34,7 @@ const service = axios.create({
 // 拦截请求，为请求附上token
 service.interceptors.request.use(
   config => {
+    console.log(store)
     config.headers!['Bihu-Token'] = store.state.user.token
     return config
   },

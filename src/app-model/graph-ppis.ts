@@ -36,10 +36,7 @@ export class stringFile implements FileWidget {
   }
 }
 
-export enum GraphPPISMode {
-  fast = 'fast',
-  slow = 'slow',
-}
+export type GraphPPISMode = 'fast' | 'slow'
 
 export interface GraphPPISParams  {
   chain: string

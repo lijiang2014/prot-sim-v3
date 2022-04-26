@@ -60,7 +60,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm()" v-if="store.state.isLogin"
-              >Summit</el-button
+              >Submit</el-button
             >
             <el-button type="primary" disabled v-if="!store.state.isLogin"
               >login to use</el-button

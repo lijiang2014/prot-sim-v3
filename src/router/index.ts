@@ -55,11 +55,11 @@ export const routes: Array<RouteRecordRaw> = [
   },
   // BLAST
   {
-    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'Doc'},
+    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'BLAST'},
     component: Layout,
     children:[
       // 序列相似性 blast
-      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'Doc'}},
+      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'BLAST'}},
     ]
   },
   // About
@@ -72,28 +72,28 @@ export const routes: Array<RouteRecordRaw> = [
   },
   // ...
   {
-    path: '/later', meta: { hidden: false, title: '. . .'},
+    path: '/later', meta: { hidden: false, title: 'Tests'},
     component: Layout,
     children:[
-      { 
-        path: '/later/dataset',
-        meta: { title: 'dataset' },
-        component: About
-      },
-      { 
-        path: '/later/Papers',
-        meta: { title: 'Papers' },
-        component: About
-      },
+      // { 
+      //   path: '/later/dataset',
+      //   meta: { title: 'dataset' },
+      //   component: About
+      // },
+      // { 
+      //   path: '/later/Papers',
+      //   meta: { title: 'Papers' },
+      //   component: About
+      // },
       { 
         path: '/later/graph-ppis', 
         meta: { hidden: false, title: 'graph-ppis'},
         component: () => import('@/views/app/graph-ppis/form.vue')
       },
       {
-        path: '/later/Contacts',
-        meta: { title: 'Contacts' },
-        component: About
+        path: '/later/graph-ppis/result/example', 
+        meta: { hidden: false, title: 'graph-ppis-result'},
+        component: () => import('@/views/app/graph-ppis/result.vue')
       },
       {
         path: '/later/test/svg-msa',
@@ -124,9 +124,6 @@ export const routes: Array<RouteRecordRaw> = [
     component: Layout,
     meta: {title: 'hidden', hidden: true},
     children: [
-      { path: '/welcome',
-        component: () => import('@/views/Welcome.vue'),
-      },
       // 测试页面
       // 队列
       { path: '/queue', component: About},
@@ -146,22 +143,16 @@ export const routes: Array<RouteRecordRaw> = [
     name:'404',
     component:()=>import('@/components/notfound.vue'),
   },
-  {
-    path: '/:currentPath(.*)*', // 路由未匹配到，进入这个
-    redirect: (_) => {
-      return { path: '/404' , component: import('@/components/notfound.vue')}
-    },
-  },
 ]
 const router = createRouter({
   history: createWebHistory(''),
   routes,
-  scrollBehavior(to, from, savedPosition) {
-    return {
-      el: '#app',
-      top: 0,
-      behavior: 'smooth',
-    }
-  },
+  // scrollBehavior(to, from, savedPosition) {
+  //   return {
+  //     el: '#app',
+  //     top: 0,
+  //     behavior: 'smooth',
+  //   }
+  // },
 })
 export default router

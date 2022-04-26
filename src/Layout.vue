@@ -153,9 +153,9 @@ const loginHandle =()=>{
  centerDialogVisible.value=true
 }
 const bihuToken = utils.checkStarlightLog()
-if (bihuToken) {
-  $router.push('/')
-}
+// if (bihuToken) {
+//   $router.push('/')
+// }
 
 const loginForm: LoginRequest = reactive({
   username: "",

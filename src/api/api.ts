@@ -1,10 +1,13 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
+import type { OutputMap, result as JobResult, } from '@/app-model'
+import  { jobMetaExample } from '@/app-model'
 import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
+import { stringFile } from '@/app-model/graph-ppis'
 // Mock apis
-
+const mockQueryTime = 1000 * 3
 export interface LoginRequest {
   username: string
   password: string
@@ -13,7 +16,7 @@ export interface LoginRequest {
 export const sendEmailCode = (email: string): Promise<any> => {
   if (email == '123@45.cn'){
     return new Promise((resolve, reject) => {
-      resolve("ok")    
+      resolve("ok") 
     })  
   } else {
     return http.post('sendCode', email)
@@ -59,8 +62,18 @@ export const uploadFile = (spath: string,file: File, settings?: AxiosRequestConf
 
 
 export const submitAppTask = (app: string, params: any, runtime_params: any): Promise<any>  => {
+  if (app === 'graph-ppis') {
+    app = 'graphppis'
+    runtime_params = Object.assign(runtime_params, {
+      cluster: 'k8s_venus',
+      partition: 'venus-cpu',
+      cpu: 1,
+      memory: 5,
+      userMode: "starlight",
+    })
+  }
   return $request({
-    url: '/api/job/submit/',
+    url: '/api/job/submit',
     method: 'post',
     data: {
       app,
@@ -68,6 +81,40 @@ export const submitAppTask = (app: string, params: any, runtime_params: any): Pr
       runtime_params
     }
   })
+}
+
+export const getJobResult = (jobindex: string, appname: string): Promise<JobResult>  => {
+  if (jobindex === 'example') {
+    return new Promise((resolve, reject) => {
+      let outputs  = {
+        "outputs": {
+          "output1": {
+            class: "file",
+            file: {
+              uri: "xxx",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile
+          },
+          "output2": {
+            class: "file",
+            file: {
+              uri: "xxx",
+              meta: {
+                mime: 'text/plain',
+              }
+            } as stringFile
+          }
+        } as OutputMap
+      }
+      let mockData = Object.assign(outputs  , jobMetaExample)
+      setTimeout(()=>{
+        resolve(mockData)
+      }, mockQueryTime)
+    })
+  }
+  return new Promise((resolve, reject) => {reject("Not Ok Yet")})
 }
 
 /*  
