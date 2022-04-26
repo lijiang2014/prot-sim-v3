@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import "pdbe-molstar/build/pdbe-molstar-plugin-1.2.1";
+import  "pdbe-molstar/build/pdbe-molstar-plugin-1.2.1";
+declare var PDBeMolstarPlugin:any
 import "molstar/build/viewer/molstar.css";
 import { onMounted } from "@vue/runtime-core";
-
 let pdbe = () => {
   //Create plugin instance
   let viewerInstance = new PDBeMolstarPlugin();

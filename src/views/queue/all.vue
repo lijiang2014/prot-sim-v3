@@ -188,7 +188,7 @@ let searchType_show = () => {
   return state.searchType === "job_name" ? "Job Name" : "Email Address";
 };
 
-let queryJob = (searchType) => {
+let queryJob = (searchType:any) => {
   state.loading = true;
   http
     .get("api/structure/search/", {
@@ -196,7 +196,7 @@ let queryJob = (searchType) => {
         searchType: searchType,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       state.tableKey = searchType;
       state.tableData = JSON.parse(res);
       state.loading = false;
@@ -219,16 +219,16 @@ let searchJob = () => {
         searchContent: state.searchContent,
       },
     })
-    .then((res) => {
+    .then((res:any) => {
       state.tableKey = state.searchType;
       state.tableData = JSON.parse(res);
     });
 };
 
-let clickRow = (row) => {
+let clickRow = (row:any) => {
   console.log(row);
 };
-let toResult = (proj_name) => {
+let toResult = (proj_name:any) => {
   $router.push({
     path: "/predict/structure/result/",
     query: { proj_name: proj_name },
@@ -236,12 +236,12 @@ let toResult = (proj_name) => {
 };
 let queue = () => {
   state.loading = true;
-  http.get("api/structure/queue/").then((response) => {
+  http.get("api/structure/queue/").then((response:any) => {
     state.tableData = JSON.parse(response);
     state.loading = false;
   });
 };
-let format_date = function (dat_str, return_str) {
+let format_date = function (dat_str:any, return_str?:any) {
   if (dat_str) {
     return dat_str
       .toString()
@@ -250,19 +250,19 @@ let format_date = function (dat_str, return_str) {
   }
   return return_str;
 };
-let tableRowClassName = ({ row, rowIndex }) => {
+let tableRowClassName = ({ row, rowIndex }:any) => {
   if (row.fields.running_date && !row.fields.completed_date) {
     return "warning-row";
   }
   return "";
 };
 //每页下拉显示数据
-let handleSizeChange = function (size) {
+let handleSizeChange = function (size:any) {
   state.pagesize = size;
   /*console.log(state.pagesize) */
 };
 //点击第几页
-let handleCurrentChange = function (currentPage) {
+let handleCurrentChange = function (currentPage:any) {
   state.currentPage = currentPage;
   /*console.log(state.currentPage) */
 };

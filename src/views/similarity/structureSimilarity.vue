@@ -110,10 +110,12 @@
 const cityOptions = ["TMalign"];
 import { useStore } from "@/store";
 import { reactive, ref } from "@vue/reactivity";
+import http from '../../api/http'
+import {ElMessage} from 'element-plus'
 let ruleFormRef = ref();
 let uploadRef = ref();
 let store = useStore();
-let state = reactive({
+let state:any = reactive({
   checkAll: false,
   checkedCities: ["TMalign"],
   cities: cityOptions,
@@ -162,109 +164,93 @@ let state = reactive({
   },
 });
 
-let handleCheckAllChange = (val) => {
+let handleCheckAllChange = (val:any) => {
   state.checkedCities = val ? cityOptions : [];
   state.isIndeterminate = false;
 };
-let handleCheckedCitiesChange = (value) => {
+let handleCheckedCitiesChange = (value:any) => {
   let checkedCount = value.length;
   state.checkAll = checkedCount === state.cities.length;
   state.isIndeterminate =
     checkedCount > 0 && checkedCount < state.cities.length;
 };
 // 文件
-let handleRemove = (file, fileList) => {
+let handleRemove = (file:any, fileList:any) => {
   console.log(file, fileList);
   state.fileList = fileList;
 };
-let handlePreview = (file) => {
+let handlePreview = (file:any) => {
   console.log(file);
 };
 
-let handleChange = (file, fileList) => {
+let handleChange = (file:any, fileList:any) => {
   state.fileList = fileList;
 };
 
 // 自定义上传开关
-let submitForm = (formName) => {
+let submitForm = (formName:any) => {
   let cur;
   if (formName == "upload") {
     cur = uploadRef;
   } else if (formName == "ruleForm") {
     cur = ruleFormRef;
   }
-  cur.value.validate((valid) => {
+  (cur as any).value.validate((valid:any) => {
     if (valid) {
-      state.upload_pdb();
+      upload_pdb();
     } else {
-      state.$message.error("error input!");
+      ElMessage.error("error input!");
       return false;
     }
   });
 };
 
-let handleSuccess = (response, file, fileList) => {
-  console.log(response.msg);
-  console.log(file);
-  console.log(fileList);
-};
 
-//table发生改变
-let clickTableRow = (row) => {
-  state.input = row.input;
-  state.input_file = row.input_file;
-  state.target = row.target;
-  state.target_file = row.target_file;
-};
 
 // 自定义上传方法
 let upload_pdb = () => {
-  console.log(state.fileList);
   if (state.fileList.length === 0) {
-    return state.$message.error("Please select at least one file!");
+    return ElMessage.error("Please select at least one file!");
   }
   const formData = new FormData();
   // 添加文件
-  state.fileList.forEach((file) => {
+  state.fileList.forEach((file:any) => {
     formData.append("file", file.raw);
   });
   // 添加自定义参数
   formData.append("job_name", state.ruleForm.job_name);
   formData.append("email", state.ruleForm.email);
 
-  state
-    .$http({
+  http({
       url: "api/similarity/upload_pdb/",
       method: "POST",
       data: formData,
     })
-    .then((res) => {
+    .then((res:any) => {
       // console.log(res)
       if (res.status == 200) {
-        state.$message.success("Uploads Success!");
+        ElMessage.success("Uploads Success!");
         state.tableData = res.data.data;
         state.showResult = true;
 
-        state.input = state.tableData[0].input;
-        state.target = state.tableData[0].target;
-        state.input_file = state.tableData[0].input_file;
-        state.target_file = state.tableData[0].target_file;
+        state.input = (state.tableData[0] as any).input;
+        state.target = (state.tableData[0] as any).target;
+        state.input_file = (state.tableData[0] as any).input_file;
+        state.target_file = (state.tableData[0] as any).target_file;
 
-        if (state.tableData[0].source == "PDB") {
-          state.target_source = "data/pdb/";
+        if ((state.tableData[0] as any).source == "PDB") {
+          (state as any).target_source = "data/pdb/";
         } else {
-          state.target_source = "alphafold/";
+          (state as any).target_source = "alphafold/";
         }
-
-        console.log(state.tableData[0].input);
       } else {
-        state.$message.error("Upload failed!");
+        ElMessage.error("Upload failed!");
       }
       state.fileList = [];
     });
 };
 
-let resetForm = (formName) => {
+let resetForm = (formName:any) => {
   if (formName == "upload") {
     uploadRef.value.resetFields();
   } else if (formName == "ruleForm") {
@@ -286,8 +272,8 @@ let selectPdbFiles = () => {
   state.limit = 100;
   state.accept = ".pdb,.cif,.bcif,.pdb.gz,.cif.gz,.bcif.gz,";
 };
-let checkProName = async (rule, value, callback) => {
-  const { data: res } = await state.$http.get("/predict/structure/check/", {
+let checkProName = async (rule:any, value:any, callback:any) => {
+  const { data: res } = await http.get("/predict/structure/check/", {
     params: { job_name: value },
   });
 
@@ -299,7 +285,7 @@ let checkProName = async (rule, value, callback) => {
 };
 
 let get_token = async () => {
-  const { data: res } = await state.$http.get("get_token");
+  const { data: res } = await http.get("get_token");
 
   window.sessionStorage.setItem("X-CSRFToken", res.token);
 };

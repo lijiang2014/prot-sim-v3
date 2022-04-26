@@ -33,7 +33,7 @@ import ListHead from "./ListHead.vue";
 let props = defineProps<{ title: string; appList: any }>();
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
-let btnClick = (num) => {
+let btnClick = (num:number) => {
   let n = 0;
   for (let item of props.appList) {
     if (item.title == props.title) {

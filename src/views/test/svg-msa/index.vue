@@ -9,8 +9,7 @@ import { nextTick, onMounted } from "@vue/runtime-core";
 import { Viewer } from "molstar/build/viewer/molstar";
 import "molstar/build/viewer/molstar.css";
 let pdb = "http://222.200.186.47/outputs/testPDB/model_1.pdb";
-
-let molstar = (app_id) => {
+let molstar = () => {
   nextTick(function () {
     let viewer = new Viewer("molstar_large", {
       layoutIsExpanded: false,

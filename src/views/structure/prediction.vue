@@ -37,7 +37,7 @@
             label-width="180px"
             label="RoseTTAFold Mode:"
             prop="RoseTTAFold_mode"
-            v-show="ruleForm.platform.indexOf('RoseTTAFold') !== -1"
+            v-show="ruleForm.platform?.indexOf('RoseTTAFold') !== -1"
           >
             <el-radio v-model="ruleForm.RoseTTAFold_mode" label="pyrosetta"
               >pyrosetta</el-radio
