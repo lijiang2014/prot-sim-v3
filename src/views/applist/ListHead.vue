@@ -47,4 +47,7 @@ let emit=defineEmits<{
   display: flex;
   justify-content: flex-end;
 }
+.title{
+  font-size: 20px;
+}
 </style>

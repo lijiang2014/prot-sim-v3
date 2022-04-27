@@ -56,10 +56,15 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
   > Example About Page
   - [ ] Element UI 按需引入 ~Later
   > https://blog.csdn.net/sayUonly/article/details/121100230
-  - [ ] i18N ~Later
+  - [x] i18N
 - [x] Starlight Login
 - [ ] Apps
 - [ ] GraphPPIS
-  - [ ] 手动模式
+  - [x] 手动模式
   - [ ] iframe 模式
 - [ ] Queue
+  - [ ] RAW ~TODO
+  - [ ] ALPHA 
+- [ ] Result
+  - [x] RAW
+  - [ ] Linked Viewer

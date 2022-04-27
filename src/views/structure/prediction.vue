@@ -90,6 +90,7 @@
 <script lang="ts" setup>
 import { ref, } from 'vue'
 import { FormRules,ElMessage, FormInstance } from 'element-plus'
+// import type { FormRules, FormInstance } from 'element-plus'
 import { checkPredictStructureProjectName, submitPredictStruct } from '@/api/api'
 import { colorSeq, structurePredictRequest  } from '@/app-model/structure'
 import { useRouter } from 'vue-router'
