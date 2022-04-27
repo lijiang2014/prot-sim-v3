@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ElNotification } from 'element-plus'
+// import { ElNotification } from 'element-plus'
 // 无法在组件外使用 store
 // import {useStore} from '@/store'
 import store from '@/store'
@@ -39,8 +39,8 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    ElNotification.error(error + '，请联系管理员进行处理。')
-    return Promise.reject()
+    // ElNotification.error(error + '，请联系管理员进行处理。')
+    return Promise.reject(error)
   }
 )
 

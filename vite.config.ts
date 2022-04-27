@@ -1,6 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import * as path from 'path'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+const AutoImport = require('unplugin-auto-import/vite')
+const Components = require('unplugin-vue-components/vite')
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
+
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,9 +35,36 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    AutoImport({
+      resolvers: [ElementPlusResolver()],
+    }),
+    Components({
+      resolvers: [
+        ElementPlusResolver(),
+        IconsResolver({enabledCollections: ['ep']}),
+      ],
+    }),
+    Icons({autoInstall: true}),
   ],
   build: {
-    assetsDir: 'static'
+    assetsDir: 'static',
+    rollupOptions: {
+      output: {
+        // manualChunks(id) {
+        //   if (id.includes('node_modules')) {
+        //     // console.log(id, "====")
+        //     const bigPackage = 'element-plus'
+        //     if (id.toString().split('node_modules/')[1].split("/")[0].includes(bigPackage)) {
+        //       return bigPackage
+        //     }
+        //     return "wq"
+        //   }
+        // }
+        // manualChunks: {
+        //   'element-plus': ['element-plus'],
+        // }
+      }
+    },
   },
   publicDir: 'public'
 })
