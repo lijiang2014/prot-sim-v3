@@ -3,6 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import * as path from 'path'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
+import externalGlobals from 'rollup-plugin-external-globals'
+import commonjs from 'rollup-plugin-commonjs'
 const AutoImport = require('unplugin-auto-import/vite')
 const Components = require('unplugin-vue-components/vite')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
@@ -49,17 +51,40 @@ export default defineConfig({
   build: {
     assetsDir: 'static',
     rollupOptions: {
+      external: ['molstar/build/viewer/molstar' ,],
+      plugins: [
+        commonjs(),
+        externalGlobals({
+          'molstar/build/viewer/molstar': 'molstar/build/viewer/molstar'
+        }),
+      ],
       output: {
-        // manualChunks(id) {
-        //   if (id.includes('node_modules')) {
-        //     // console.log(id, "====")
-        //     const bigPackage = 'element-plus'
-        //     if (id.toString().split('node_modules/')[1].split("/")[0].includes(bigPackage)) {
-        //       return bigPackage
-        //     }
-        //     return "wq"
-        //   }
-        // }
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            console.log(id, "====")
+            const packageMap = {
+              'lodash-es': 'ep',
+              'element-plus': 'ep',
+              '@element-plus': 'ep',
+              '@ctrl': 'ep',
+              'axios': 'ep',
+              'vuex': 'ep', 
+              'vue-router': 'ep',
+              'vue-i18n': 'ep',
+              '@vue': 'ep', 
+            }
+            const bigPackage = 'lodash-es'
+            const pname = id.toString().split('node_modules/')[1].split("/")[0]
+            if (pname.includes(bigPackage)) {
+              return bigPackage
+            }
+            if (Object.keys(packageMap).indexOf(pname) >= 0) {
+              return packageMap[pname]
+            }
+            // return "others-" + pname
+            return "others"
+          }
+        }
         // manualChunks: {
         //   'element-plus': ['element-plus'],
         // }

@@ -10,8 +10,9 @@
   </div>
 </template>
 <script>
-import { Viewer } from "molstar/build/viewer/molstar";
-import "molstar/build/viewer/molstar.css";
+// import { Viewer } from "molstar";
+// import { Viewer } from "molstar/build/viewer/molstar";
+// import "molstar/build/viewer/molstar.css";
 
 export default {
   props: [ "src", "boxId"],
@@ -25,7 +26,7 @@ export default {
   methods: {
     molstar() {
       let filename = this.src;
-      var viewer = new Viewer(this.boxId, {
+      var viewer = new molstar.Viewer(this.boxId, {
         layoutIsExpanded: false,
         layoutShowControls: false,
         layoutShowRemoteState: false,

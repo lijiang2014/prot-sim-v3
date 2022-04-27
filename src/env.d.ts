@@ -8,3 +8,4 @@ declare module '*.vue' {
 }
 
 declare module 'molstar/build/viewer/molstar'
+// declare module 'molstar'
