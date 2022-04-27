@@ -107,11 +107,11 @@
 </template>
 
 <script lang="ts" setup>
-const cityOptions = ["TMalign"];
-import { useStore } from "@/store";
-import { reactive, ref } from "@vue/reactivity";
+import { useStore } from "@/store"
+import { reactive, ref } from "@vue/reactivity"
 import http from '../../api/http'
 import {ElMessage} from 'element-plus'
+const cityOptions = ["TMalign"]
 let ruleFormRef = ref();
 let uploadRef = ref();
 let store = useStore();

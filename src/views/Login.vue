@@ -108,6 +108,7 @@ import { sendEmailCode, login, LoginRequest } from "../api/api";
 import { RedirectLoginURL } from "../api/starlight";
 import { ref, reactive, watch, getCurrentInstance, onMounted, computed } from "vue";
 import { ElNotification as $Notify, ElMessage, FormRules } from "element-plus";
+// import type { FormRules } from "element-plus";
 import { useRouter } from "vue-router";
 import { utils } from "@/utils/utils";
 import LangSel from '../components/common/LangSel.vue'

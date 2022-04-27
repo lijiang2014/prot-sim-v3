@@ -42,7 +42,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   // Queue
   {
-    path: '/jobs', meta: { hidden: false, title: 'Jobs'},
+    path: '/queue', meta: { hidden: false, title: 'Jobs'},
     component: Layout,
     children:[
       // 结构预测
@@ -50,6 +50,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/queue/all',
         meta: { title: 'Jobs' },
         component: ()=>import('@/views/queue/all.vue')
+      },
+      {
+        path: '/queue/example',
+        meta: { title: 'Queue' },
+        component: ()=>import('@/views/jobs/index.vue')
       },
     ]
   },
@@ -142,6 +147,13 @@ export const routes: Array<RouteRecordRaw> = [
       // molstar
       { path: '/molstar', component: About},
     ]
+  },
+  // Debug Direct without layout
+  {
+    path: '/debug',
+    name: 'debug',
+    component: ()=>import('@/views/jobs/index.vue'),
+    meta: {title: 'hidden', hidden: true},
   },
   {
     path:'/404',
