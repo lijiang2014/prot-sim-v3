@@ -21,4 +21,8 @@ http.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+http.interceptors.request.use(config=>{
+  (config.headers as any).Authorization  = window.sessionStorage.getItem('token')
+  return config
+})
 export default http

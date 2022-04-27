@@ -48,6 +48,11 @@ export const routes: Array<RouteRecordRaw> = [
       // 结构预测
       { 
         path: '/queue/all',
+        meta: { title: 'Jobs' },
+        component: ()=>import('@/views/queue/all.vue')
+      },
+      {
+        path: '/queue/example',
         meta: { title: 'Queue' },
         component: ()=>import('@/views/jobs/index.vue')
       },
@@ -98,13 +103,28 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: '/later/graph-ppis/result/:id', 
         meta: { hidden: true, title: 'graph-ppis-result'},
-        component: () => import('@/views/app/graph-ppis/result.vue')
+        component: () => import('@/views/app/graph-ppis/result.vue'),
       },
-      // {
-      //   path: '/later/Contacts',
-      //   meta: { title: 'Contacts' },
-      //   component: About
-      // },
+      {
+        path: '/later/test/svg-msa',
+        meta: { title: 'svg-msa' },
+        component: ()=>import('@/views/test/svg-msa/index.vue')
+      },
+      {
+        path: '/later/test/tc',
+        meta: { title: 'tc' },
+        component: ()=>import('@/views/test/tc/index.vue')
+      },
+      {
+        path: '/later/test/pdbMolstar',
+        meta: { title: 'pdb-molstar' },
+        component: ()=>import('@/views/test/pdbMolstar/index.vue')
+      },
+      {
+        path: '/later/test/example',
+        meta: { title: 'example' },
+        component: ()=>import('@/views/test/example/index.vue')
+      },
     ]
   },
   // Hidden
