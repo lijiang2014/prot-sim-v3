@@ -9,6 +9,7 @@ import initStorePersistence from '@/store/persistence'
 
 import '@/assets/global.css'
 // import '@/assets/index.css'
+import 'element-plus/theme-chalk/el-message.css'
 
 import i18n from './i18n'
 

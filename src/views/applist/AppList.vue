@@ -6,7 +6,7 @@
         <template v-for="item in appList" :key="item.name">
           <div class="contain">
             <el-card class="card">
-              <div class="app" @click="appClick(item.path)">
+              <div class="app" @click="appClick(item.name)">
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
                   <div>{{ item.name }}</div>
@@ -31,7 +31,6 @@ type list = {
   title: string;
   icon: string;
   type: string;
-  path: string;
 };
 let props = defineProps<{ title: string; appList: list[] }>();
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
@@ -48,7 +47,13 @@ let btnClick = (num: number) => {
     transform.value += num;
   }
 };
-let appClick = (path: string) => {
+let appClick = (name: string) => {
+  let path=''
+  if(name=='structure-prediction' || name=='graph-ppis'){
+    path='/predict/structure'
+  }else if(name=='structure-similarity'){
+    path='/predict/structure/queue'
+  }
   router.push(path)
 }
 </script>

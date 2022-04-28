@@ -128,20 +128,20 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
  */
 export const getApps = (region?:string, params?: any,):Promise<any>  => {
   const mockApps = {spec: [
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-similarity',path:'/predict/structure/queue',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'graphppis',path:'/predict/structure',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-similarity',path:'/predict/structure/queue',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'graph-ppis',path:'/predict/structure',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-similarity',path:'/predict/structure/queue',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'graph-ppis',path:'/predict/structure',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'structure-prediction',path:'/predict/structure',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
-    {name: 'structure-similarity',path:'/predict/structure/queue',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
-    {name: 'graph-ppis',path:'/predict/structure',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-similarity',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'graph-ppis',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-similarity',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'graph-ppis',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-similarity',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'graph-ppis',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'structure-prediction',title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'base'},
+    {name: 'structure-similarity',title: '相似性比对',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
+    {name: 'graph-ppis',title: '位点预测',icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'base'},
   ], total: 100}
   params = Object.assign({region}, params)
   console.log('pp',params)

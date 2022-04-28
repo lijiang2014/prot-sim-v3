@@ -21,7 +21,6 @@ type list = {
   title: string;
   icon: string;
   type: string;
-  path: string;
 };
 let state = reactive<{
   appList: {
