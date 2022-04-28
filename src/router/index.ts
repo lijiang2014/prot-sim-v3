@@ -24,7 +24,7 @@ export const routes: Array<RouteRecordRaw> = [
   },
   // Structure Prediction
   {
-    path: '/app', meta: { hidden: false, title: '应用列表'},
+    path: '/app', meta: { hidden: false, title: 'appList'},
     component: Layout,
     children:[
       // 结构预测

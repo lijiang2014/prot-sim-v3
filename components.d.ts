@@ -12,6 +12,7 @@ declare module '@vue/runtime-core' {
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElColorPicker: typeof import('element-plus/es')['ElColorPicker']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDialog: typeof import('element-plus/es')['ElDialog']
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
@@ -41,11 +42,14 @@ declare module '@vue/runtime-core' {
     LangSel: typeof import('./src/components/common/LangSel.vue')['default']
     Link: typeof import('./src/components/Nav/Link.vue')['default']
     Loading: typeof import('element-plus/es')['ElLoadingDirective']
+    Login: typeof import('./src/components/Login/index.vue')['default']
     Nav: typeof import('./src/components/Nav/index.vue')['default']
     NavItem: typeof import('./src/components/Nav/nav-item.vue')['default']
     Notfound: typeof import('./src/components/notfound.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StarlightLoginWarm: typeof import('./src/components/Login/starlightLoginWarm.vue')['default']
+    StarlightLoginWarn: typeof import('./src/components/Login/starlightLoginWarn.vue')['default']
   }
 }
 
