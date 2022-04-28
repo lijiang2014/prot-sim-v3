@@ -28,6 +28,7 @@
 <script  lang="ts" >
 import path from 'path-browserify'
 import { defineComponent, PropType, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { RouteRecordRaw } from 'vue-router'
 import  Item  from './item.vue'
 import  AppLink  from './Link.vue'
@@ -67,7 +68,14 @@ export default defineComponent({
       return path.resolve(props.basePath, routePath)
     }
     // TODO  处理 多语言支持
-    const generateTitle = (title: string) => title
+    const i18n = useI18n()
+    const generateTitle = (title: string):string => {
+      const inkey = 'route.' + title
+      if (i18n.te(inkey)) {
+        return i18n.t(inkey)
+      }
+      return title
+    }
     const onlyOneChild = ref<RouteRecordRaw>()
     const hidden = ref(false)
     const noShowingChildren =  ref(false)

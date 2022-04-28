@@ -4,11 +4,7 @@
   <div class="filter-container">
     <div style="">
       <div class="filter-tool">
-        <div style="">
-        <input class="test"/>
-        <input class="test"/>
-        <input class="test"/>
-          <!-- <el-select class="test" #append>xxxx</el-select> 
+          <el-select class="test" #append>xxxx</el-select> 
           <el-input
               v-model="listQuery.field_lk_name"
               class="test"
@@ -22,8 +18,16 @@
               clearable
               style="width: 150px;"
               placeholder="作业名称"
-            />  -->
-        </div>
+            />
+          <el-button
+            v-waves
+            type="primary"
+            icon="el-icon-search"
+            :loading="listLoading"
+            @click="handleFilter"
+          >
+            {{ $t('table.search') }}
+          </el-button>
       </div>
     </div>
   </div>
@@ -46,9 +50,13 @@ const listQuery = ref({
         field_ge_created_at: 0,
         field_eq_status: []
 })
+const listLoading = ref(true)
 const handleClick = () => {
   store.commit("increment")
   console.log(store.state.count)
+}
+const handleFilter = () => {
+  
 }
 </script>
 
