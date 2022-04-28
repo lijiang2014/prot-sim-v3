@@ -4,7 +4,7 @@
       <el-row style="width:100%">
         <el-col :span="16">
           <el-input ref="usernameRef" prefix-icon="el-icon-user-solid" v-model="loginForm['username']"
-            :placeholder="$t('login.email')" autofocus style="ime-mode: disabled"></el-input>
+            :placeholder="$t('login.username')" autofocus style="ime-mode: disabled"></el-input>
         </el-col>
         <el-col :span="8">
           <el-button class="btn-code" type="primary" plain :disabled="!verifiedUsername" @click="toSendCode">
@@ -14,15 +14,15 @@
     </el-form-item>
     <el-form-item prop="password">
       <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"
-        :placeholder="$t('login.codePlaceholder')" :disabled="!codeSent"></el-input>
+        :placeholder="$t('login.password')" :disabled="!codeSent"></el-input>
     </el-form-item>
   </el-form>
-  <el-dialog v-model="starTip" title="确认信息" width="29%" center draggable top="30vh" append-to-body>
+  <el-dialog v-model="starTip" :title="$t('login.confirmTitle')" width="29%" center draggable top="30vh" append-to-body>
     <login-wran></login-wran>
     <template #footer>
       <span class="footer">
-        <el-button @click="starTip = false">Cancel</el-button>
-        <el-button type="primary" @click="jumpStar">Confirm</el-button>
+        <el-button @click="starTip = false">{{$t('login.cancel')}}</el-button>
+        <el-button type="primary" @click="jumpStar">{{$t('login.confirm')}}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -49,13 +49,14 @@ import { sendEmailCode, login, LoginRequest } from '@/api/api'
 import { RedirectLoginURL } from '@/api/starlight'
 import { useRoute, useRouter } from 'vue-router'
 import router from '@/router'
+import { useI18n } from 'vue-i18n'
 let emit = defineEmits<{
   (event: 'closeWindow'): void
 }>()
 let store = useStore()
 let $route = useRoute()
 let $router = useRouter()
-
+let $t=useI18n().t;
 const loginForm: LoginRequest = reactive({
   username: "",
   password: "",
@@ -64,12 +65,12 @@ const regExpEmail = /^\w{3,}(\.\w+)*@[A-z 0-9]+(\.[A-z]{2,5}){1,2}$/;
 const regExpCode = /^[0-9]{6}$/;
 const loginFormRules = reactive({
   username: [
-    { required: true, message: "请输入邮箱地址", trigger: "blur" },
-    { type: "email", message: "邮箱格式不正确", trigger: "blur" },
+    { required: true, message: $t('login.EmailOrTelephoneNeeded'), trigger: "blur" },
+    { type: "email", message: $t('login.EmailFormatError'), trigger: "blur" },
   ],
   password: [
-    { required: true, message: '请输入验证码', trigger: 'blur', },
-    { pattern: regExpCode, message: '验证码格式不对', trigger: 'blur' },]
+    { required: true, message: $t('login.VerificationCodeNeeded'), trigger: 'blur', },
+    { pattern: regExpCode, message: $t('login.wrongWord'), trigger: 'blur' },]
 } as FormRules)
 let verifiedUsername = ref(false)
 let verifiedCode = ref(false)
@@ -82,7 +83,7 @@ watch(() => loginForm, (newVal, oldVal) => {
 const toSendCode = async () => {
   const res = await sendEmailCode(loginForm.username).catch(err => {
     console.log("err:", err, "123@45.cn will pass the mock test!")
-    $Notify({ type: 'error', title: '验证码发送失败，请稍后再试', message: err })
+    $Notify({ type: 'error', title: $t('login.sendFail'), message: err })
   })
   if (!res) { return }
   console.log("mock sendCode 123456")
@@ -93,7 +94,7 @@ const submit = async () => {
   console.log("mock submit ", loginForm);
   const res = await login(loginForm).catch((err) => {
     console.log("err:", err, "123456 will pass the mock test!");
-    $Notify({ type: "error", title: "验证码校验出错", message: err });
+    $Notify({ type: "error", title: $t('login.checkWrong'), message: err });
   });
   if (!res) {
     return;
@@ -102,7 +103,7 @@ const submit = async () => {
   if (res.status === 200) {
     ElMessage({
       showClose: true,
-      message: "Login Success!",
+      message: $t('login.loginOk'),
       type: "success",
       center: true,
       duration: 1000,

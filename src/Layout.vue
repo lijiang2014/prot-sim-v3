@@ -20,7 +20,7 @@
       <!-- <el-footer>Footer</el-footer> -->
     </el-container>
     <!-- 登录弹窗 -->
-    <el-dialog v-model="loginWindowVisible" title="用户登录" width="30%" center draggable top="35vh">
+    <el-dialog v-model="loginWindowVisible" :title="$t('login.title')" width="30%" center draggable top="35vh">
       <login-form @closeWindow="closeWindow"></login-form>
     </el-dialog>
     <!-- #endregion -->

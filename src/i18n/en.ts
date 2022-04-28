@@ -218,7 +218,7 @@ export default {
     // username:'please enter email address',
     sendCode:'send code',
     // password:'please enter the verification code',
-    starLogin:'starlight platform Login',
+    starlightLogin:'starlight platform Login',
     quickEnter:'directly enter the home page',
     submit:'submit',
     confirm:'confirm',

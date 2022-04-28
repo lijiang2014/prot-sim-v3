@@ -40,8 +40,8 @@ export default {
     WeiXinLogin: '微信登录',
     Image: '公开镜像',
     //
-    getCode:'获取验证码',
-    starLogin:'星光平台登录',
+    sendCode:'获取验证码',
+    starlightLogin:'星光平台登录',
     quickEnter:'直接进入主页',
     submit:'提交',
     confirm:'确认',
