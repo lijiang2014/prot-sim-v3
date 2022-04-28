@@ -5,6 +5,8 @@ import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import externalGlobals from 'rollup-plugin-external-globals'
 import commonjs from 'rollup-plugin-commonjs'
+import vueI18n from '@intlify/vite-plugin-vue-i18n'
+
 const AutoImport = require('unplugin-auto-import/vite')
 const Components = require('unplugin-vue-components/vite')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
@@ -47,6 +49,10 @@ export default defineConfig({
       ],
     }),
     Icons({autoInstall: true}),
+    vueI18n({
+      compositionOnly: false,
+      include: path.resolve(__dirname, "src/i18n/**"),
+    }),
   ],
   build: {
     assetsDir: 'static',
