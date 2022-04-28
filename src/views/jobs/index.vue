@@ -4,7 +4,7 @@
   <div class="filter-container">
     <div style="">
       <div class="filter-tool">
-          <el-select class="test" #append>xxxx</el-select> 
+          <el-select class="test">xxxx</el-select> 
           <el-input
               v-model="listQuery.field_lk_name"
               class="test"
@@ -20,7 +20,6 @@
               placeholder="作业名称"
             />
           <el-button
-            v-waves
             type="primary"
             icon="el-icon-search"
             :loading="listLoading"
@@ -34,10 +33,10 @@
 </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useStore } from '@/store';
-const store = useStore()
-const count = ref(store.state.count)
+import { reactive, ref } from 'vue';
+// import { useStore } from '@/store';
+// const store = useStore()
+// // const count = ref(store.state.count)
 const listQuery = ref({
         page: 1,
         offset: 0,
@@ -51,12 +50,11 @@ const listQuery = ref({
         field_eq_status: []
 })
 const listLoading = ref(true)
-const handleClick = () => {
-  store.commit("increment")
-  console.log(store.state.count)
-}
-const handleFilter = () => {
-  
+// const handleClick = () => {
+//   store.commit("increment")
+//   console.log(store.state.count)
+// }
+const handleFilter = () => { 
 }
 </script>
 
