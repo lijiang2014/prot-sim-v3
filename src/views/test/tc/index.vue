@@ -1,14 +1,14 @@
 <template>
   <div>
-    <Dan-view
+    <db-view
       :src='`/public/model_1.pdb`'
       boxId='id1'
-    ></Dan-view>
+    ></db-view>
   </div>
 </template>
 
 <script lang="ts" setup>
-import DanView from "@/components/common/danView.vue";
+import dbView from "@/components/common/dbView.vue";
 </script>
 
 <style></style>

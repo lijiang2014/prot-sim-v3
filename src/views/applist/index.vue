@@ -41,7 +41,7 @@ onMounted(async () => {
 <style lang="less" scoped>
 .welcome {
   height: 3000px;
-  padding: 50px 10%;
+  padding: 20px 10%;
   min-width: 1000px;
 }
 </style>

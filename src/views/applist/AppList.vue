@@ -10,7 +10,6 @@
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
                   <div>{{ item.name }}</div>
-                  <el-button type="primary">使用</el-button>
                 </div>
               </div>
             </el-card>
@@ -68,7 +67,7 @@ let appClick = (path: string) => {
 }
 
 .contain {
-  height: 400px;
+  height: 250px;
   width: 24%;
   margin-right: 1.33%;
   flex-shrink: 0;
