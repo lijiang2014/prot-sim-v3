@@ -231,6 +231,8 @@ export default {
     sendFail:'Failed to send verification code. Please try again later',
     checkWrong:'Verification code verification error',
     loginOk:'Login succeeded',
+    EmailOrTelephoneNeeded:'Mailbox cannot be empty',
+    VerificationCodeNeeded:'Verification code cannot be empty',
   },
   register: {
     EmptyEmail: 'Email can not be empty',
