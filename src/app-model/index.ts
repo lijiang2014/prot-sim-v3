@@ -36,6 +36,25 @@ export interface jobMeta {
 }
 
 
+export type ApiResponseSpec<Type> = {
+  spec: Type,
+}
+
+export type ApiResponseItems<Type> = {
+  spec: Type[],
+  total?: number,
+}
+
+export type ApiResponse<Type> = ApiResponseSpec<Type> | ApiResponseItems<Type>
+
+export interface AppMeta {
+  name: string,
+  path?: string,
+  title: string, 
+  icon?: string,
+  type: string,
+}
+
 export const jobMetaExample = {
   "id": 238876, 
   "user_name": "nscc-gz_jiangli", 

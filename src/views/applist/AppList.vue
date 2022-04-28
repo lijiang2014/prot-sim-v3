@@ -1,12 +1,12 @@
 <template>
   <div>
-    <list-head :title="title" @btnClick="btnClick"></list-head>
+    <list-head :title="transName(title)" @btnClick="btnClick"></list-head>
     <div class="box">
       <div class="app-list" :style="`transform:translateX(-${transform * (24 + 1.3)}%)`">
-        <template v-for="item in appList" :key="item.name">
+        <template v-for="item in list" :key="item.name">
           <div class="contain">
             <el-card class="card">
-              <div class="app" @click="appClick(item.path)">
+              <div class="app" @click="appClick(item.path!)">
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
                   <div>{{ item.name }}</div>
@@ -21,28 +21,25 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from "@vue/reactivity";
-import { computed, onMounted, watch, watchEffect } from "@vue/runtime-core";
+import { getApps } from "@/api/api";
+import { AppMeta } from "@/app-model";
+import { trans } from "@/i18n";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import listHead from "./ListHead.vue";
 let router = useRouter()
-type list = {
-  name: string;
-  title: string;
-  icon: string;
-  type: string;
-  path: string;
-};
-let props = defineProps<{ title: string; appList: list[] }>();
+let prop = defineProps<{ title: string; }>();
+let list = ref<AppMeta[]>([])
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
+const transName = (s:string):string =>  {
+  return trans(s, 'route.')
+}
+onMounted(async () => {
+  list.value = (await getApps(prop.title, { mock: '1' })).spec  
+})
 let btnClick = (num: number) => {
-  let n = 0;
-  for (let item of props.appList) {
-    if (item.title == props.title) {
-      n++;
-    }
-  }
+  let n = list.value.length;
   if (transform.value + num >= n - 3) return;
   if (transform.value + num >= 0) {
     transform.value += num;

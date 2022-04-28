@@ -14,7 +14,7 @@ body,
   font-family: Arial, Helvetica, sans-serif;
   font-size: calc(11px + 1vmin);
 }
-.el-table,
+/* .el-table,
 .container,
 .el-form {
   font-family: Arial, Helvetica, sans-serif;
@@ -52,5 +52,5 @@ body,
   font-family: Arial, Helvetica, sans-serif;
   font-size: calc(8px + 1vmin);
   color: grey;
-}
+} */
 </style>
