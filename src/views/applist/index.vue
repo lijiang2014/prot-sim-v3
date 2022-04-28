@@ -1,13 +1,13 @@
 <template>
   <div class="welcome">
       <div>
-        <App-list :title="'结构预测'" :appList="state.appList"></App-list>
+        <app-list :title="'结构预测'" :appList="state.appList"></app-list>
       </div>
       <div>
-        <App-list :title="'相似性比对'" :appList="state.appList"></App-list>
+        <app-list :title="'相似性比对'" :appList="state.appList"></app-list>
       </div>
       <div>
-        <App-list :title="'位点预测'" :appList="state.appList"></App-list>
+        <app-list :title="'位点预测'" :appList="state.appList"></app-list>
       </div>
   </div>
 </template>
@@ -20,7 +20,7 @@ let state=reactive({
 })
 getApps('1',{mock:1}).then((res)=>{
   state.appList=res.spec
-  console.log(res.spec)
+  // console.log(res.spec)
 })
 </script>
 <style lang="less" scoped>

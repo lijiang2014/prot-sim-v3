@@ -1,10 +1,7 @@
 <template>
-  <div class="box">
     <el-dropdown @command='switching'>
       <span class="el-dropdown-link">
-        语言切换
-        <br>
-        <span class="title">Language switching</span>
+        En/中
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -16,7 +13,6 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-  </div>
 </template>
 
 <script lang='ts' setup>
@@ -32,8 +28,5 @@ let switching=(lang:string)=>{
 <style>
 .el-dropdown-link {
   color: #409eff ;
-}
-.title{
-    font-size: 10px;
 }
 </style>
