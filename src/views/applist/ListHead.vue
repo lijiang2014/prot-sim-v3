@@ -1,6 +1,6 @@
 <template>
   <div class="list-head">
-    <el-row>
+    <el-row :gutter="20">
       <el-col :span='1'>
         <div class="line"></div>
       </el-col>
@@ -14,10 +14,10 @@
       </el-col>
       <el-col :span='2'>
         <div class="next">
-        <el-button size='small' @click="emit('btnClick',-1)">
+        <el-button size='small' @click="emit('btnClick',-1)" class="btn">
           <el-icon><arrow-left-bold /></el-icon>
         </el-button>
-        <el-button size='small' @click="emit('btnClick',1)">
+        <el-button size='small' @click="emit('btnClick',1)" class="btn">
           <el-icon><arrow-right-bold /></el-icon>
         </el-button>
         </div>
@@ -46,8 +46,12 @@ let emit=defineEmits<{
 .next{
   display: flex;
   justify-content: flex-end;
+  width: 100%;
 }
 .title{
   font-size: 20px;
+}
+.btn{
+  width: 100%;
 }
 </style>

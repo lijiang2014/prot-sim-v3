@@ -3,7 +3,6 @@
     <el-row
       :gutter="20"
       class="searchPageBar"
-      type="flex"
       justify="space-between"
     >
       <!-- 搜索框 -->
@@ -41,8 +40,8 @@
       </el-col>
 
       <!-- 选择分类按钮 -->
-      <el-col :span="12">
-        <el-row :gutter="50" type="flex" justify="center">
+      <el-col :span="11" :pull='1'>
+        <el-row justify="end">
           <el-button plain @click="queue()">All</el-button>
           <el-button type="primary" plain @click="queryJob('running_date')"
             >Active</el-button
@@ -140,7 +139,7 @@
       </el-col>
     </el-row>
     <!--分页条 -->
-    <el-row :gutter="40" justify="end">
+    <el-row justify="end">
       <!-- 分页 -->
       <el-col>
         <div class="pagination">
@@ -188,7 +187,7 @@ let searchType_show = () => {
   return state.searchType === "job_name" ? "Job Name" : "Email Address";
 };
 
-let queryJob = (searchType:any) => {
+let queryJob = (searchType:string) => {
   state.loading = true;
   http
     .get("api/structure/search/", {
@@ -220,6 +219,7 @@ let searchJob = () => {
       },
     })
     .then((res:any) => {
+      console.log(res)
       state.tableKey = state.searchType;
       state.tableData = JSON.parse(res);
     });
@@ -228,7 +228,7 @@ let searchJob = () => {
 let clickRow = (row:any) => {
   console.log(row);
 };
-let toResult = (proj_name:any) => {
+let toResult = (proj_name:string) => {
   $router.push({
     path: "/predict/structure/result/",
     query: { proj_name: proj_name },
@@ -257,12 +257,12 @@ let tableRowClassName = ({ row, rowIndex }:any) => {
   return "";
 };
 //每页下拉显示数据
-let handleSizeChange = function (size:any) {
+let handleSizeChange = function (size:number) {
   state.pagesize = size;
   /*console.log(state.pagesize) */
 };
 //点击第几页
-let handleCurrentChange = function (currentPage:any) {
+let handleCurrentChange = function (currentPage:number) {
   state.currentPage = currentPage;
   /*console.log(state.currentPage) */
 };
