@@ -25,8 +25,10 @@ export interface result extends jobMeta {
 }
 
 export interface jobMeta {
+  "id": number,
   "name": string,
   "app_name": string,
+  "cluster_name"?: string,
   "cluster_job_id": string, 
   "status": number, 
   "created_at"?: string, 

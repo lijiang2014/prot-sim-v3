@@ -67,7 +67,6 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            console.log(id, "====")
             const packageMap = {
               'lodash-es': 'ep',
               'element-plus': 'ep',
@@ -87,6 +86,7 @@ export default defineConfig({
             if (Object.keys(packageMap).indexOf(pname) >= 0) {
               return packageMap[pname]
             }
+            console.log(id, "====")
             // return "others-" + pname
             return "others"
           }

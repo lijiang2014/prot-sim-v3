@@ -1,7 +1,7 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, AppMeta, AppSpec, OutputMap, result as JobResult, } from '@/app-model'
+import type { ApiResponseItems, AppMeta, AppSpec, jobMeta, OutputMap, result as JobResult, } from '@/app-model'
 import  { jobMetaExample } from '@/app-model'
 import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
@@ -285,6 +285,22 @@ export const getAppSpec = (app:string,params?: any):Promise<AppSpec> => {
     return new Promise((resolve, reject) => {
       setTimeout(()=>{
         resolve(mockAppSpec)
+      }, mockQueryTime)
+    })
+  }
+  return new Promise((resolve, reject) => {reject("Not Ok Yet")})
+}
+
+export const getJobs = (params?: any):Promise<ApiResponseItems<jobMeta>> => {
+  const mockData = [
+    jobMetaExample,
+    jobMetaExample,
+    jobMetaExample,
+  ]
+  if (params && params.mock === '1') {
+    return new Promise((resolve, reject) => {
+      setTimeout(()=>{
+        resolve({spec: mockData, total: 1000})
       }, mockQueryTime)
     })
   }
