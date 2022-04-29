@@ -3,6 +3,8 @@ export default {
     Home: 'HOME',
     appList: 'Application List',
     structurePrediction: 'Structure Prediction',
+    structureSimilarly: 'Structure Similarly',
+    sitePrediction: 'Site Prediction',
     dashboard: 'Dashboard',
     documentation: 'Documentation',
     guide: 'Guide',

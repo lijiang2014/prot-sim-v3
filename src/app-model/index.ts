@@ -36,6 +36,57 @@ export interface jobMeta {
 }
 
 
+export type ApiResponseSpec<Type> = {
+  spec: Type,
+}
+
+export type ApiResponseItems<Type> = {
+  spec: Type[],
+  total?: number,
+}
+
+export type ApiResponse<Type> = ApiResponseSpec<Type> | ApiResponseItems<Type>
+
+export interface AppMeta {
+  name: string,
+  path?: string,
+  title: string, 
+  icon?: string,
+  type: string,
+}
+
+export interface AppWidgets {
+  id: string,
+  type: "container" | "info" | "text" | "rfbPath" | "list",
+  name: "",
+  label: string,
+  attr: AppWidgetAttr ,
+  data: AppWidgets[],  
+}
+
+export interface AppWidgetAttr {
+  visible?: true,
+  default?: any,
+  placeholder?: "",
+  required?: boolean,
+  disabled?: boolean,
+  rules?: any,
+  options?: AppWidgetOption[]
+}
+
+export interface AppWidgetOption {
+  label: string,
+  value: string,
+  number?: boolean,
+  disabled?: boolean,
+  selected?: boolean,
+}
+
+
+export interface AppSpec extends AppMeta {
+  render: any,
+}
+
 export const jobMetaExample = {
   "id": 238876, 
   "user_name": "nscc-gz_jiangli", 

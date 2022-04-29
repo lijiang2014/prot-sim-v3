@@ -45,7 +45,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/queue', meta: { hidden: false, title: 'Jobs'},
     component: Layout,
     children:[
-      // 结构预测
       { 
         path: '/queue/all',
         meta: { title: 'Jobs' },
@@ -54,7 +53,7 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: '/queue/example',
         meta: { title: 'Queue' },
-        component: ()=>import('@/views/jobs/index.vue')
+        component: ()=>import('@/views/jobs/index.vue'),
       },
     ]
   },
