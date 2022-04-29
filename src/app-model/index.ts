@@ -61,7 +61,9 @@ export interface AppWidgets {
   name: "",
   label: string,
   attr: AppWidgetAttr ,
-  data: AppWidgets[],  
+  data: AppWidgets[],
+  width:number,
+  offset:number,  
 }
 
 export interface AppWidgetAttr {
@@ -84,7 +86,7 @@ export interface AppWidgetOption {
 
 
 export interface AppSpec extends AppMeta {
-  render: any,
+  render: AppWidgets,
 }
 
 export const jobMetaExample = {
