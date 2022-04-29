@@ -6,7 +6,7 @@
         <template v-for="item in list" :key="item.name">
           <div class="contain">
             <el-card class="card">
-              <div class="app" @click="appClick(item.path!)">
+              <div class="app" @click="appClick(item.name)">
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
                   <div>{{ item.name }}</div>
@@ -45,7 +45,13 @@ let btnClick = (num: number) => {
     transform.value += num;
   }
 };
-let appClick = (path: string) => {
+let appClick = (name: string) => {
+  let path=''
+  if(name=='structure-prediction' || name=='graph-ppis'){
+    path='/predict/structure'
+  }else if(name=='structure-similarity'){
+    path='/predict/structure/queue'
+  }
   router.push(path)
 }
 </script>
