@@ -55,6 +55,38 @@ export interface AppMeta {
   type: string,
 }
 
+export interface AppWidgets {
+  id: string,
+  type: "container" | "info" | "text" | "rfbPath" | "list",
+  name: "",
+  label: string,
+  attr: AppWidgetAttr ,
+  data: AppWidgets[],  
+}
+
+export interface AppWidgetAttr {
+  visible?: true,
+  default?: any,
+  placeholder?: "",
+  required?: boolean,
+  disabled?: boolean,
+  rules?: any,
+  options?: AppWidgetOption[]
+}
+
+export interface AppWidgetOption {
+  label: string,
+  value: string,
+  number?: boolean,
+  disabled?: boolean,
+  selected?: boolean,
+}
+
+
+export interface AppSpec extends AppMeta {
+  render: any,
+}
+
 export const jobMetaExample = {
   "id": 238876, 
   "user_name": "nscc-gz_jiangli", 
