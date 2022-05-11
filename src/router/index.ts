@@ -124,6 +124,11 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'example' },
         component: ()=>import('@/views/test/example/index.vue')
       },
+      {
+        path: '/later/test/myform',
+        meta: { title: '表单' },
+        component: ()=>import('@/views/test/myform/index.vue')
+      },
     ]
   },
   // Hidden
