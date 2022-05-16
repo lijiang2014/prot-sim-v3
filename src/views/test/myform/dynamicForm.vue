@@ -1,12 +1,11 @@
 <template>
   <div class="myform">
-    <!-- {{ message }} -->
-    <!-- {{ props }} -->
     <el-row>
       <el-col :span="formData?.render.width" :offset="formData?.render.offset">
         <el-form label-position="top" label-width="120px" :model="message" ref="bottomFormRef">
 
-          <el-form-item v-for="(item, index) in formData?.render.data" :label="item.label" :prop="item.id">
+          <el-form-item v-for="(item, index) in formData?.render.data" :label="item.label" :prop="item.id"
+            :key="item.id">
             <el-row v-if="item.attr.visible" class="item-row">
               <el-col :span="item.width" :offset="item.offset">
                 <div v-if="item.type === 'info'">
@@ -19,9 +18,9 @@
                 </div>
                 <div v-if="item.type === 'rfbPath'">
                   <el-upload ref="uploadRef" :auto-upload="false" action="#" :limit="1"
-                    :on-exceed="(...e) => handleExceed(e, item.id)"
                     :before-upload="(...e) => beforePDBUpload(...e, item.id)"
-                    :on-change="(...e) => handleChange(...e, item.id)" accept=".pdb">
+                    :on-change="(...e) => handleChange(...e, item.id)" accept=".pdb"
+                    :on-exceed="(...e) => handleExceed(...e, item.id)">
                     <template #trigger>
                       <el-button type="primary">select file</el-button>
                     </template>
@@ -109,30 +108,12 @@ let message = ref<any>({
 
 let uploadRef = ref<UploadInstance[]>()
 let initData = {
-  jobname:""
+  jobname: ""
 }
-// onMounted(async () => {
-//   let res = await getAppSpec('graph-ppis').catch((err: any) => console.log(err))
-//   if (!res) return
-//   formData.value = res
-//   function fun(data: any) {
-//     if (data.attr?.default) {
-//       if (data.type !== 'info') {
-//         message.value[data.id] = data.attr.default
-//       }
-//     }
-//     if (data.data.length) {
-//       for (let i of data.data) {
-//         fun(i)
-//       }
-//     }
-//   }
-//   fun(res.render)   //加入默认值
-//   initData = JSON.parse(JSON.stringify(message.value))
-// })
+let curFile=[]
 
-watch(()=>props.formData,(newVal,oldVal)=>{
-  if(!newVal)return 
+watch(() => props.formData, (newVal, oldVal) => {
+  if (!newVal) return
   formData.value = newVal
   function fun(data: any) {
     if (data.attr?.default) {
@@ -148,15 +129,14 @@ watch(()=>props.formData,(newVal,oldVal)=>{
   }
   fun(newVal.render)   //加入默认值
   initData = JSON.parse(JSON.stringify(message.value))
-  initData.jobname=runtimeForm.value.jobname
+  initData.jobname = runtimeForm.value.jobname
 })
 
-const handleExceed: UploadProps['onExceed'] | any = (files: UploadRawFile[], id: string) => {
+const handleExceed: UploadProps['onExceed'] | any = (uploadFile: UploadRawFile,files: UploadRawFile[], id: string) => {
   let num: number = Number(id.match(/\d/g)?.join('')) - 1   //根据id取得ref索引
-  uploadRef.value![num].clearFiles()
-  const file = files[0] as UploadRawFile
-  file.uid = genFileId()
-  // uploadRef.value!.handleStart(file)
+  // // const file = files[0] as UploadRawFile
+  // // file.uid = genFileId()
+  console.log('超出限制',files,uploadFile,id)
 }
 
 const beforePDBUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFile, id: string) => {
@@ -168,6 +148,7 @@ const beforePDBUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFi
     ElMessage.error('File size can not exceed 2MB!')
     return false
   }
+  console.log('上传前')
   return false
 }
 
@@ -178,8 +159,8 @@ const handleChange: UploadProps['onChange'] | any = (uploadFile: UploadFile, upl
     }
     message.value.pdb![id].clientFile = uploadFile.raw!
   }
+  console.log(uploadFiles)
 }
-
 const submitUpload = (id: string) => {
   let num: number = Number(id.match(/\d/g)?.join('')) - 1; //根据id取得ref索引
   uploadRef.value![num].submit()
@@ -236,11 +217,10 @@ const submitForm = async () => {
 }
 
 const resetForm = () => {
-  runtimeForm.value.jobname=initData.jobname
+  runtimeForm.value.jobname = initData.jobname
   message.value = initData
   initData = JSON.parse(JSON.stringify(message.value))
-  initData.jobname=runtimeForm.value.jobname
-  console.log(message)
+  initData.jobname = runtimeForm.value.jobname
   for (let item of uploadRef.value!) {
     item.clearFiles()
   }
