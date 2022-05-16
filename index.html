@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@2.4.1/build/viewer/molstar.css"/>
-    <title>Vite App</title>
-  </head>
-  <body>
-    <script src="https://cdn.jsdelivr.net/npm/molstar@2.4.1/build/viewer/molstar.js"></script>
-    <script type="text/javascript" src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-plugin-1.2.1.js"></script>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/molstar@2.4.1/build/viewer/molstar.css" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/molstar@2.4.1/build/viewer/molstar.js"></script> -->
+  <script src="/molstar.js"></script>
+  <!-- <script type="text/javascript"
+    src="https://www.ebi.ac.uk/pdbe/pdb-component-library/js/pdbe-molstar-plugin-1.2.1.js"></script> -->
+  <script type="text/javascript" src="/pdbe-molstar-plugin-1.2.1.js"></script>
+  <!-- <script src=//cdn.bio.sh/msa/1.0/msa.min.gz.js></script> -->
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

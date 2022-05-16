@@ -5,8 +5,11 @@ export interface State {
   count: number
   user: {
     token: string
+    defaultFS: string
+    name: string
+    home: string
   }
-  isLogin:boolean
+  isLogin: boolean
 }
 
 export const key: InjectionKey<Store<State>> = Symbol()
@@ -17,23 +20,26 @@ export const store = createStore<State>({
       count: 0,
       isLogin: false,
       user: {
-        token: ''
+        token: '',
+        defaultFS: 'GPUFS',
+        home: '/GPUFS/nscc-gz_jiangli',
+        name: 'nscc-gz_jiangli'
       }
     }
   },
   mutations: {
-    loginChange(state,payload){
-      state.isLogin=payload      
+    loginChange(state, payload) {
+      state.isLogin = payload
     },
-    setToken(state,token:string){
-      state.user.token=token      
+    setToken(state, token: string) {
+      state.user.token = token
     },
-    increment(state){
-      state.count++      
+    increment(state) {
+      state.count++
     }
   }
 })
-export function useStore () {
+export function useStore() {
   return baseUseStore(key)
 }
 
