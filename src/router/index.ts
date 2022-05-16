@@ -6,16 +6,16 @@ export const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    meta: { hidden: true, title: 'login'},
+    meta: { hidden: true, title: 'login' },
     component: () =>
-    import(/* webpackChunkName: "Login" */ '../views/Login.vue'), 
+      import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
   },
   {
-    path: '/', redirect: '/welcome', meta: { hidden: false, title: 'Home'},
+    path: '/', redirect: '/welcome', meta: { hidden: false, title: 'Home' },
     component: Layout,
-    children:[
+    children: [
       // 结构预测
-      { 
+      {
         path: '/welcome',
         meta: { title: 'Home' },
         component: () => import('@/views/applist/index.vue')
@@ -24,61 +24,61 @@ export const routes: Array<RouteRecordRaw> = [
   },
   // Structure Prediction
   {
-    path: '/app', meta: { hidden: false, title: 'appList'},
+    path: '/app', meta: { hidden: false, title: 'appList' },
     component: Layout,
-    children:[
+    children: [
       // 结构预测
-      { 
+      {
         path: '/predict/structure/',
         meta: { title: '结构预测' },
         component: () => import('@/views/structure/prediction.vue')
       },
-      { 
+      {
         path: '/predict/structure/queue/',
         meta: { title: '相似性计算' },
-        component: ()=>import('@/views/similarity/structureSimilarity.vue')
+        component: () => import('@/views/similarity/structureSimilarity.vue')
       },
     ]
   },
   // Queue
   {
-    path: '/queue', meta: { hidden: false, title: 'Jobs'},
+    path: '/queue', meta: { hidden: false, title: 'Jobs' },
     component: Layout,
-    children:[
-      { 
+    children: [
+      {
         path: '/queue/all',
         meta: { title: 'Jobs' },
-        component: ()=>import('@/views/queue/all.vue')
+        component: () => import('@/views/queue/all.vue')
       },
       {
         path: '/queue/example',
         meta: { title: 'Queue' },
-        component: ()=>import('@/views/jobs/index.vue'),
+        component: () => import('@/views/jobs/index.vue'),
       },
     ]
   },
   // BLAST
   {
-    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'BLAST'},
+    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'BLAST' },
     component: Layout,
-    children:[
+    children: [
       // 序列相似性 blast
-      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'BLAST'}},
+      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'BLAST' } },
     ]
   },
   // About
   {
-    path: '/about', redirect: '/about/about', meta: { hidden: false, title: 'About'},
+    path: '/about', redirect: '/about/about', meta: { hidden: false, title: 'About' },
     component: Layout,
-    children:[
-      { path: '/about/about', component: About, meta: { hidden: false, title: 'About'}},
+    children: [
+      { path: '/about/about', component: About, meta: { hidden: false, title: 'About' } },
     ]
   },
   // ...
   {
-    path: '/later', meta: { hidden: false, title: 'Tests'},
+    path: '/later', meta: { hidden: false, title: 'Tests' },
     component: Layout,
-    children:[
+    children: [
       // { 
       //   path: '/later/dataset',
       //   meta: { title: 'dataset' },
@@ -89,45 +89,55 @@ export const routes: Array<RouteRecordRaw> = [
       //   meta: { title: 'Papers' },
       //   component: About
       // },
-      { 
-        path: '/later/graph-ppis', 
-        meta: { hidden: false, title: 'graph-ppis'},
+      {
+        path: '/later/graph-ppis',
+        meta: { hidden: false, title: 'graph-ppis' },
         component: () => import('@/views/app/graph-ppis/form.vue')
       },
       {
-        path: '/later/graph-ppis/result/example', 
-        meta: { hidden: false, title: 'graph-ppis-result'},
+        path: '/later/graph-ppis/result/example', name: 'jobSpecResult',
+        meta: { hidden: false, title: 'graph-ppis-result' },
         component: () => import('@/views/app/graph-ppis/result.vue')
       },
       {
-        path: '/later/graph-ppis/result/:id', 
-        meta: { hidden: true, title: 'graph-ppis-result'},
+        path: '/later/graph-ppis/result/graphppis', name: 'result-graphppis',
+        meta: { hidden: true, title: 'graph-ppis-result' },
+        component: () => import('@/views/app/graph-ppis/result.vue')
+      },
+      {
+        path: '/later/graph-ppis/result/:id',
+        meta: { hidden: true, title: 'graph-ppis-result' },
         component: () => import('@/views/app/graph-ppis/result.vue'),
       },
       {
-        path: '/later/test/svg-msa',
-        meta: { title: 'svg-msa' },
-        component: ()=>import('@/views/test/svg-msa/index.vue')
+        path: '/later/wrf',
+        meta: { title: 'wrf' },
+        component: () => import('@/components/WebRemoteFinder/input.vue'),
       },
+      // {
+      //   path: '/later/test/svg-msa',
+      //   meta: { title: 'svg-msa' },
+      //   component: ()=>import('@/views/test/svg-msa/index.vue')
+      // },
       {
         path: '/later/test/tc',
         meta: { title: 'tc' },
-        component: ()=>import('@/views/test/tc/index.vue')
+        component: () => import('@/views/test/tc/index.vue')
       },
       {
         path: '/later/test/pdbMolstar',
         meta: { title: 'pdb-molstar' },
-        component: ()=>import('@/views/test/pdbMolstar/index.vue')
+        component: () => import('@/views/test/pdbMolstar/index.vue')
       },
       {
         path: '/later/test/example',
         meta: { title: 'example' },
-        component: ()=>import('@/views/test/example/index.vue')
+        component: () => import('@/views/test/example/index.vue')
       },
       {
         path: '/later/test/myform',
         meta: { title: '表单' },
-        component: ()=>import('@/views/test/myform/index.vue')
+        component: () => import('@/views/test/myform/index.vue')
       },
     ]
   },
@@ -136,33 +146,34 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/hide',
     name: 'Hide',
     component: Layout,
-    meta: {title: 'hidden', hidden: true},
+    meta: { title: 'hidden', hidden: true },
     children: [
       // 测试页面
       // 队列
-      { path: '/queue', component: About},
+      { path: '/queue', component: About },
       // Help
-      { path: '/help', component: About, 
+      {
+        path: '/help', component: About,
         children: [
-          { path: '/sequence/blast/doc/psiblast', component: About},
-          { path: '/sequence/blast/doc/jackhmmer', component: About},          
+          { path: '/sequence/blast/doc/psiblast', component: About },
+          { path: '/sequence/blast/doc/jackhmmer', component: About },
         ]
       },
       // molstar
-      { path: '/molstar', component: About},
+      { path: '/molstar', component: About },
     ]
   },
   // Debug Direct without layout
   {
     path: '/debug',
     name: 'debug',
-    component: ()=>import('@/views/jobs/index.vue'),
-    meta: {title: 'hidden', hidden: true},
+    component: () => import('@/views/jobs/index.vue'),
+    meta: { title: 'hidden', hidden: true },
   },
   {
-    path:'/404',
-    name:'404',
-    component:()=>import('@/components/notfound.vue'),
+    path: '/404',
+    name: '404',
+    component: () => import('@/components/notfound.vue'),
   },
 ]
 const router = createRouter({

@@ -28,8 +28,8 @@
             v-model="listQuery.field_ge_created_at"
             class="filter-x"
             type="datetime"
-            placeholder="提交时间From (默认显示近2个月记录)"
-            style="width: 300px;"
+            placeholder="提交时间From"
+            style="width: 150px;"
           />
         </el-tooltip>
         <el-date-picker
@@ -38,7 +38,7 @@
           v-model="listQuery.field_le_created_at"
           type="datetime"
           placeholder="提交时间To"
-          style="width: 200px;"
+          style="width: 150px;"
         /> 
         <el-button
           type="primary"
@@ -51,24 +51,172 @@
         </el-button>
     </div>
   </div>
+  <div class="data-form">
+    <el-table
+      key="0"
+      v-loading="listLoading"
+      :data="list"
+      stripe
+      border
+      fit
+      highlight-current-row
+      style="width: 100%"
+      >
+        
+        <el-table-column min-width="170px" label="名称" align="center">
+          <template #default="scope">
+            <div class="span-monospace">
+              <span v-if="scope.row.name">
+              {{ scope.row.name }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="170px" label="ID" align="center">
+          <template #default="scope">
+            <div class="span-monospace">
+              <span v-if="scope.row.name">
+              {{ scope.row.cluster_job_id }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column min-width="170px" label="应用" align="center">
+          <template #default="scope">
+            <div class="span-monospace">
+              <span v-if="scope.row.app_name">
+              {{ scope.row.app_name }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="提交时间"
+          min-width="200px"
+        >
+          <template #default="scope">
+            <div class="span-monospace">
+              <span
+                v-if="scope.row.created_at"
+              >
+              {{  parseTime(scope.row.created_at, '{y}-{m}-{d} {h}:{i}:{s}' ) }}
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="开始时间" min-width="170px">
+          <template #default="scope">
+            <div class="span-monospace">
+              <span v-if="scope.row.started_at"> {{  parseTime(scope.row.started_at, '{y}-{m}-{d} {h}:{i}:{s}' ) }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center" label="结束时间" min-width="170px">
+          <template #default="scope">
+            <div class="span-monospace">
+              <span v-if="scope.row.end_at"> {{  parseTime(scope.row.end_at, '{y}-{m}-{d} {h}:{i}:{s}' ) }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="center"  class-name="status-col" label="运行状态" min-width="100px">
+          <template #default="scope">
+            <el-tag>{{  scope.row.status  }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          :label="$t('table.actions')"
+          width="80"
+          fixed="right"
+          class-name="small-padding"
+        >
+          <template #default="scope">
+            <el-button
+              v-if="(scope.row.type!==1&&scope.row.cluster_job_id)||(scope.row.type===1&&scope.row.uuid)"
+              type="primary"
+              size="small"
+              icon="el-icon-view"
+              plain
+              @click="viewSpecJob(scope.row)"
+            >
+              查看
+            </el-button>
+          </template>
+        </el-table-column>
+    </el-table>
+  </div>
+  <div class="pagination-container">
+    <el-pagination
+      background
+      :current-page="listQuery.page"
+      :page-sizes="[10,20,30, 50]"
+      :page-size="listQuery.limit"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      :loading="listLoading"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    >
+    </el-pagination>
+  </div>
 </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { jobMeta } from '@/app-model';
+import { ref,onMounted } from 'vue';
+import { parseTime } from '@/utils';
+import { getJobs } from '@/api/api';
+import { useRouter } from 'vue-router';
+
+const $router = useRouter()
+
 const listQuery = ref({
-        page: 1,
-        offset: 0,
-        limit: 10,
-        field_lk_name: '',
-        field_eq_cluster_job_id: '',
-        // field_eq_user_name: '',
-        // field_eq_group_name: '',
-        field_ge_created_at: 0,
-        field_le_created_at: 0,
-        field_eq_status: []
+  page: 1,
+  offset: 0,
+  limit: 10,
+  field_lk_name: '',
+  field_eq_cluster_job_id: '',
+  field_ge_created_at: 0,
+  field_le_created_at: 0,
+  field_eq_status: []
 })
-const listLoading = ref(true)
-const handleFilter = () => { 
+const list =ref<jobMeta[]>([])
+const total =ref(0)
+const listLoading = ref(false)
+const handleFilter = () => {
+  listQuery.value.page = 1
+  getList()
+}
+const getList = async () => {
+  listLoading.value = true
+  let ret = await getJobs({mock:'1'}).catch(err => {
+    console.log(err)
+  })
+  listLoading.value = false
+  if (!ret) {
+    return
+  }
+  console.log(ret)
+  list.value = ret.spec
+  total.value = ret.total || 0
+}
+onMounted(()  => {
+  getList()
+})
+const handleSizeChange = (val:number) =>{
+  listQuery.value.limit = val
+  getList()
+}
+const handleCurrentChange = (val:number) =>{
+  listQuery.value.page = val
+  getList()
+}
+const viewSpecJob = (row:jobMeta) => {
+  if ($router.hasRoute('result-'+ row.app_name)) {
+    $router.push({ name: 'result-'+ row.app_name, params: { cluster: row.cluster_name ||  "", jobIndex: row.cluster_job_id, jobId: row.id } })
+  }
+  $router.push({ name: 'jobSpecResult'})
 }
 </script>
 
@@ -95,8 +243,6 @@ const handleFilter = () => {
 .filter-container {
   display: inline-block;
   width: 100%;
-      // margin-right: 10px;
-  height:200px;
   margin-right: 0px;
   box-sizing: content-box;
   .filter-tools {
@@ -125,4 +271,9 @@ const handleFilter = () => {
   color: #ff6a00;
 }
 
+.pagination-container {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+}
 </style>

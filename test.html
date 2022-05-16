@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="description" content="Simple BioJS example" />
+</head>
+<body>
+  <script src="https://cdn.bio.sh/msa/1.0.3/msa.min.gz.js"></script>
+  <div id="rootDiv">press "Run with JS"</div>
+  <script type="javascript">
+    var opts = {
+      el: document.getElementById('rootDiv'),
+      importURL: "./data/fer1.clustal",
+    };
+    var m = msa(opts);
+    console.log(msa,m)
+  </script>
+</body>
+</html>
