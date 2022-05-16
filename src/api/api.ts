@@ -7,7 +7,7 @@ import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
 // Mock apis
-const mockQueryTime = 1000 * 3
+const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
   username: string
   password: string
