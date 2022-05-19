@@ -55,9 +55,18 @@
 import dbView from "@/components/common/dbView.vue";
 import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult, getText } from '@/api/api'
+import { fileOutput, filesOutput } from '@/app-model'
 
-let resData = ref<any>([])
-let activeNames = ref<string[]>(['output1'])
+interface dataItem extends fileOutput {
+  title: string
+}
+interface datasItem extends filesOutput {
+  title: string
+}
+type listItem = dataItem | datasItem
+
+let resData = ref<listItem[]>([])
+let activeNames = ref<string[]>([])
 let scrollbarRef = ref()
 
 const changedActive = () => {
@@ -72,7 +81,7 @@ onMounted(async () => {
   })
   if (!res) return
   for (let key in res.outputs) {
-    resData.value.push(Object.assign({ title: key }, res.outputs[key]))
+    resData.value.push(Object.assign({ title: key }, res.outputs[key] as dataItem | datasItem))
     activeNames.value.push(key)
   }
   console.log(resData)
@@ -84,7 +93,7 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
   }
 }
 let readText = async (uri: string) => {
-  let res =await getText(uri).catch(err => console.log(err))
+  let res = await getText(uri).catch(err => console.log(err))
   console.log(res)
 }
 </script>

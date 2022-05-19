@@ -1,5 +1,5 @@
 <template>
-  <div class="view_region" @click="viewClick" ref="viewRef">
+  <div class="view_region">
     <el-row class="panel_3d">
       <el-col>
         <el-row style="height: 100%;">
@@ -22,7 +22,6 @@ export default defineComponent({
     boxId: String,
   },
   setup(props, ctx) {
-    let viewRef=ref()
     const mountMolstar = () => {
       let filename = props.src;
       var viewer = new molstar.Viewer(props.boxId, {
@@ -41,28 +40,11 @@ export default defineComponent({
       });
       viewer.loadStructureFromUrl(filename, "pdb");
     }
-    const viewClick = (e:any) => {
-      // window.e = e
-      for (let item of e.path) {
-        if (item.tagName === 'BUTTON') {
-          if (item.title === 'Toggle Expanded Viewport') {
-            console.log('-0-0-0-0-', 'item.class')
-            item.className.indexOf('msp-btn-link-toggle-off') !== -1 ?
-              document.exitFullscreen() : viewRef.value.requestFullscreen()
-          }
-          break
-        }
-      }
-
-    }
     onMounted(() => {
       nextTick(function () {
         mountMolstar();
       });
     })
-    return {
-      viewClick,viewRef
-    }
   }
 })
 </script>
@@ -75,6 +57,9 @@ export default defineComponent({
     display: flex;
     text-align: center;
     justify-content: left;
+  }
+  :deep(.msp-plugin .msp-layout-expanded){
+    z-index:9999
   }
 }
 
