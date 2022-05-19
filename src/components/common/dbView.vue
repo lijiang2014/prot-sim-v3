@@ -1,8 +1,8 @@
 <template>
   <div class="view_region">
     <el-row class="panel_3d">
-      <el-col :span="8">
-        <el-row>
+      <el-col>
+        <el-row style="height: 100%;">
           <div :key="boxId" class="view_3d" :id="boxId"></div>
         </el-row>
       </el-col>
@@ -20,6 +20,7 @@ export default defineComponent({
   props: {
     src: String,
     boxId: String,
+    load: Boolean,
   },
   setup(props, ctx) {
     const mountMolstar = () => {
@@ -32,9 +33,9 @@ export default defineComponent({
         layoutShowLog: false,
         layoutShowLeftPanel: false,
 
-        viewportShowExpand: false,
+        // viewportShowExpand: false,
         viewportShowSettings: false,
-        // ViewportShowControl: false,
+        ViewportShowControl: false,
         viewportShowSelectionMode: false,
         viewportShowAnimation: false,
       });
@@ -51,7 +52,7 @@ export default defineComponent({
 
 <style lang="less" scoped>
 .view_region {
-  padding-top: 20px;
+  height: 100%;
 
   .title {
     display: flex;
@@ -63,6 +64,7 @@ export default defineComponent({
 .panel_3d {
   padding-top: 0px;
   margin-top: 0px;
+  height: 100%;
 }
 
 .el-tabs--border-card>.el-tabs__content {
@@ -81,7 +83,7 @@ export default defineComponent({
 
 .view_3d {
   width: 100%;
-  height: 450px;
+  height: 100%;
   display: flex;
   justify-content: center;
   padding: 0;

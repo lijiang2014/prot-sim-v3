@@ -120,9 +120,13 @@ export const routes: Array<RouteRecordRaw> = [
       //   component: ()=>import('@/views/test/svg-msa/index.vue')
       // },
       {
-        path: '/later/test/tc',
-        meta: { title: 'tc' },
-        component: () => import('@/views/test/tc/index.vue')
+        path: '/later/test/res',
+        meta: { title: '结果展示' },
+        component: () => import('@/views/test/res/index.vue')
+        // }, {
+        //   path: '/later/test/tc',
+        //   meta: { title: 'tc' },
+        //   component: () => import('@/views/test/tc/index.vue')
       },
       {
         path: '/later/test/pdbMolstar',
