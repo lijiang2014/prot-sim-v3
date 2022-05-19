@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="16" :offset="4">
         <div class="demo-collapse">
-          <el-collapse v-model="activeNames">
+          <el-collapse v-model="activeNames" @change="handleChange">
             <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
               <div v-if="item.class === 'file'">
                 <div v-if="item.file.meta.mime === 'text/plain'">
@@ -17,7 +17,7 @@
                 </div>
                 <div v-if="item.file.meta.mime === 'image/png'">
                   <div class="imgbox">
-                    <el-image :src="item.file.uri" fit="contain" class="img"></el-image>
+                    <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri]"></el-image>
                   </div>
                 </div>
               </div>
@@ -33,7 +33,7 @@
                           :load="activeNames.indexOf(item.title) !== -1"></db-view>
                       </div>
                       <div v-if="child.meta.mime === 'image/png'">
-                        <el-image :src="child.uri" fit="contain" class="img"></el-image>
+                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri]"></el-image>
                       </div>
                     </div>
                   </div>
@@ -95,6 +95,11 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
     item.update()
   }
 }
+let handleChange=()=>{
+  setTimeout(()=>{
+    window.dispatchEvent(new Event('resize'))
+  })
+}
 </script>
 
 <style scoped lang="less">
@@ -107,8 +112,8 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
 }
 
 .box {
-  height: 400px;
-  width: 50%;
+  height: calc( 300px + 2vw);
+  width: calc( 600px + 2vw);
   position: relative;
 }
 
@@ -129,29 +134,26 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
   // position: relative;
 
   .boxs {
-    width: calc(300px + 1vw);
+    width: calc(350px + 1vw);
     height: calc(300px + 1vw);
 
   }
 
   .img {
-    width: 300px;
+    height: calc(250px + 1vw);
   }
 }
 
 .imgbox {
   height: 300px;
   width: 50%;
-  position: relative;
 
   .img {
 
-    height: 80%;
+    height: 100%;
     width: 80%;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    padding-left: 10%;
+    vertical-align:bottom;
   }
 }
 </style>

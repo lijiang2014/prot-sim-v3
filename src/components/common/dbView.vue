@@ -1,5 +1,5 @@
 <template>
-  <div class="view_region">
+  <div class="view_region" @click="viewClick" ref="viewRef">
     <el-row class="panel_3d">
       <el-col>
         <el-row style="height: 100%;">
@@ -55,6 +55,20 @@ export default {
       });
       viewer.loadStructureFromUrl(filename, "pdb");
     },
+    viewClick(e){
+      window.e=e
+      for(let item of e.path){
+        if(item.tagName==='BUTTON'){
+          if(item.title==='Toggle Expanded Viewport'){
+            console.log('-0-0-0-0-','item.class')
+            item.className.indexOf('msp-btn-link-toggle-off')!==-1?
+            document.exitFullscreen():this.$refs.viewRef.requestFullscreen()
+          }
+          break
+        }
+      }
+      
+    }
   },
 };
 </script>
