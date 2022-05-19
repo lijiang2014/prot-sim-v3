@@ -136,8 +136,8 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/later/test/myform',
-        meta: { title: '表单' },
-        component: () => import('@/views/test/myform/index.vue')
+        meta: { title: 'AppForm' },
+        component: () => import('@/views/test/myform/dynamicForm.vue')
       },
     ]
   },

@@ -147,7 +147,7 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, Ref, reactive } from 'vue'
 
 import {
   Search,
@@ -195,7 +195,8 @@ const enterLoading = ref(false)
 const searchFileName = ref('')
 const isShowHidden = ref(false)
 const selectFile = ref<FileInfo>()
-const selectedFiles = ref<FileInfo[]>([])
+// const selectedFiles = ref<FileInfo[]>([])
+let selectedFiles = reactive<FileInfo[]>([])
 const froms = ref([])
 type UploadFlieInfo = {
   status: number,
@@ -213,7 +214,8 @@ type TransProgress = {
   cancel?: Function,
 }
 const uploadProgresses = ref<{ [index: string]: TransProgress }>({})
-const list = ref<FileInfo[]>([])
+// const list = ref<FileInfo[]>([])
+const list = reactive<FileInfo[]>([])
 let listAll: FileInfo[] = []
 const listLoading = ref(false)
 const totals = ref(0)
@@ -252,12 +254,12 @@ const searchFile = () => {
   splitListAll(true)
 }
 const handleDownload = () => {
-  selectedFiles.value.forEach(element => {
+  selectedFiles.forEach(element => {
     var href = StarlightURL + '/api/storage/download?file='
     var params = encodeURIComponent(element.path)
     window.open(href + params)
   })
-  selectedFiles.value = []
+  selectedFiles.splice(0, selectedFiles.length)
 }
 const handleFastCreate = () => {
   inputFileRef.value?.click()
@@ -342,7 +344,8 @@ const splitListAll = (filterEnable?: boolean) => {
   let total = totals.value = listOrg.length
   if (total <= limit) {
     listQuery.value.page = 1
-    list.value = listOrg
+    list.splice(0, list.length)
+    list.push(...listOrg)
     return
   }
   if (((page - 1) * limit) >= total) {
@@ -351,7 +354,9 @@ const splitListAll = (filterEnable?: boolean) => {
   if (page === 0) {
     page = 1
   }
-  list.value = listOrg.slice((page - 1) * limit, page * limit)
+  list.splice(0, list.length)
+  list.push(...listOrg.slice((page - 1) * limit, page * limit))
+  // list = listOrg.slice((page - 1) * limit, page * limit)
 }
 const handlePageSizeChange = (newPageSize: number) => {
   listQuery.value.limit = newPageSize
@@ -397,31 +402,32 @@ const handlerFileClick = (fileClicked: FileInfo) => {
     return
   }
   if (!props.multiable) {
-    if (selectedFiles.value.length == 0) {
-      selectedFiles.value.push(fileClicked)
+    if (selectedFiles.length == 0) {
+      selectedFiles.push(fileClicked)
       selectFile.value = fileClicked
-    } else if (selectedFiles.value[0].path === fileClicked.path) {
-      selectedFiles.value.pop()
+      emit("update:modelValue", [{ ...fileClicked }])
+    } else if (selectedFiles[0].path === fileClicked.path) {
+      selectedFiles.pop()
       selectFile.value = undefined
+      emit("update:modelValue", [])
     } else {
-      selectedFiles.value.pop()
-      selectedFiles.value.push(fileClicked)
+      selectedFiles.pop()
+      selectedFiles.push(fileClicked)
       selectFile.value = fileClicked
+      emit("update:modelValue", [{ ...fileClicked }])
     }
-    emit("update:modelValue", selectedFiles.value)
-    console.log('emitted', selectedFiles.value)
     return
   }
-  let inSelectedIndex = selectedFiles.value.findIndex((filei) => filei.path === fileClicked.path)
+  let inSelectedIndex = selectedFiles.findIndex((filei) => filei.path === fileClicked.path)
   if (inSelectedIndex >= 0) {
-    selectedFiles.value.splice(inSelectedIndex, 1)
+    selectedFiles.splice(inSelectedIndex, 1)
     selectFile.value = undefined
   } else {
-    selectedFiles.value.push(fileClicked)
+    selectedFiles.push(fileClicked)
     selectFile.value = fileClicked
   }
-  emit("update:modelValue", selectedFiles.value)
-  console.log('emitted', selectedFiles.value)
+  emit("update:modelValue", selectedFiles)
+  console.log('emitted', selectedFiles)
   return
 }
 const handleEnterClick = (item: FileInfo, type: string) => {
@@ -433,7 +439,7 @@ const handleEnterClick = (item: FileInfo, type: string) => {
 
 const getServerList = async () => {
   listLoading.value = true
-  list.value = []
+  list.splice(0, list.length)
   const ret = await getDirInfo(queryPath.value).catch(err => {
     ElNotification.error(err)
   })
@@ -446,7 +452,7 @@ const getServerList = async () => {
 
 onMounted(async () => {
   storage.value = store.state.user.defaultFS
-  selectedFiles.value = props.modelValue
+  selectedFiles.push(...props.modelValue)
   const ret = await getFileSystemList().catch(err => {
     ElNotification.error(err)
   })
