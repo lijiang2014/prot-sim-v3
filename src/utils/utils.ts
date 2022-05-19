@@ -8,8 +8,8 @@ export const utils = {
   * @name: 设置cookie 值
   * @param: cname string cookie名称 
   * @param: cvalue any cookie值
-   */ 
-  setCookie(cname:string, cvalue:any, exdays = 720){
+   */
+  setCookie(cname: string, cvalue: any, exdays = 720) {
     let d = new Date()
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
     const expires = "expires=" + d.toUTCString()
@@ -18,19 +18,19 @@ export const utils = {
   /*
   * @name: 获取cookie 值
   * @param: cname string cookie名称 
-   */ 
-  getCookie(cname:string){
+   */
+  getCookie(cname: string) {
     const name = cname + "="
     const ca = document.cookie.split(';')
-    for (let i = 0 ; i < ca.length; i++) {
+    for (let i = 0; i < ca.length; i++) {
       let c = ca[i].trim()
-      if(c.startsWith(name)) {
+      if (c.startsWith(name)) {
         return c.substring(name.length, c.length)
       }
     }
     return ""
   },
-  clearCookie(cname:string, domain= '', pathurl = ''){
+  clearCookie(cname: string, domain = '', pathurl = '') {
     let d = new Date()
     d.setTime(-1)
     const expires = "expires=" + d.toUTCString()
@@ -41,9 +41,10 @@ export const utils = {
     if (pathurl) {
       delstr += `; path=${pathurl}`
     }
+    console.log('clear Cookie', delstr)
     document.cookie = delstr
   },
-  checkStarlightLog():string {
+  checkStarlightLog(): string {
     const token = this.getCookie("Bihu-Token")
     if (token) {
       window.sessionStorage.setItem('bihu-token', token)
@@ -55,17 +56,17 @@ export const utils = {
   /**
    * 获取枚举的不重复数组
    */
-  getEnumArray(e: any): any[]{
+  getEnumArray(e: any): any[] {
     const arr: any[] = []
     for (const key in e) {
       const haveKey = arr.find(item => {
         return item.key === e[key] || Number(item.key) === Number(e[key])
       })
-      if(!haveKey){
+      if (!haveKey) {
         const isNaN = Number.isNaN(Number(key))
         const obj = {
           key: isNaN ? e[key] : Number(key),
-          value: isNaN? key: e[key]
+          value: isNaN ? key : e[key]
         }
         arr.push(obj)
       }
@@ -82,5 +83,6 @@ export const utils = {
       }
     }
     return ''
-  }
+  },
 }
+

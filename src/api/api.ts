@@ -1,11 +1,12 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, AppMeta, AppSpec, OutputMap, result as JobResult, } from '@/app-model'
+import type { ApiResponseItems, AppMeta, AppSpec, jobMeta, OutputMap, result as JobResult, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
 import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
+import { ElNotification } from 'element-plus'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -442,16 +443,15 @@ export const getApps = (region?: string, params?: any,): Promise<ApiResponseItem
 }
 
 export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
-  const mockAppSpec = {
+  let mockAppSpec: AppSpec = {
     "id": 1406,
     "name": "graphppis",
     "render": {
       "id": "widgets-root",
       "type": "container",
       "name": "",
-      "value": "",
-      "offset": 6,
-      "width": 12,
+      "offset": 0,
+      "width": 24,
       "label": "根组件",
       "attr": {},
       "data": [
@@ -459,7 +459,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "info1",
           "type": "info",
           "name": "",
-          "value": "",
           "offset": 0,
           "width": 24,
           "label": "",
@@ -473,7 +472,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "text1",
           "type": "text",
           "name": "pdbID",
-          "value": "1r8s",
           "offset": 0,
           "width": 24,
           "label": "pdbID",
@@ -483,7 +481,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "disabled": false,
             "visible": true,
             "rules": "",
-            "default": "1r8s"
+            // "default": "1r8s"
           },
           "data": []
         },
@@ -491,7 +489,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "text22",
           "type": "text",
           "name": "pdbID2",
-          "value": "1r8s",
           "offset": 0,
           "width": 24,
           "label": "pdbID2",
@@ -509,7 +506,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "rfbPath1",
           "type": "rfbPath",
           "name": "pdb",
-          "value": "",
           "offset": 0,
           "width": 24,
           "label": "pdb",
@@ -518,14 +514,16 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "default": "",
             "visible": true,
             "required": false,
+            "extends": {
+              "accept": ".pdb",
+            },
             "rules": ""
           },
           "data": []
         }, {
           "id": "rfbPath2",
           "type": "rfbPath",
-          "name": "pdb",
-          "value": "",
+          "name": "pdb2",
           "offset": 0,
           "width": 24,
           "label": "pdb",
@@ -533,6 +531,9 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "placeholder": "",
             "default": "",
             "visible": true,
+            "extends": {
+              "accept": ".pdb",
+            },
             "required": false,
             "rules": ""
           },
@@ -540,8 +541,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
         }, {
           "id": "rfbPath3",
           "type": "rfbPath",
-          "name": "pdb",
-          "value": "",
+          "name": "pdb3",
           "offset": 0,
           "width": 24,
           "label": "pdb",
@@ -558,7 +558,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "text2",
           "type": "text",
           "name": "chain",
-          "value": "E",
           "offset": 0,
           "width": 24,
           "label": "chain",
@@ -576,7 +575,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "list1",
           "type": "list",
           "name": "mode",
-          "value": "",
           "offset": 0,
           "width": 24,
           "label": "mode",
@@ -606,7 +604,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "id": "list12",
           "type": "list",
           "name": "mode2",
-          "value": "",
           "offset": 0,
           "width": 24,
           "label": "mode2",
@@ -632,7 +629,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           },
           "data": []
         }
-
       ]
     },
     "title": "GraphPPIS",
@@ -648,6 +644,83 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
     })
   }
   return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+}
+
+export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
+  const mockData = [
+    jobMetaExample,
+    jobMetaExample,
+    jobMetaExample,
+  ]
+  if (params && params.mock === '1') {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({ spec: mockData, total: 1000 })
+      }, mockQueryTime)
+    })
+  }
+  return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+}
+
+export const getFileSystemList = (params?: any): Promise<any> => {
+  return $request({
+    url: '/api/storage/user_storage_path',
+    method: 'get',
+    params,
+    headers: { 'TIMEOUT': '15' },
+  })
+}
+
+export const getDirInfo = (dirpath: string, params?: any): Promise<any> => {
+  let query = Object.assign({
+    dir: dirpath,
+  }, params)
+  console.log(query)
+  return $request({
+    url: '/api/storage/dir_info',
+    method: 'get',
+    params: query,
+    headers: { 'TIMEOUT': '15' },
+  })
+}
+
+
+export function uploadFileDirect(params: any, data: Blob, settings: any) {
+  if (!settings) {
+    settings = {}
+  }
+  var contentType = 'application/octet-stream'
+  var mysettings = Object.assign(settings, {
+    url: '/api/storage/upload',
+    method: 'put',
+    params: params,
+    //  headers: { 'Content-Type': contentType },
+    timeout: 0,
+    data
+  })
+  if (!mysettings.headers) {
+    mysettings.headers = {}
+  }
+  mysettings.headers['Content-Type'] = contentType
+  return $request(mysettings)
+}
+
+export function uploadFileDirectSimple(filename: string, fileObj: File, settings?: any) {
+  let blob = new Blob([fileObj])
+  var filesize = blob.size
+  if (filesize > 1024 * 1024 * 2) {
+    ElNotification({
+      title: '只允许小于2MB的文件',
+      type: 'warning',
+      duration: 10000
+    })
+    return
+  }
+  let params = {
+    file: filename,
+    overwrite: false || (settings && settings.overwrite)
+  }
+  return uploadFileDirect(params, blob, settings)
 }
 
 // Orginal API

@@ -9,37 +9,23 @@
     </el-row>
   </div>
 </template>
-<script>
+<script lang="ts" >
 // import { Viewer } from "molstar";
 // import { Viewer } from "molstar/build/viewer/molstar";
 // import "molstar/build/viewer/molstar.css";
+import { nextTick, defineComponent, onMounted, ref } from 'vue'
 
-export default {
-  props: ["src", "boxId", 'load'],
-  data() {
-    return {
-      isLoad: false
-    }
+export default defineComponent({
+  name: 'MolstarView',
+  props: {
+    src: String,
+    boxId: String,
   },
-  watch: {
-    load: {
-      handler(newVal) {
-        if (this.isLoad) return
-        if (newVal) {
-          this.isLoad = true
-          this.$nextTick(() => {
-            this.molstar()
-          })
-        }
-      },
-      immediate: true
-    }
-  },
-
-  methods: {
-    molstar() {
-      let filename = this.src;
-      var viewer = new molstar.Viewer(this.boxId, {
+  setup(props, ctx) {
+    let viewRef=ref()
+    const mountMolstar = () => {
+      let filename = props.src;
+      var viewer = new molstar.Viewer(props.boxId, {
         layoutIsExpanded: false,
         layoutShowControls: false,
         layoutShowRemoteState: false,
@@ -54,23 +40,31 @@ export default {
         viewportShowAnimation: false,
       });
       viewer.loadStructureFromUrl(filename, "pdb");
-    },
-    viewClick(e){
-      window.e=e
-      for(let item of e.path){
-        if(item.tagName==='BUTTON'){
-          if(item.title==='Toggle Expanded Viewport'){
-            console.log('-0-0-0-0-','item.class')
-            item.className.indexOf('msp-btn-link-toggle-off')!==-1?
-            document.exitFullscreen():this.$refs.viewRef.requestFullscreen()
+    }
+    const viewClick = (e:any) => {
+      // window.e = e
+      for (let item of e.path) {
+        if (item.tagName === 'BUTTON') {
+          if (item.title === 'Toggle Expanded Viewport') {
+            console.log('-0-0-0-0-', 'item.class')
+            item.className.indexOf('msp-btn-link-toggle-off') !== -1 ?
+              document.exitFullscreen() : viewRef.value.requestFullscreen()
           }
           break
         }
       }
-      
+
     }
-  },
-};
+    onMounted(() => {
+      nextTick(function () {
+        mountMolstar();
+      });
+    })
+    return {
+      viewClick,viewRef
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>
