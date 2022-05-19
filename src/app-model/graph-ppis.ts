@@ -1,12 +1,12 @@
 
 export interface StarlightRuntimeParams {
   jobname: string
-  cluster: string 
-  partition: string 
-  cpu?: number  
-  gpu?: number  
-  memory?: number  
-  nodes?: number 
+  cluster: string
+  partition: string
+  cpu?: number
+  gpu?: number
+  memory?: number
+  nodes?: number
 }
 
 export interface baseWidget {
@@ -20,12 +20,18 @@ export interface FileWidget extends baseWidget {
   meta?: any // insert anything others
 }
 
+
+export interface objFile extends FileWidget {
+  class: 'File'
+  path: string
+}
+
 export class stringFile implements FileWidget {
   public uri?: string
   public content?: string
   public clientFile?: File
   public meta?: any
-  constructor(uri:string = '', content: string = '', file?:File , meta?: any) {
+  constructor(uri: string = '', content: string = '', file?: File, meta?: any) {
     this.uri = uri
     this.content = content
     this.clientFile = file
@@ -38,14 +44,20 @@ export class stringFile implements FileWidget {
 
 export type GraphPPISMode = 'fast' | 'slow'
 
-export interface GraphPPISParams  {
+export interface GraphPPISParams {
   chain: string
   mode: GraphPPISMode
   pdbID?: string
   pdb?: stringFile
 }
 
-export function createJobName(prefix: string):string{
+export type baseAppParamsTypes = string | number | stringFile | objFile
+
+export interface AppParams {
+  [key: string]: baseAppParamsTypes | baseAppParamsTypes[]
+}
+
+export function createJobName(prefix: string): string {
   let jobnametmp = ''
   const mydate = new Date()
   const time = mydate.getDate().toString() + mydate.getHours().toString() + mydate.getMinutes().toString() + mydate.getSeconds().toString()

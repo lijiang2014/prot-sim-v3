@@ -4,6 +4,7 @@ import axios from 'axios'
 // import {useStore} from '@/store'
 import store from '@/store'
 import qs from 'qs'
+import { ElNotification } from 'element-plus'
 
 export const StarlightURL = `${import.meta.env.VITE_APP_BASE_STARLIGHT}`
 
@@ -38,7 +39,7 @@ service.interceptors.request.use(
     return config
   },
   error => {
-    // ElNotification.error(error + '，请联系管理员进行处理。')
+    ElNotification.error(error + '，请联系管理员进行处理。')
     return Promise.reject(error)
   }
 )

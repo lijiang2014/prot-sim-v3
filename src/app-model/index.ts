@@ -76,6 +76,7 @@ export interface AppWidgetAttr {
   required?: boolean,
   disabled?: boolean,
   rules?: any,
+  extends?: any,
   options?: AppWidgetOption[]
 }
 

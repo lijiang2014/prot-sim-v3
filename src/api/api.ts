@@ -6,6 +6,7 @@ import { jobMetaExample } from '@/app-model'
 import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
+import { ElNotification } from 'element-plus'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -204,7 +205,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "disabled": false,
             "visible": true,
             "rules": "",
-            "default": "1r8s"
+            // "default": "1r8s"
           },
           "data": []
         },
@@ -237,13 +238,16 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "default": "",
             "visible": true,
             "required": false,
+            "extends": {
+              "accept": ".pdb",
+            },
             "rules": ""
           },
           "data": []
         }, {
           "id": "rfbPath2",
           "type": "rfbPath",
-          "name": "pdb",
+          "name": "pdb2",
           "offset": 0,
           "width": 24,
           "label": "pdb",
@@ -251,6 +255,9 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "placeholder": "",
             "default": "",
             "visible": true,
+            "extends": {
+              "accept": ".pdb",
+            },
             "required": false,
             "rules": ""
           },
@@ -258,7 +265,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
         }, {
           "id": "rfbPath3",
           "type": "rfbPath",
-          "name": "pdb",
+          "name": "pdb3",
           "offset": 0,
           "width": 24,
           "label": "pdb",
@@ -421,6 +428,25 @@ export function uploadFileDirect(params: any, data: Blob, settings: any) {
   mysettings.headers['Content-Type'] = contentType
   return $request(mysettings)
 }
+
+export function uploadFileDirectSimple(filename: string, fileObj: File, settings?: any) {
+  let blob = new Blob([fileObj])
+  var filesize = blob.size
+  if (filesize > 1024 * 1024 * 2) {
+    ElNotification({
+      title: '只允许小于2MB的文件',
+      type: 'warning',
+      duration: 10000
+    })
+    return
+  }
+  let params = {
+    file: filename,
+    overwrite: false || (settings && settings.overwrite)
+  }
+  return uploadFileDirect(params, blob, settings)
+}
+
 // Orginal API
 export const checkPredictStructureProjectName = (projName: string): Promise<any> => {
   return http.get('/predict/structure/check/', { params: { proj_name: projName } })
