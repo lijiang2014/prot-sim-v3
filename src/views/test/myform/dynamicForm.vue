@@ -75,7 +75,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getAppSpec } from '@/api/api'
 import { onMounted, reactive, ref, watch } from 'vue';
 import { AppSpec } from '@/app-model'
 import { genFileId, ElMessage, UploadFile, } from 'element-plus'
@@ -110,7 +109,6 @@ let uploadRef = ref<UploadInstance[]>()
 let initData = {
   jobname: ""
 }
-let curFile=[]
 
 watch(() => props.formData, (newVal, oldVal) => {
   if (!newVal) return
@@ -136,6 +134,8 @@ const handleExceed: UploadProps['onExceed'] | any = (uploadFile: UploadRawFile,f
   let num: number = Number(id.match(/\d/g)?.join('')) - 1   //根据id取得ref索引
   // // const file = files[0] as UploadRawFile
   // // file.uid = genFileId()
+  // uploadRef.value![num].clearFiles()
+  // uploadRef.value![num].handleStart()
   console.log('超出限制',files,uploadFile,id)
 }
 

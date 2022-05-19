@@ -1,8 +1,8 @@
 <template>
   <div class="view_region">
     <el-row class="panel_3d">
-      <el-col :span="8">
-        <el-row>
+      <el-col>
+        <el-row style="height: 100%;">
           <div :key="boxId" class="view_3d" :id="boxId"></div>
         </el-row>
       </el-col>
@@ -15,12 +15,25 @@
 // import "molstar/build/viewer/molstar.css";
 
 export default {
-  props: [ "src", "boxId"],
-
-  mounted() {
-    this.$nextTick(function () {
-      this.molstar();
-    });
+  props: ["src", "boxId", 'load'],
+  data() {
+    return {
+      isLoad: false
+    }
+  },
+  watch: {
+    load: {
+      handler(newVal) {
+        if (this.isLoad) return
+        if (newVal) {
+          this.isLoad = true
+          this.$nextTick(() => {
+            this.molstar()
+          })
+        }
+      },
+      immediate: true
+    }
   },
 
   methods: {
@@ -34,9 +47,9 @@ export default {
         layoutShowLog: false,
         layoutShowLeftPanel: false,
 
-        viewportShowExpand: false,
+        // viewportShowExpand: false,
         viewportShowSettings: false,
-        // ViewportShowControl: false,
+        ViewportShowControl: false,
         viewportShowSelectionMode: false,
         viewportShowAnimation: false,
       });
@@ -48,19 +61,22 @@ export default {
 
 <style lang="less" scoped>
 .view_region {
-  padding-top: 20px;
+  height: 100%;
+
   .title {
     display: flex;
     text-align: center;
     justify-content: left;
   }
 }
+
 .panel_3d {
   padding-top: 0px;
   margin-top: 0px;
+  height: 100%;
 }
 
-.el-tabs--border-card > .el-tabs__content {
+.el-tabs--border-card>.el-tabs__content {
   padding: 0px;
 }
 
@@ -76,7 +92,7 @@ export default {
 
 .view_3d {
   width: 100%;
-  height: 450px;
+  height: 100%;
   display: flex;
   justify-content: center;
   padding: 0;
@@ -87,6 +103,7 @@ export default {
   cursor: pointer;
   color: #409eff;
 }
+
 .el-icon-arrow-down {
   font-size: 12px;
 }

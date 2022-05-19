@@ -91,21 +91,297 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
           "output1": {
             class: "file",
             file: {
-              uri: "xxx",
+              uri: "/1.txt",
               meta: {
-                mime: 'chemical/pdb',
+                mime: 'text/plain',
               }
             } as stringFile
           },
           "output2": {
             class: "file",
             file: {
-              uri: "xxx",
+              uri: "/model_1.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile
+          },
+          "output3": {
+            class: "files",
+            files: [({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/1.jpg",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/1.jpg",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ]
+          },
+          "output4": {
+            class: "files",
+            files: [({
+              uri: "/ranked_0.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_1.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_2.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_3.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_4.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ]
+          },
+          "output5": {
+            class: "files",
+            files: [({
+              uri: "../../src/assets/1.jpg",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "/1.txt",
               meta: {
                 mime: 'text/plain',
               }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ]
+          },
+          "output6": {
+            class: "files",
+            files: [({
+              uri: "/model_1.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_0.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_1.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/1.txt",
+              meta: {
+                mime: 'text/plain',
+              }
+            } as stringFile),
+            ]
+          },
+
+          "output7": {
+            class: "file",
+            file: {
+              uri: "../../src/assets/1.jpg",
+              meta: {
+                mime: 'image/png',
+              }
             } as stringFile
-          }
+          },
+          "output8": {
+            class: "files",
+            files: [({
+              uri: "/ranked_2.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/ranked_3.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+            ({
+              uri: "/1.txt",
+              meta: {
+                mime: 'text/plain',
+              }
+            } as stringFile),
+
+            ({
+              uri: "../../src/assets/1.jpg",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ({
+              uri: "/model_1.pdb",
+              meta: {
+                mime: 'chemical/pdb',
+              }
+            } as stringFile),
+
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+
+            ({
+              uri: "../../src/assets/logo.png",
+              meta: {
+                mime: 'image/png',
+              }
+            } as stringFile),
+            ]
+          },
+          "output9": {
+            class: "files",
+            files: [
+
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "/model_1.pdb",
+                meta: {
+                  mime: 'chemical/pdb',
+                }
+              } as stringFile),
+
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "/ranked_4.pdb",
+                meta: {
+                  mime: 'chemical/pdb',
+                }
+              } as stringFile),
+
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "/1.txt",
+                meta: {
+                  mime: 'text/plain',
+                }
+              } as stringFile),
+
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+              ({
+                uri: "../../src/assets/logo.png",
+                meta: {
+                  mime: 'image/png',
+                }
+              } as stringFile),
+            ]
+          },
         } as OutputMap
       }
       let mockData = Object.assign(outputs, jobMetaExample)
@@ -381,4 +657,12 @@ export const checkPredictStructureProjectName = (projName: string): Promise<any>
 
 export const submitPredictStruct = (r: structurePredictRequest): Promise<any> => {
   return http.post('/predict/structure_submit/', r)
+}
+
+
+
+
+// 返回文本文件的内容
+export const getText = (url: string): Promise<{ data: string }> => {
+  return axios.get(url)
 }
