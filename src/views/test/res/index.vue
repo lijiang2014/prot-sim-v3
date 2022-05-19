@@ -7,7 +7,7 @@
             <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
               <div v-if="item.class === 'file'">
                 <div v-if="item.file.meta.mime === 'text/plain'" class="text">
-                  <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri)">
+                  <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri!)">
                     <Document />
                   </el-icon>
                 </div>
@@ -19,7 +19,7 @@
                 </div>
                 <div v-if="item.file.meta.mime.indexOf('image') !== -1">
                   <div class="imgbox">
-                    <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri]">
+                    <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri!]">
                     </el-image>
                   </div>
                 </div>
@@ -29,15 +29,15 @@
                   <div class="scrollbar-flex-content">
                     <div v-for="(child, childIndex) in item.files" class="scrollbar-demo-item">
                       <div v-if="child.meta.mime === 'text/plain'" class="text">
-                        <el-icon size="calc( 100px + 5vw)" @Click="readText(child.uri)">
+                        <el-icon size="calc( 100px + 5vw)" @Click="readText(child.uri!)">
                           <Document />
                         </el-icon>
                       </div>
                       <div v-if="child.meta.mime === 'chemical/pdb'" class="boxs">
-                        <db-view :src='child.uri' :boxId='child.uri + childIndex + index'></db-view>
+                        <db-view :src='child.uri' :boxId='child.uri! + childIndex + index'></db-view>
                       </div>
                       <div v-if="child.meta.mime.indexOf('image') !== -1">
-                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri]"></el-image>
+                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri!]"></el-image>
                       </div>
                     </div>
                   </div>
