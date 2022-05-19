@@ -6,8 +6,10 @@
           <el-collapse v-model="activeNames" @change="changedActive">
             <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
               <div v-if="item.class === 'file'">
-                <div v-if="item.file.meta.mime === 'text/plain'">
-                  <div class="text" v-html="item.file.text"></div>
+                <div v-if="item.file.meta.mime === 'text/plain'" class="text">
+                  <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri)">
+                    <Document />
+                  </el-icon>
                 </div>
                 <div v-if="item.file.meta.mime === 'chemical/pdb'">
                   <div class="box">
@@ -15,9 +17,10 @@
                     </db-view>
                   </div>
                 </div>
-                <div v-if="item.file.meta.mime === 'image/png'">
+                <div v-if="item.file.meta.mime.indexOf('image') !== -1">
                   <div class="imgbox">
-                    <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri]"></el-image>
+                    <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri]">
+                    </el-image>
                   </div>
                 </div>
               </div>
@@ -25,13 +28,15 @@
                 <el-scrollbar class="scrollbar-contain" ref="scrollbarRef" @mouseenter="scrollbarUpdate">
                   <div class="scrollbar-flex-content">
                     <div v-for="(child, childIndex) in item.files" class="scrollbar-demo-item">
-                      <div v-if="child.meta.mime === 'text/plain'">
-                        <div class="text" v-html="child.text"></div>
+                      <div v-if="child.meta.mime === 'text/plain'" class="text">
+                        <el-icon size="calc( 100px + 5vw)" @Click="readText(child.uri)">
+                          <Document />
+                        </el-icon>
                       </div>
                       <div v-if="child.meta.mime === 'chemical/pdb'" class="boxs">
                         <db-view :src='child.uri' :boxId='child.uri + childIndex + index'></db-view>
                       </div>
-                      <div v-if="child.meta.mime === 'image/png'">
+                      <div v-if="child.meta.mime.indexOf('image') !== -1">
                         <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri]"></el-image>
                       </div>
                     </div>
@@ -52,7 +57,7 @@ import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult, getText } from '@/api/api'
 
 let resData = ref<any>([])
-let activeNames = ref<string[]>([])
+let activeNames = ref<string[]>(['output1'])
 let scrollbarRef = ref()
 
 const changedActive = () => {
@@ -61,34 +66,11 @@ const changedActive = () => {
     window.dispatchEvent(myEvent);
   })
 }
-
-async function addText(obj: any) {
-  for (let key in obj) {
-    if (obj[key].file) {
-      if (obj[key].file.meta.mime === 'text/plain') {
-        let text = await getText(obj[key].file.uri).catch(err => {
-          console.log(err)
-        });
-        obj[key].file.text = text!.data
-      }
-    } else if (obj[key].files) {
-      for (let item of obj[key].files) {
-        if (item.meta.mime === 'text/plain') {
-          let text = await getText(item.uri).catch(err => {
-            console.log(err)
-          });
-          item.text = text!.data
-        }
-      }
-    }
-  }
-}
 onMounted(async () => {
   let res = await getJobResult('example', '').catch(err => {
     console.log(err)
   })
   if (!res) return
-  await addText(res.outputs)//加入文本内容
   for (let key in res.outputs) {
     resData.value.push(Object.assign({ title: key }, res.outputs[key]))
     activeNames.value.push(key)
@@ -101,34 +83,26 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
     item.update()
   }
 }
-let handleChange=()=>{
-  setTimeout(()=>{
-    window.dispatchEvent(new Event('resize'))
-  })
+let readText = async (uri: string) => {
+  let res =await getText(uri).catch(err => console.log(err))
+  console.log(res)
 }
 </script>
 
 <style scoped lang="less">
 .text {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
-  width: 80%;
+  padding: 0 50px;
+  cursor: pointer;
 }
 
 .box {
-  height: calc( 300px + 2vw);
-  width: calc( 600px + 2vw);
+  height: calc(300px + 2vw);
+  width: calc(600px + 2vw);
   position: relative;
 }
 
 .scrollbar-flex-content {
   display: flex;
-
-  .text {
-    width: 300px;
-  }
 }
 
 .scrollbar-demo-item {
@@ -159,7 +133,7 @@ let handleChange=()=>{
     height: 100%;
     width: 80%;
     padding-left: 10%;
-    vertical-align:bottom;
+    vertical-align: bottom;
   }
 }
 </style>
