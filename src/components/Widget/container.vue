@@ -1,8 +1,8 @@
 <template>
   <template v-if="widgetForm.type === 'container' && widgetForm.data && widgetForm.data.length > 0">
     <el-form ref="formRef" label-position="top" label-width="120px" :rules="rules" :model="modelValue">
-      <index v-for="(item, index) in widgetForm.data" :widgetForm="item" :ref="el => { if (el) children[index] = el }"
-        v-model="modelValue[item.name]" :rules="rules">
+      <index v-for="(item, index) in widgetForm.data" :widgetForm="item"
+        :ref="(el: any) => { if (el) children[index] = el }" v-model="modelValue[item.name]" :rules="rules">
       </index>
     </el-form>
   </template>
@@ -11,7 +11,7 @@
 import { AppWidgets } from '@/app-model'
 import { AppParams } from '@/app-model/graph-ppis';
 import { FormInstance, FormRules, FormValidateCallback } from 'element-plus';
-import { Ref, ref } from 'vue';
+import { ref, defineProps } from 'vue';
 import Index from './index.vue';
 interface Props {
   widgetForm: AppWidgets
@@ -24,10 +24,7 @@ const validate = (callback?: FormValidateCallback) => {
   return formRef.value?.validate(callback)
 }
 const children = ref<(typeof Index)[]>([])
-// const setItemRef = (el: (Ref<(typeof Index)>)) => {
-//   console.log('push', children.length, el)
-//   children.push(el)
-// }
+
 const prepareSubmit = async () => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < children.value.length; i++) {
