@@ -1,212 +1,169 @@
+<!-- 动态表单
+  * 以 widget 控件为基础实现
+    * 支持 "container" | "info" | "text" | "rfbPath" | "list" 等控件的嵌套使用
+      - [ ] objRFB
+    * 类似于 input 控件的值绑定
+  * 支持基础的表单校验
+  * 支持提交
+    -[ ] 支持两种文件选择方式 TODO 选择服务器文件
+    -[ ] 支持上传文件 TODO 自动上传文件
+ -->
 <template>
   <div class="myform">
-    <el-row>
-      <el-col :span="formData?.render.width" :offset="formData?.render.offset">
-        <el-form label-position="top" label-width="120px" :model="message" ref="bottomFormRef">
-
-          <el-form-item v-for="(item, index) in formData?.render.data" :label="item.label" :prop="item.id"
-            :key="item.id">
-            <el-row v-if="item.attr.visible" class="item-row">
-              <el-col :span="item.width" :offset="item.offset">
-                <div v-if="item.type === 'info'">
-                  <div v-html="item.attr.default" class="info"></div>
-                </div>
-                <div v-if="item.type === 'text'">
-                  <el-input type="text" clearable v-model="message[item.id]" :placeholder="item.attr.placeholder"
-                    :disabled="item.attr.disabled">
-                  </el-input>
-                </div>
-                <div v-if="item.type === 'rfbPath'">
-                  <el-upload ref="uploadRef" :auto-upload="false" action="#" :limit="1"
-                    :before-upload="(...e) => beforePDBUpload(...e, item.id)"
-                    :on-change="(...e) => handleChange(...e, item.id)" accept=".pdb"
-                    :on-exceed="(...e) => handleExceed(...e, item.id)">
-                    <template #trigger>
-                      <el-button type="primary">select file</el-button>
-                    </template>
-                    <el-button class="ml-3" type="success" @click="() => submitUpload(item.id)">
-                      upload to server
-                    </el-button>
-                    <template #tip>
-                      <div class="el-upload__tip text-red">
-                        limit 1 file, new file will cover the old file
-                      </div>
-                    </template>
-                  </el-upload>
-                </div>
-                <div v-if="item.type === 'list'">
-                  <el-select v-model="message[item.id]" style="width: 100%;">
-                    <el-option v-for="opt in item.attr.options" :label="opt.label" :value="opt.value"
-                      :disabled="opt.disabled"></el-option>
-                  </el-select>
-                </div>
-              </el-col>
-            </el-row>
-
-            <el-row v-if="index === 0" style="width: 100%;">
-              <el-col :span="formData?.render.data[0].width" :offset="formData?.render.data[0].offset">
-                <div>
-                  <el-form :model="runtimeForm" :rules="runtimeRules" ref="topFormRef" label-width="120px"
-                    class="demo-ruleForm" label-position="top" @submit.native.prevent>
-                    <el-form-item prop="jobname" label="job name">
-                      <template #label>
-                        <span slot="label">
-                          <span class="span-box">
-                            <span>job name</span>
-                          </span>
-                        </span>
-                      </template>
-                      <el-input type="text" v-model="runtimeForm.jobname" clearable></el-input>
-                    </el-form-item>
-                  </el-form>
-                </div>
-              </el-col>
-            </el-row>
-
-          </el-form-item>
+    <div v-if="debug">
+      {{ runtimeParams }}
+      <hr>{{ appParams }}
+    </div>
+    <div v-if="loading">数据加载中...</div>
+    <el-row v-else>
+      <el-col v-if="app && app.render" :span="app?.render.width" :offset="app?.render.offset">
+        <el-form label-position="top" label-width="120px">
+          <widget ref="runtimeFormRef" :widgetForm="runtimeForm" :rules="runtimeRules" v-model="runtimeParams"></widget>
+          <widget ref="appFormRef" :widgetForm="app!.render" :rules="appRules" v-model="appParams"></widget>
           <el-form-item>
             <el-button type="primary" @click="submitForm()">Submit</el-button>
-            <el-button @click="resetForm()">Reset</el-button>
           </el-form-item>
         </el-form>
-
       </el-col>
     </el-row>
   </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue';
-import { AppSpec } from '@/app-model'
-import { genFileId, ElMessage, UploadFile, } from 'element-plus'
-import type { FormRules, FormInstance, UploadInstance, UploadProps, UploadRawFile, UploadFiles, } from 'element-plus'
+import { getAppSpec } from '@/api/api'
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { AppSpec, AppWidgets } from '@/app-model'
+import { FormRules, FormInstance, UploadInstance, ElNotification, } from 'element-plus'
 import { submitAppTask, uploadFile } from '@/api/api'
-import { StarlightRuntimeParams, createJobName } from '@/app-model/graph-ppis';
-
-let props = defineProps(['formData'])
-
+import Widget from "@/components/Widget/index.vue"
+import { StarlightRuntimeParams, createJobName, AppParams } from '@/app-model/graph-ppis';
+const route = useRoute()
+const debug = ref(route.query["debug"] == 'true')
 const appname = 'graph-ppis'
-const runtimeForm = ref({
-  jobname: createJobName(appname),
-} as StarlightRuntimeParams)
-const topFormRef = ref<FormInstance[]>()
-const runtimeRules = ref({
+const loading = ref(false)
+const runtimeRules = ref<FormRules>({
   jobname: [
     { required: true, message: 'Please input a job name!', trigger: 'blur', },
     { pattern: /^[a-z][a-z0-9_\-]{3,23}[a-z0-9]$/, message: '命名不符合规范 /^[a-z][a-z0-9_]{3,23}[a-z0-9]$/ ', trigger: 'blur', }
   ],
-} as FormRules)
+})
+const appRules = ref<FormRules>({})
+let runtimeForm = ref<AppWidgets>({
+  "id": "runtime-root",
+  "type": "container",
+  "name": "",
+  "offset": 0,
+  "width": 24,
+  "label": "",
+  "attr": {},
+  "data": [
+    {
+      "id": "info-default",
+      "type": "info",
+      "name": "",
+      "offset": 0,
+      "width": 24,
+      "label": "",
+      "attr": {
+        "visible": true,
+        "default": "",
+      },
+      "data": []
+    },
+    {
+      "id": "jobname",
+      "type": "text",
+      "name": "jobname",
+      "offset": 0,
+      "width": 24,
+      "label": "Job Name",
+      "attr": {
+        "placeholder": "",
+        "required": false,
+        "disabled": false,
+        "visible": true,
+        "rules": "",
+        "default": ""
+      },
+      "data": []
+    }]
+})
+const runtimeParams = ref<StarlightRuntimeParams>({
+  jobname: createJobName(appname)
+} as StarlightRuntimeParams)
+let app = ref<AppSpec>()
+const appParams = ref<AppParams>({})
 
 
-
-
-//----------------------------------------------------------------------------------------------------------
-let formData = ref<AppSpec>()
-let message = ref<any>({
-  pdb: {},
+onMounted(async () => {
+  loading.value = true
+  let res = await getAppSpec(appname).catch((err: any) => {
+    console.log(err)
+  })
+  loading.value = false
+  if (!res) {
+    return
+  }
+  // 表单初始化
+  // * 提取 info
+  for (let i = 0; i < res.render.data.length; i++) {
+    let widgeti = res.render.data[i]
+    if (widgeti.type == 'info') {
+      runtimeForm.value.data[0].attr.default = widgeti.attr.default
+      res.render.data.splice(i, 1)
+      break
+    }
+  }
+  // * 创建 AppRules
+  for (let i = 0; i < res.render.data.length; i++) {
+    let widgeti = res.render.data[i]
+    let newRule = []
+    if (widgeti.attr.required) {
+      newRule.push({ required: true, message: 'Please input ' + widgeti.label + '!', trigger: 'blur', })
+    }
+    if (widgeti.attr.rules) {
+      console.log('Need To Set More rules....')
+    }
+    if (newRule.length > 0) {
+      appRules.value[widgeti.name] = newRule
+    }
+  }
+  app.value = res
 })
 
-let uploadRef = ref<UploadInstance[]>()
-let initData = {
-  jobname: ""
-}
-
-watch(() => props.formData, (newVal, oldVal) => {
-  if (!newVal) return
-  formData.value = newVal
-  function fun(data: any) {
-    if (data.attr?.default) {
-      if (data.type !== 'info') {
-        message.value[data.id] = data.attr.default
-      }
-    }
-    if (data.data.length) {
-      for (let i of data.data) {
-        fun(i)
-      }
-    }
-  }
-  fun(newVal.render)   //加入默认值
-  initData = JSON.parse(JSON.stringify(message.value))
-  initData.jobname = runtimeForm.value.jobname
-})
-
-const handleExceed: UploadProps['onExceed'] | any = (uploadFile: UploadRawFile,files: UploadRawFile[], id: string) => {
-  let num: number = Number(id.match(/\d/g)?.join('')) - 1   //根据id取得ref索引
-  // // const file = files[0] as UploadRawFile
-  // // file.uid = genFileId()
-  // uploadRef.value![num].clearFiles()
-  // uploadRef.value![num].handleStart()
-  console.log('超出限制',files,uploadFile,id)
-}
-
-const beforePDBUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFile, id: string) => {
-  if (! /.pdb$/.test(rawFile.name)) {
-    ElMessage.error('PDB File must be pdb format!')
-    return false
-  }
-  if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('File size can not exceed 2MB!')
-    return false
-  }
-  console.log('上传前')
-  return false
-}
-
-const handleChange: UploadProps['onChange'] | any = (uploadFile: UploadFile, uploadFiles: UploadFiles, id: string) => {
-  if (uploadFile) {
-    if (!message.value.pdb[id]) {
-      message.value.pdb[id] = {}
-    }
-    message.value.pdb![id].clientFile = uploadFile.raw!
-  }
-  console.log(uploadFiles)
-}
-const submitUpload = (id: string) => {
-  let num: number = Number(id.match(/\d/g)?.join('')) - 1; //根据id取得ref索引
-  uploadRef.value![num].submit()
-}
-const bottomFormRef = ref<FormInstance>()
+const runtimeFormRef = ref<typeof Widget>()
+const appFormRef = ref<typeof Widget>()
 const submitForm = async () => {
-
   let pass = true
   // check forms
-  await topFormRef.value![0].validate((valid, fields) => {
-    if (valid) {
-      console.log('sumit!')
-    } else {
-      console.log('error submit!', fields)
+  await runtimeFormRef.value?.validate((valid: boolean, fields: any) => {
+    if (!valid) {
+      console.log('error submit check!', fields)
+      ElNotification.error('error submit check!')
       pass = false
     }
   })
-  await bottomFormRef.value?.validate((valid, fields) => {
-    if (valid) {
-      console.log('sumit!')
-    } else {
-      console.log('error submit!', fields)
+  await appFormRef.value?.validate((valid: boolean, fields: any) => {
+    if (!valid) {
+      console.log('error submit check!', fields)
+      ElNotification.error('error submit check!')
       pass = false
     }
   })
   if (!pass) { return }
   // check uploads
-  for (let key in message.value.pdb) {
-    console.log(message.value.pdb[key])
-    if (message.value.pdb[key]?.clientFile) {
-      await uploadFile("ok", message.value.pdb!.clientFile).catch(err => {
-        console.log("err", err)
-        pass = false
-      })
-    }
-  }
+  console.log("uploding Files if Need...")
+  await appFormRef.value?.prepareSubmit().catch((err: any) => {
+    console.log('error prepare submit!', err)
+    ElNotification.error(err)
+    pass = false
+  })
   if (!pass) { return }
   // submit Form
-  console.log(appname, message.value, runtimeForm.value)
+  console.log("job submit:", appname, appParams.value, runtimeParams.value)
+  return
   // change File Format
-  let params: any = Object.assign({}, message.value)
-
-  if (!message.value.pdb!.uid) {
-    // params.pdb = ""
-  }
-  const res = await submitAppTask(appname, params, runtimeForm.value).catch(err => {
+  const res = await submitAppTask(appname, appParams.value, runtimeParams.value).catch(err => {
     console.log("err", err)
     pass = false
   })
@@ -215,18 +172,6 @@ const submitForm = async () => {
   // 请求网址: https://starlight.nscc-gz.cn/api/job/running/k8s_venus/graph-ppis-25113148
 
 }
-
-const resetForm = () => {
-  runtimeForm.value.jobname = initData.jobname
-  message.value = initData
-  initData = JSON.parse(JSON.stringify(message.value))
-  initData.jobname = runtimeForm.value.jobname
-  for (let item of uploadRef.value!) {
-    item.clearFiles()
-  }
-}
-
-
 </script>
 <style lang="less">
 .myform {

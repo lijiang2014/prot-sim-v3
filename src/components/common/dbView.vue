@@ -9,37 +9,23 @@
     </el-row>
   </div>
 </template>
-<script>
+<script lang="ts" >
 // import { Viewer } from "molstar";
 // import { Viewer } from "molstar/build/viewer/molstar";
 // import "molstar/build/viewer/molstar.css";
+import { nextTick, defineComponent, onMounted } from 'vue'
 
-export default {
-  props: ["src", "boxId", 'load'],
-  data() {
-    return {
-      isLoad: false
-    }
+export default defineComponent({
+  name: 'MolstarView',
+  props: {
+    src: String,
+    boxId: String,
+    load: Boolean,
   },
-  watch: {
-    load: {
-      handler(newVal) {
-        if (this.isLoad) return
-        if (newVal) {
-          this.isLoad = true
-          this.$nextTick(() => {
-            this.molstar()
-          })
-        }
-      },
-      immediate: true
-    }
-  },
-
-  methods: {
-    molstar() {
-      let filename = this.src;
-      var viewer = new molstar.Viewer(this.boxId, {
+  setup(props, ctx) {
+    const mountMolstar = () => {
+      let filename = props.src;
+      var viewer = new molstar.Viewer(props.boxId, {
         layoutIsExpanded: false,
         layoutShowControls: false,
         layoutShowRemoteState: false,
@@ -54,9 +40,14 @@ export default {
         viewportShowAnimation: false,
       });
       viewer.loadStructureFromUrl(filename, "pdb");
-    },
-  },
-};
+    }
+    onMounted(() => {
+      nextTick(function () {
+        mountMolstar();
+      });
+    })
+  }
+})
 </script>
 
 <style lang="less" scoped>

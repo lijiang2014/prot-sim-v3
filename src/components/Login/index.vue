@@ -21,8 +21,8 @@
     <login-wran></login-wran>
     <template #footer>
       <span class="footer">
-        <el-button @click="starTip = false">{{$t('login.cancel')}}</el-button>
-        <el-button type="primary" @click="jumpStar">{{$t('login.confirm')}}</el-button>
+        <el-button @click="starTip = false">{{ $t('login.cancel') }}</el-button>
+        <el-button type="primary" @click="jumpStar">{{ $t('login.confirm') }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -50,13 +50,14 @@ import { RedirectLoginURL } from '@/api/starlight'
 import { useRoute, useRouter } from 'vue-router'
 import router from '@/router'
 import { useI18n } from 'vue-i18n'
+import { utils } from '@/utils/utils'
 let emit = defineEmits<{
   (event: 'closeWindow'): void
 }>()
 let store = useStore()
 let $route = useRoute()
 let $router = useRouter()
-let $t=useI18n().t;
+let $t = useI18n().t;
 const loginForm: LoginRequest = reactive({
   username: "",
   password: "",
@@ -113,7 +114,7 @@ const submit = async () => {
   window.sessionStorage.setItem("token", res.token);
   store.commit('loginChange', true)
   console.log($route.path)
-  console.log($route.path=='/login')
+  console.log($route.path == '/login')
   if ($route.path == '/login') {
     $router.push('/')
   } else {
@@ -128,6 +129,23 @@ let jumpStar = async () => {
   const href = RedirectLoginURL()
   window.location.href = href
 }
+
+const bihuToken = utils.getCookie("Bihu-Token")
+console.log("bihuToken:", bihuToken)
+if (bihuToken !== "") {
+  // login by Starlight
+  // 保存token
+  window.sessionStorage.setItem("token", bihuToken);
+  store.commit('loginChange', true)
+  store.commit('setToken', bihuToken)
+  console.log($route.path)
+  if ($route.path == '/login') {
+    $router.push('/')
+  } else {
+    emit('closeWindow')
+  }
+}
+
 </script>
 <style lang="less" scoped>
 .login_form {

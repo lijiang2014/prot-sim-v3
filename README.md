@@ -30,11 +30,11 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
 
 - [x] login 
 - [x] structure prediciton/sumit
-- [ ] structure prediciton/queue
-- [ ] test/svg
-- [ ] test/pdbmolstar
-- [ ] test/phylotree
-- [ ] structure prediciton/example
+- [x] structure prediciton/queue
+- [x] test/svg
+- [x] test/pdbmolstar
+- [ ] ~~test/phylotree~~
+- [ ] ~~structure prediciton/example~~
 
 暂缓：
 
@@ -54,16 +54,17 @@ You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/
   - [x] 通过 vuex 来记录状态
   > https://vuex.vuejs.org/zh/guide/composition-api.html
   > Example About Page
-  - [ ] Element UI 按需引入 ~Later
+  - [x] Element UI 按需引入 ~Later
   > https://blog.csdn.net/sayUonly/article/details/121100230
   - [x] i18N
 - [x] Starlight Login
-- [ ] Apps
+- [x] Apps
+  - [ ] Dyn Forms
 - [ ] GraphPPIS
   - [x] 手动模式
-  - [ ] iframe 模式
-- [ ] Queue
-  - [ ] RAW ~TODO
+  - [ ] ~~iframe 模式~~
+- [x] Queue
+  - [x] RAW ~TODO
   - [ ] ALPHA 
 - [ ] Result
   - [x] RAW

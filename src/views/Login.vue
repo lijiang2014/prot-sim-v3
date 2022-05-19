@@ -6,14 +6,15 @@
       </div>
       <div class="form_box">
         <login-form>
-          <el-link class="link" type="primary" @click="enterHome">{{$t('login.quickEnter')}}</el-link>
+          <el-link class="link" type="primary" @click="enterHome">{{ $t('login.quickEnter') }}</el-link>
         </login-form>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
 import LoginForm from '@/components/Login/index.vue'
+import { utils } from '@/utils/utils';
 import { useRouter } from "vue-router";
 const $router = useRouter();
 let enterHome = () => {
@@ -46,6 +47,7 @@ let enterHome = () => {
     box-shadow: 0 0 10px #ddd;
     border: 1px solid #eee;
     border-radius: 50%;
+
     img {
       width: 100%;
       height: 100%;
@@ -53,12 +55,13 @@ let enterHome = () => {
       background-color: #eee;
     }
   }
+
   .form_box {
-      margin: 75px 20px;
-      height: 200px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-    }
+    margin: 75px 20px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
 }
 </style>
