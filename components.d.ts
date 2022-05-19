@@ -6,12 +6,15 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     About: typeof import('./src/components/About.vue')['default']
+    Container: typeof import('./src/components/Widget/container.vue')['default']
     DbView: typeof import('./src/components/common/dbView.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCard: typeof import('element-plus/es')['ElCard']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElCollapse: typeof import('element-plus/es')['ElCollapse']
+    ElCollapseItem: typeof import('element-plus/es')['ElCollapseItem']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
@@ -33,12 +36,14 @@ declare module '@vue/runtime-core' {
     ElPopover: typeof import('element-plus/es')['ElPopover']
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRow: typeof import('element-plus/es')['ElRow']
+    ElScrollbar: typeof import('element-plus/es')['ElScrollbar']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
+    Input: typeof import('./src/components/WebRemoteFinder/input.vue')['default']
     Item: typeof import('./src/components/Nav/item.vue')['default']
     LangSel: typeof import('./src/components/common/LangSel.vue')['default']
     Link: typeof import('./src/components/Nav/Link.vue')['default']
@@ -47,9 +52,11 @@ declare module '@vue/runtime-core' {
     Nav: typeof import('./src/components/Nav/index.vue')['default']
     NavItem: typeof import('./src/components/Nav/nav-item.vue')['default']
     Notfound: typeof import('./src/components/notfound.vue')['default']
+    RfbPath: typeof import('./src/components/Widget/RfbPath.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     StarlightLoginWarn: typeof import('./src/components/Login/starlightLoginWarn.vue')['default']
+    Widget: typeof import('./src/components/Widget/index.vue')['default']
   }
 }
 
