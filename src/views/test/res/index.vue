@@ -3,7 +3,7 @@
     <el-row>
       <el-col :span="16" :offset="4">
         <div class="demo-collapse">
-          <el-collapse v-model="activeNames">
+          <el-collapse v-model="activeNames" @change="changedActive">
             <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
               <div v-if="item.class === 'file'">
                 <div v-if="item.file.meta.mime === 'text/plain'">
@@ -11,7 +11,7 @@
                 </div>
                 <div v-if="item.file.meta.mime === 'chemical/pdb'">
                   <div class="box">
-                    <db-view :src='item.file.uri' :boxId='item.file.uri' :load="activeNames.indexOf(item.title) !== -1">
+                    <db-view :src='item.file.uri' :boxId='item.file.uri'>
                     </db-view>
                   </div>
                 </div>
@@ -29,8 +29,7 @@
                         <div class="text" v-html="child.text"></div>
                       </div>
                       <div v-if="child.meta.mime === 'chemical/pdb'" class="boxs">
-                        <db-view :src='child.uri' :boxId='child.uri + childIndex + index'
-                          :load="activeNames.indexOf(item.title) !== -1"></db-view>
+                        <db-view :src='child.uri' :boxId='child.uri + childIndex + index'></db-view>
                       </div>
                       <div v-if="child.meta.mime === 'image/png'">
                         <el-image :src="child.uri" fit="contain" class="img"></el-image>
@@ -49,12 +48,19 @@
 
 <script lang="ts" setup>
 import dbView from "@/components/common/dbView.vue";
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult, getText } from '@/api/api'
 
 let resData = ref<any>([])
 let activeNames = ref<string[]>([])
 let scrollbarRef = ref()
+
+const changedActive = () => {
+  nextTick(() => {
+    let myEvent = new Event('resize');
+    window.dispatchEvent(myEvent);
+  })
+}
 
 async function addText(obj: any) {
   for (let key in obj) {

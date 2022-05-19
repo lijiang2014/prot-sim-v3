@@ -20,7 +20,6 @@ export default defineComponent({
   props: {
     src: String,
     boxId: String,
-    load: Boolean,
   },
   setup(props, ctx) {
     const mountMolstar = () => {
