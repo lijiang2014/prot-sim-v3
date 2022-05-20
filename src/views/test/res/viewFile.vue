@@ -16,7 +16,7 @@ let props = defineProps<{
 }>()
 let currentPage = ref(1)
 let textData = ref('')
-let pageSize = ref(500)
+let pageSize = ref(1000)
 let total = ref(0)
 let getContent = async () => {
     let res = await getText(props.url, pageSize.value, currentPage.value).catch(err => console.log(err))

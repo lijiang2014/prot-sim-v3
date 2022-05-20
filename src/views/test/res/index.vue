@@ -5,6 +5,11 @@
         <div class="demo-collapse">
           <el-collapse v-model="activeNames" @change="changedActive">
             <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
+              <div v-if="item.class === 'simple'">
+                <div class="simple-box">
+                  {{ item.value }}
+                </div>
+              </div>
               <div v-if="item.class === 'file'">
                 <div v-if="item.file.meta.mime === 'text/plain'" class="text">
                   <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri!)">
@@ -37,7 +42,8 @@
                         <db-view :src='child.uri' :boxId='child.uri! + childIndex + index'></db-view>
                       </div>
                       <div v-if="child.meta.mime.indexOf('image') !== -1">
-                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri!]"></el-image>
+                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri!]">
+                        </el-image>
                       </div>
                     </div>
                   </div>
@@ -48,7 +54,7 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog v-model="showViewFile" title="查看文本" width="50%">
+    <el-dialog v-model="showViewFile" title="查看文本" width="50%" :top="'50vh'" class="dialog">
       <view-file :url="viewFileUrl"></view-file>
     </el-dialog>
   </div>
@@ -67,13 +73,18 @@ interface dataItem extends fileOutput {
 interface datasItem extends filesOutput {
   title: string
 }
-type listItem = dataItem | datasItem
+interface simple {
+  title: string,
+  class: 'simple',
+  value: string | number
+}
+type listItem = dataItem | datasItem | simple
 
 let resData = ref<listItem[]>([])
 let activeNames = ref<string[]>([])
 let scrollbarRef = ref()
-let showViewFile=ref(false)
-let viewFileUrl=ref('')
+let showViewFile = ref(false)
+let viewFileUrl = ref('')
 
 const changedActive = () => {
   nextTick(() => {
@@ -87,7 +98,11 @@ onMounted(async () => {
   })
   if (!res) return
   for (let key in res.outputs) {
-    resData.value.push(Object.assign({ title: key }, res.outputs[key] as dataItem | datasItem))
+    if (typeof res.outputs[key] === 'number' || typeof res.outputs[key] === 'string') {
+      resData.value.push({ title: key, class: 'simple', value: res.outputs[key] as string | number })
+    } else {
+      resData.value.push(Object.assign({ title: key }, res.outputs[key] as dataItem | datasItem))
+    }
     activeNames.value.push(key)
   }
   console.log(resData)
@@ -99,8 +114,8 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
   }
 }
 let readText = async (uri: string) => {
-  showViewFile.value=true
-  viewFileUrl.value=uri
+  showViewFile.value = true
+  viewFileUrl.value = uri
   console.log(viewFileUrl.value)
 }
 </script>
@@ -151,5 +166,13 @@ let readText = async (uri: string) => {
     padding-left: 10%;
     vertical-align: bottom;
   }
+}
+
+.simple-box {
+  padding: 10px;
+}
+
+::v-deep(.el-dialog) {
+  transform: translateY(-50%);
 }
 </style>

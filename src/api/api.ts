@@ -383,6 +383,8 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
               } as stringFile),
             ]
           },
+          "output10":1365413,
+          "output11":"aaaaaaa",
         } as OutputMap
       }
       let mockData = Object.assign(outputs, jobMetaExample)
