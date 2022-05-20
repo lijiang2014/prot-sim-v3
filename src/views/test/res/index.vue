@@ -65,8 +65,12 @@ import dbView from "@/components/common/dbView.vue";
 import viewFile from "./viewFile.vue";
 import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult } from '@/api/api'
-import { fileOutput, filesOutput } from '@/app-model'
+import { classOutput, fileOutput, filesOutput } from '@/app-model'
 
+let ooo = {
+  'a': 2
+
+}
 interface dataItem extends fileOutput {
   title: string
 }
@@ -98,10 +102,11 @@ onMounted(async () => {
   })
   if (!res) return
   for (let key in res.outputs) {
-    if (typeof res.outputs[key] === 'number' || typeof res.outputs[key] === 'string') {
-      resData.value.push({ title: key, class: 'simple', value: res.outputs[key] as string | number })
-    } else {
-      resData.value.push(Object.assign({ title: key }, res.outputs[key] as dataItem | datasItem))
+    let outputK = res.outputs[key]
+    if (typeof outputK === 'number' || typeof outputK === 'string') {
+      resData.value.push({ title: key, class: 'simple', value: outputK })
+    } else if (outputK.class) {
+      resData.value.push(Object.assign({ title: key }, outputK))
     }
     activeNames.value.push(key)
   }
