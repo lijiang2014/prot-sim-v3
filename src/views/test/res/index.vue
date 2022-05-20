@@ -67,10 +67,6 @@ import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult } from '@/api/api'
 import { classOutput, fileOutput, filesOutput } from '@/app-model'
 
-let ooo = {
-  'a': 2
-
-}
 interface dataItem extends fileOutput {
   title: string
 }
