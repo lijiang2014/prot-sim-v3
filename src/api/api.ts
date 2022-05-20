@@ -236,7 +236,7 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
               }
             } as stringFile),
             ({
-              uri: "/1.txt",
+              uri: "/3.txt",
               meta: {
                 mime: 'text/plain',
               }
@@ -268,7 +268,7 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
               }
             } as stringFile),
             ({
-              uri: "/1.txt",
+              uri: "/4.txt",
               meta: {
                 mime: 'text/plain',
               }
@@ -339,7 +339,7 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
                 }
               } as stringFile),
               ({
-                uri: "/1.txt",
+                uri: "/5.txt",
                 meta: {
                   mime: 'text/plain',
                 }

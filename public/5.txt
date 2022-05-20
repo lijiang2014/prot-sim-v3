@@ -1,0 +1,284 @@
+CSDN首页
+博客
+下载·课程
+学习 
+社区
+认证
+开源
+云服务 
+View Design升级Vue3
+ 搜索
+
+会员中心 
+足迹
+动态
+消息
+css文字长度实现宽度自适应、显示三行超出省略号
+
+望舒忘书
+
+于 2022-04-08 12:50:44 发布
+
+503
+ 收藏
+分类专栏： css 文章标签： css vue html js
+版权
+
+css
+专栏收录该内容
+1 篇文章0 订阅
+订阅专栏
+width 不设置默认宽度铺满全屏，如果要实现宽度随着文字长度自适应，css
+
+width:fit-content;
+1
+如果要实现文字自动换行，最多显示三行，超出显示省略号,以下这种效果的话
+在这里插入图片描述
+
+ 	overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+1
+2
+3
+4
+5
+6
+
+望舒忘书
+关注
+
+0
+
+
+0
+
+0
+打赏
+
+专栏目录
+css 固定内容显示范围,css之让文字在一定范围内显示，不超过固定的宽度和高度...
+weixin_39640008的博客
+ 387
+首先我们设置类如：.STYLE1 { width:150px; height:80px;color: #000000; border:1px solid #FF0000;}解决让文字不超出CSS盒子的固定高宽我们只需要在此CSS类加入overflow:hidden;样式即可，加入后CSS类：.STYLE1 { width:150px; height:80px;color: #000000; bor...
+css文字只显示三行，超出部分显示省略号
+Jonn1124的博客
+ 520
+text-overflow: -o-ellipsis-lastline; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical;
+参与评论
+
+
+请发表有价值的评论， 博客评论不欢迎灌水，良好的社区氛围需大家一起维护。
+ 
+表情包
+表情包
+...超出部分用省略号显示_m0_49016709的博客_css显示三行
+3-15
+css 实现div内显示两行或三行,超出部分用省略号显示 一、div内显示一行,超出部分用省略号显示 white-space:nowrap;overflow:hidden;text-overflow:ellipsis; 二、div内显示固定两行或三行,超出部分用省略号显示 ...
+css 实现div内显示两行或三行,超出部分用省略号显示
+2-25
+-webkit-line-clamp 是一个 不规范的属性(unsupported WebKit property),它没有出现在 CSS 规范草案中。限制在一个块元素显示的文本的行数。 为了实现该效果,它需要组合其他外来的WebKit属性。常见结合属性: ...
+CSS文字自适应div宽度
+大风起兮云飞扬
+ 2717
+1、文字自适应宽度 <body> <div class="box"> <div>大风起兮云飞扬</div> <div>安得猛士兮守四方</div> <div>威加海内兮归故乡</div> </div> </body> .box{ border:1px solid red; } .box di
+css 固定宽度，文字均匀分布
+Running_FE的博客
+ 315
+//方法一： text-align-last: justify; //不支持IE浏览器和safari浏览器 //方法二： .label{ display: inline-block; width: 70px; height: 20px; /*高度需要添加，不然文字下面会多出一些空隙*/ text-align: justify; &::after { content: ""; display: inline-block; ...
+css 实现div内显示一行、两行或三行,超出部分用省略号显示
+3-15
+-webkit-line-clamp 是一个 不规范的属性(unsupported WebKit property),它没有出现在 CSS 规范草案中。限制在一个块元素显示的文本的行数。 为了实现该效果,它需要组合其他外来的WebKit属性。常见结合属性: ...
+...的部分显示..._Markov Zheng的博客_css超过3行显示为...
+3-22
+css 控制 段落 超出三行的部分显示… 代码如下 <!DOCTYPE html> p{ width:100px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3;/*超出3行部分显示省略号,去掉该属性 显示...
+css根据文字长度实现宽度自适应
+Einstellung的博客
+ 3586
+根据文字长度，自适应width大小 width: fit-content
+css 文本三行显示，超出省略号表示
+weixin_39535289的博客
+ 1132
+css 文本显示，超出省略号表示
+使文字平均铺满容器的css属性
+qq_44417271的博客
+ 770
+给盒子宽度 加上text-align-last: justify;属性即可 效果图：
+宽度固定，字体充满整个div
+weixin_33796177的博客
+ 5324
+2019独角兽企业重金招聘Python工程师标准>>> ...
+CSS文本超过三行用省略号代替
+weixin_41970780的博客
+ 1294
+CSS文本超过三行用省略号代替 overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; // 控制多行的行数 -webkit-box-orient: vertical;
+css实现列表信息最多展示三行然后...打点
+Afterwade的博客
+ 828
+今天写h5移动端碰到个需求，需要实现列表信息最多展示三行然后…打点，在这里记录一下。 <!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width,
+css当文字超过指定宽度时，超出部分用“...“省略号表示
+Amily_an的博客
+ 259
+html <p>红红火火恍恍惚惚斤斤计较溜了溜了凄凄切切呜呜哇哇柔柔弱弱吞吞吐吐一样一样乒乒乓乓重中之重休息休息宝宝贝贝男男女女密密麻麻坎坎坷坷</p> css单行 p { width: 300px; overflow: hidden; text-overflow: ellipsis;/* 超出省略号 */ white-space: nowrap; } 效果图： css多行 p { width: 200px; height: 36px; /* 高度根据多行文字一共占
+css让字体平均铺满容器
+6块腹肌的博客
+ 4997
+<div class="label">账号</div> .label { width: 60px; height: 31px; line-height: 31px; padding-right: 10px; text-align: justify; } .label::after { display: inline-block; width: 100%; content: ""; } 效果
+CSS 实现div宽度根据内容自适应
+09-24
+最近做了个项目，其中有项目需求是需要div根据内容进行宽度自适应。下面小编给大家分享一段代码关于CSS 实现div宽度根据内容自适应 的相关知识，需要的朋友参考下
+背景自适应文字宽度的css按钮
+08-13
+根据文字宽度，背景图片自适应，用a标记实现
+css设置div显示几行,div+css显示两行或三行文字，超出用...表示
+weixin_42349769的博客
+ 839
+.comment_inner{width: 200px;word-break: break-all;text-overflow: ellipsis;display: -webkit-box; /** 对象作为伸缩盒子模型显示 **/-webkit-box-orient: vertical; /**设置或检索伸缩盒对象的子元素的排列方式 **/-webkit-line-clamp: 3; /** ...
+[css] 在固定宽度的div下，怎么让字体自适应大小，不超出宽度，也不要换行
+歌谣的博客
+ 1386
+[css] 在固定宽度的div下，怎么让字体自适应大小，不超出宽度，也不要换行 .item-codes{width:800px;word-break: break-all;white-space: normal;} 个人简介 我是歌谣，欢迎和大家一起交流前后端知识。放弃很容易， 但坚持一定很酷。欢迎大家一起讨论 主目录 与歌谣一起通关前端面试题 ...
+最多显示三行，多余...展开，点击展开收起 getClientRects
+热门推荐
+ 2万+
+需求：显示文本，最多显示三行，多余的显示 ... 展开，点击展开收起.效果如下：需要考虑的点：换行，展开的时候遮住收起如果是不需要有固定在右侧的展开收起，那么移动端直接用css3：overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: ve...
+CSS控制显示3行
+threedeformity的博客
+ 700
+文本父级上添加 display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden;
+css自适应的文字长度的div
+Provenr的博客
+ 1万+
+需求：产品列表页面中，产品图片下面显示产品的名称，产品简介时需要自适应文字长度。一行时居中显示，多行左对齐显示。  一、利用display:inline-block；属性  1、html 代码段 北京市海淀区 内蒙古自治区锡林郭勒盟  2、css 片段  div {width: 120px;background: #fafafa;height: 50px;ma
+css 设置文字自适应宽度提示框
+最新发布
+qq_40225369的博客
+ 23
+min-width: 10px; max-width: 300px width: max-content; // 关键代码，让文字在最小和最大宽度之间占满
+“相关推荐”对你有帮助么？
+
+非常没帮助
+
+没帮助
+
+一般
+
+有帮助
+
+非常有帮助
+©️2022 CSDN 皮肤主题：深蓝海洋 设计师：CSDN官方博客 返回首页
+关于我们
+招贤纳士
+商务合作
+寻求报道
+
+400-660-0108
+
+kefu@csdn.net
+
+在线客服
+工作时间 8:30-22:00
+公安备案号11010502030143
+京ICP备19004658号
+京网文〔2020〕1039-165号
+经营性网站备案信息
+北京互联网违法和不良信息举报中心
+家长监护
+网络110报警服务
+中国互联网举报中心
+Chrome商店下载
+©1999-2022北京创新乐知网络技术有限公司
+版权与免责声明
+版权申诉
+出版物许可证
+营业执照
+
+望舒忘书
+码龄3年
+ 暂无认证
+12
+原创
+15万+
+周排名
+10万+
+总排名
+7074
+访问
+
+等级
+139
+积分
+0
+粉丝
+7
+获赞
+8
+评论
+3
+收藏
+持之以恒
+勤写标兵Lv1
+私信
+关注
+搜博主文章
+
+热门文章
+VUE项目修改element-ui等组件库样式  2213
+el-checkbox出现的传值问题以及change事件传默认值  2021
+三分钟带你了解JS的运行机制  900
+js 垃圾回收机制  772
+css文字长度实现宽度自适应、显示三行超出省略号  486
+最新评论
+css - 特殊的样式
+盼盼编程: 感谢博主分享，讲的挺不错，希望后面有更多的文章!欢迎一起交流!
+
+css - 特殊的样式
+不正经的kimol君: 写的不错，学习了，学习的道路上一起进步，也期待你的关注与支持！
+
+VUE项目修改element-ui等组件库样式
+前端卡卡西呀: 偷偷学编程，然后惊艳所有人，哈哈哈～
+
+VUE项目修改element-ui等组件库样式
+ITKaven: 写的很不错，感谢大神的分享！
+
+VUE项目修改element-ui等组件库样式
+strive_day: 很好的文章，点赞
+
+您愿意向朋友推荐“博客详情页”吗？
+
+强烈不推荐
+
+不推荐
+
+一般般
+
+推荐
+
+强烈推荐
+最新文章
+mac关掉node服务
+JS-浅谈一下Symbol
+js promise，async异步数据链式获取---回调地狱
+2022年8篇2021年5篇
+
+ 
+
+分类专栏
+
+JavaScript
+4篇
+
+垃圾回收
+1篇
+
+内存管理
+1篇
+
+css
+1篇
+
+
+举报
