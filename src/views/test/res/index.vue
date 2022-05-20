@@ -48,13 +48,17 @@
         </div>
       </el-col>
     </el-row>
+    <el-dialog v-model="showViewFile" title="查看文本" width="50%">
+      <view-file :url="viewFileUrl"></view-file>
+    </el-dialog>
   </div>
 </template>
 
 <script lang="ts" setup>
 import dbView from "@/components/common/dbView.vue";
+import viewFile from "./viewFile.vue";
 import { onMounted, ref, nextTick } from 'vue'
-import { getJobResult, getText } from '@/api/api'
+import { getJobResult } from '@/api/api'
 import { fileOutput, filesOutput } from '@/app-model'
 
 interface dataItem extends fileOutput {
@@ -68,6 +72,8 @@ type listItem = dataItem | datasItem
 let resData = ref<listItem[]>([])
 let activeNames = ref<string[]>([])
 let scrollbarRef = ref()
+let showViewFile=ref(false)
+let viewFileUrl=ref('')
 
 const changedActive = () => {
   nextTick(() => {
@@ -93,8 +99,9 @@ let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不�
   }
 }
 let readText = async (uri: string) => {
-  let res = await getText(uri).catch(err => console.log(err))
-  console.log(res)
+  showViewFile.value=true
+  viewFileUrl.value=uri
+  console.log(viewFileUrl.value)
 }
 </script>
 

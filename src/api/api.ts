@@ -196,7 +196,7 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
               }
             } as stringFile),
             ({
-              uri: "/1.txt",
+              uri: "/2.txt",
               meta: {
                 mime: 'text/plain',
               }
@@ -736,6 +736,14 @@ export const submitPredictStruct = (r: structurePredictRequest): Promise<any> =>
 
 
 // 返回文本文件的内容
-export const getText = (url: string): Promise<{ data: string }> => {
-  return axios.get(url)
+export const getText =(url: string , size:number ,page:number):Promise<{text:string,total:number}> => {
+  let text:string
+  return new Promise((resolve,reject)=>{
+    axios.get(url).then(res=>{
+      text=res.data.slice(size*(page-1),size*page)
+      resolve({text,total:res.data.length})
+    }).catch(err=>{
+      reject(err)
+    })
+  })
 }
