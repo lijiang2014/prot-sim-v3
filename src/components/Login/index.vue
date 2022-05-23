@@ -3,7 +3,7 @@
     <el-form-item prop="username">
       <el-row style="width:100%">
         <el-col :span="16">
-          <el-input ref="usernameRef" v-model="loginForm['username']" :placeholder="$t('login.username')" autofocus
+          <el-input ref="usernameRef" v-model="loginForm['username']" :placeholder="$t('login.emailName')" autofocus
             style="ime-mode: disabled" class="input">
             <template #prefix>
               <el-icon class="icon">
@@ -20,7 +20,7 @@
     </el-form-item>
     <el-form-item prop="password">
       <el-input v-model="loginForm.password" type="password" 
-        :placeholder="$t('login.password')" :disabled="!codeSent" class="input">
+        :placeholder="$t('login.verificationCode')" :disabled="!codeSent" class="input">
         <template #prefix>
           <el-icon class="icon">
             <Key />
