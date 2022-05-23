@@ -13,7 +13,7 @@
 // import { Viewer } from "molstar";
 // import { Viewer } from "molstar/build/viewer/molstar";
 // import "molstar/build/viewer/molstar.css";
-import { nextTick, defineComponent, onMounted } from 'vue'
+import { nextTick, defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
   name: 'MolstarView',
@@ -57,6 +57,9 @@ export default defineComponent({
     display: flex;
     text-align: center;
     justify-content: left;
+  }
+  :deep(.msp-plugin .msp-layout-expanded){
+    z-index:9999
   }
 }
 
