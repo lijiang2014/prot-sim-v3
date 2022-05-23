@@ -188,7 +188,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           "label": "",
           "attr": {
             "visible": true,
-            "default": "<h2 style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; text-align: center;\" data-v-67dea2ff=\"\"><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #000000; font-family: 'Microsoft Yahei', 微软雅黑, 宋体; font-size: 36px; font-weight: 600; text-align: justify; background-color: #ffffff; float: none; display: inline !important;\">GraphPPIS xxxxx : 基于深度图卷积网络的结构感知的蛋白质相互作用位点预测</span><br style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" /><span style=\"color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">ref:&nbsp;</span><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #333333; font-family: arial; font-size: 16px;\">https://doi.org/10.1093/bioinformatics/btab643</span></h2>"
+            "default": "<h2 style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; text-align: center;\" data-v-67dea2ff=\"\"><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #000000; font-family: 'Microsoft Yahei', 微软雅黑, 宋体; font-size: 36px; font-weight: 600; text-align: justify; background-color: #ffffff; float: none; display: inline !important;\">GraphPPIS  : 基于深度图卷积网络的结构感知的蛋白质相互作用位点预测</span><br style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" /><span style=\"color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">ref:&nbsp;</span><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #333333; font-family: arial; font-size: 16px;\">https://doi.org/10.1093/bioinformatics/btab643</span></h2>"
           },
           "data": []
         },
@@ -205,24 +205,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "disabled": false,
             "visible": true,
             "rules": "",
-            // "default": "1r8s"
-          },
-          "data": []
-        },
-        {
-          "id": "text22",
-          "type": "text",
-          "name": "pdbID2",
-          "offset": 0,
-          "width": 24,
-          "label": "pdbID2",
-          "attr": {
-            "placeholder": "",
-            "required": false,
-            "disabled": false,
-            "visible": true,
-            "rules": "",
-            "default": "1r8s2"
+            "default": "1r8s"
           },
           "data": []
         },
@@ -241,39 +224,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
             "extends": {
               "accept": ".pdb",
             },
-            "rules": ""
-          },
-          "data": []
-        }, {
-          "id": "rfbPath2",
-          "type": "rfbPath",
-          "name": "pdb2",
-          "offset": 0,
-          "width": 24,
-          "label": "pdb",
-          "attr": {
-            "placeholder": "",
-            "default": "",
-            "visible": true,
-            "extends": {
-              "accept": ".pdb",
-            },
-            "required": false,
-            "rules": ""
-          },
-          "data": []
-        }, {
-          "id": "rfbPath3",
-          "type": "rfbPath",
-          "name": "pdb3",
-          "offset": 0,
-          "width": 24,
-          "label": "pdb",
-          "attr": {
-            "placeholder": "",
-            "default": "",
-            "visible": true,
-            "required": false,
             "rules": ""
           },
           "data": []
@@ -324,35 +274,6 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
           },
           "data": []
         },
-        {
-          "id": "list12",
-          "type": "list",
-          "name": "mode2",
-          "offset": 0,
-          "width": 24,
-          "label": "mode2",
-          "attr": {
-            "required": false,
-            "disabled": false,
-            "visible": true,
-            "options": [
-              {
-                "label": "fast2",
-                "value": "fast2",
-                "number": false,
-                "disabled": false,
-                "selected": false
-              },
-              {
-                "label": "slow2",
-                "value": "slow2",
-                "disabled": false
-              }
-            ],
-            "default": "fast2"
-          },
-          "data": []
-        }
       ]
     },
     "title": "GraphPPIS",
@@ -446,6 +367,20 @@ export function uploadFileDirectSimple(filename: string, fileObj: File, settings
   }
   return uploadFileDirect(params, blob, settings)
 }
+
+// 返回文本文件的内容
+export const getText = (url: string, size: number, page: number): Promise<{ text: string, total: number }> => {
+  let text: string
+  return new Promise((resolve, reject) => {
+    axios.get(url).then(res => {
+      text = res.data.slice(size * (page - 1), size * page)
+      resolve({ text, total: res.data.length })
+    }).catch(err => {
+      reject(err)
+    })
+  })
+}
+
 
 // Orginal API
 export const checkPredictStructureProjectName = (projName: string): Promise<any> => {

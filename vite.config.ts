@@ -6,7 +6,7 @@ import IconsResolver from 'unplugin-icons/resolver'
 import externalGlobals from 'rollup-plugin-external-globals'
 import commonjs from 'rollup-plugin-commonjs'
 import vueI18n from '@intlify/vite-plugin-vue-i18n'
-
+import { viteMockServe } from "vite-plugin-mock"
 const AutoImport = require('unplugin-auto-import/vite')
 const Components = require('unplugin-vue-components/vite')
 const { ElementPlusResolver } = require('unplugin-vue-components/resolvers')
@@ -42,13 +42,16 @@ export default defineConfig({
     AutoImport({
       resolvers: [ElementPlusResolver()],
     }),
+    viteMockServe({
+      supportTs: true,
+    }),
     Components({
       resolvers: [
         ElementPlusResolver(),
-        IconsResolver({enabledCollections: ['ep']}),
+        IconsResolver({ enabledCollections: ['ep'] }),
       ],
     }),
-    Icons({autoInstall: true}),
+    Icons({ autoInstall: true }),
     vueI18n({
       compositionOnly: false,
       include: path.resolve(__dirname, "src/i18n/**"),
@@ -57,7 +60,7 @@ export default defineConfig({
   build: {
     assetsDir: 'static',
     rollupOptions: {
-      external: ['molstar/build/viewer/molstar' ,],
+      external: ['molstar/build/viewer/molstar',],
       plugins: [
         commonjs(),
         externalGlobals({
@@ -73,10 +76,10 @@ export default defineConfig({
               '@element-plus': 'ep',
               '@ctrl': 'ep',
               'axios': 'ep',
-              'vuex': 'ep', 
+              'vuex': 'ep',
               'vue-router': 'ep',
               'vue-i18n': 'ep',
-              '@vue': 'ep', 
+              '@vue': 'ep',
             }
             const bigPackage = 'lodash-es'
             const pname = id.toString().split('node_modules/')[1].split("/")[0]

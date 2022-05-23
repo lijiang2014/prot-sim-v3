@@ -124,6 +124,11 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'tc' },
         component: () => import('@/views/test/tc/index.vue')
       },
+      // {
+      //   path: '/later/test/res',
+      //   meta: { title: 'Result' },
+      //   component: () => import('@/views/test/res/index.vue')
+      // },
       {
         path: '/later/test/pdbMolstar',
         meta: { title: 'pdb-molstar' },
@@ -138,6 +143,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/later/test/myform',
         meta: { title: 'AppForm' },
         component: () => import('@/views/test/myform/dynamicForm.vue')
+      },
+      {
+        path: '/later/test/mockApi',
+        meta: { title: 'MockApi' },
+        component: () => import('@/views/test/MockApi/index.vue')
       },
     ]
   },
