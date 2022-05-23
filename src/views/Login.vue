@@ -14,7 +14,6 @@
 </template>
 <script lang="ts" setup>
 import LoginForm from '@/components/Login/index.vue'
-import { utils } from '@/utils/utils';
 import { useRouter } from "vue-router";
 const $router = useRouter();
 let enterHome = () => {

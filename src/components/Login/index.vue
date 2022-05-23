@@ -3,8 +3,14 @@
     <el-form-item prop="username">
       <el-row style="width:100%">
         <el-col :span="16">
-          <el-input ref="usernameRef" prefix-icon="el-icon-user-solid" v-model="loginForm['username']"
-            :placeholder="$t('login.username')" autofocus style="ime-mode: disabled"></el-input>
+          <el-input ref="usernameRef" v-model="loginForm['username']" :placeholder="$t('login.username')" autofocus
+            style="ime-mode: disabled" class="input">
+            <template #prefix>
+              <el-icon class="icon">
+                <MessageBox />
+              </el-icon>
+            </template>
+          </el-input>
         </el-col>
         <el-col :span="8">
           <el-button class="btn-code" type="primary" plain :disabled="!verifiedUsername" @click="toSendCode">
@@ -13,8 +19,14 @@
       </el-row>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input prefix-icon="el-icon-lock" v-model="loginForm.password" type="password"
-        :placeholder="$t('login.password')" :disabled="!codeSent"></el-input>
+      <el-input v-model="loginForm.password" type="password" 
+        :placeholder="$t('login.password')" :disabled="!codeSent" class="input">
+        <template #prefix>
+          <el-icon class="icon">
+            <Key />
+          </el-icon>
+        </template>
+      </el-input>
     </el-form-item>
   </el-form>
   <el-dialog v-model="starTip" :title="$t('login.confirmTitle')" width="29%" center draggable top="30vh" append-to-body>
@@ -42,13 +54,12 @@
  * starlightLogin
  */
 import LoginWran from './starlightLoginWarn.vue'
-import { ref, reactive, watch, onMounted } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { useStore } from '@/store'
 import { ElNotification as $Notify, ElMessage, FormRules } from 'element-plus'
 import { sendEmailCode, login, LoginRequest } from '@/api/api'
 import { RedirectLoginURL } from '@/api/starlight'
 import { useRoute, useRouter } from 'vue-router'
-import router from '@/router'
 import { useI18n } from 'vue-i18n'
 import { utils } from '@/utils/utils'
 let emit = defineEmits<{
@@ -87,6 +98,7 @@ const toSendCode = async () => {
     $Notify({ type: 'error', title: $t('login.sendFail'), message: err })
   })
   if (!res) { return }
+  $Notify({ type: 'success', title: $t('login.sendSuccess') })
   console.log("mock sendCode 123456")
   console.log("res", res)
   codeSent.value = true
@@ -133,7 +145,7 @@ let jumpStar = async () => {
 const bihuToken = utils.getCookie("Bihu-Token")
 console.log("bihuToken:", bihuToken)
 if (bihuToken !== "") {
-  // login by Starlight
+  // login by Starlight 
   // 保存token
   window.sessionStorage.setItem("token", bihuToken);
   store.commit('loginChange', true)
@@ -153,7 +165,9 @@ if (bihuToken !== "") {
   padding: 0px;
   // font-family: Arial, Helvetica, sans-serif;
   font-size: calc(11px + 1vmin);
-
+  .input ::v-deep(.el-input__inner){
+    padding-left: 30px!important;
+  }
   .btn-code {
     width: 100%;
   }
@@ -169,5 +183,11 @@ if (bihuToken !== "") {
   // .f_right {
   //   color: blue;
   // }
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 </style>

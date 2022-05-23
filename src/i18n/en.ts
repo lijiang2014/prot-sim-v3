@@ -197,8 +197,8 @@ export default {
   login: {
     title: 'Login Form',
     logIn: 'Login',
-    username: 'Username',
-    password: 'Password',
+    username: 'email',
+    password: 'Verification Code',
     any: 'any',
     thirdparty: 'Or connect with',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !',
@@ -231,6 +231,7 @@ export default {
     wrongName:'The mailbox format is incorrect',
     wrongWord:'Incorrect format of verification code',
     sendFail:'Failed to send verification code. Please try again later',
+    sendSuccess:'Sent successfully',
     checkWrong:'Verification code verification error',
     loginOk:'Login succeeded',
     EmailOrTelephoneNeeded:'Mailbox cannot be empty',
