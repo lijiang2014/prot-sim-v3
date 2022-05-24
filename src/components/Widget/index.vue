@@ -33,7 +33,7 @@
   </template>
 </template>
 <script lang="ts" setup>
-import { onMounted, ref, defineProps } from 'vue'
+import { onMounted, ref } from 'vue'
 import { AppWidgets } from '@/app-model'
 import type { AppParams, baseAppParamsTypes } from '@/app-model/graph-ppis';
 import Container from './container.vue';
