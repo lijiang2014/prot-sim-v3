@@ -11,7 +11,7 @@
 import { AppWidgets } from '@/app-model'
 import type { AppParams, baseAppParamsTypes } from '@/app-model/graph-ppis';
 import { FormInstance, FormRules, FormValidateCallback } from 'element-plus';
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 import Index from './index.vue';
 interface Props {
   widgetForm: AppWidgets

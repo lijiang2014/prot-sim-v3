@@ -83,18 +83,15 @@ watch(() => loginForm, (newVal, oldVal) => {
 }, { deep: true })
 const toSendCode = async () => {
   const res = await sendEmailCode(loginForm.username).catch(err => {
-    console.log("err:", err, "123@45.cn will pass the mock test!")
+    console.log("err:", err)
     $Notify({ type: 'error', title: $t('login.sendFail'), message: err })
   })
   if (!res) { return }
-  console.log("mock sendCode 123456")
-  console.log("res", res)
   codeSent.value = true
 }
 const submit = async () => {
-  console.log("mock submit ", loginForm);
   const res = await login(loginForm).catch((err) => {
-    console.log("err:", err, "123456 will pass the mock test!");
+    console.log("err:", err,);
     $Notify({ type: "error", title: $t('login.checkWrong'), message: err });
   });
   if (!res) {
@@ -111,7 +108,7 @@ const submit = async () => {
     });
   }
   // 保存token
-  window.sessionStorage.setItem("token", res.token);
+  window.sessionStorage.setItem("token", res.spec);
   store.commit('loginChange', true)
   console.log($route.path)
   console.log($route.path == '/login')
