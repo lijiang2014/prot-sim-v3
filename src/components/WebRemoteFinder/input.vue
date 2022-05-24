@@ -16,8 +16,8 @@ const emit = defineEmits(["itemClick", "update:modelValue"]);
 
 interface Props {
   workdir: string // 开始时的位置
-  multiable: boolean // 可以多选
-  types: FileType[] // 允许选择的类型
+  multiable?: boolean // 可以多选
+  types?: FileType[] // 允许选择的类型
   accept: string // 允许的文件类型
   modelValue: FileInfo[]
 }

@@ -1,15 +1,15 @@
 <template>
   <template v-if="widgetForm.type === 'container' && widgetForm.data && widgetForm.data.length > 0">
     <el-form ref="formRef" label-position="top" label-width="120px" :rules="rules" :model="modelValue">
-      <index v-for="(item, index) in widgetForm.data" :widgetForm="item"
-        :ref="(el: any) => { if (el) children[index] = el }" v-model="modelValue[item.name]" :rules="rules">
+      <index v-for="(item, index) in widgetForm.data" :widgetForm="item" ref="children" v-model="modelValue[item.name]"
+        :rules="rules" @update:model-value="(val: baseAppParamsTypes) => changedItem(item, val)">
       </index>
     </el-form>
   </template>
 </template>
 <script lang="ts" setup>
 import { AppWidgets } from '@/app-model'
-import { AppParams } from '@/app-model/graph-ppis';
+import type { AppParams, baseAppParamsTypes } from '@/app-model/graph-ppis';
 import { FormInstance, FormRules, FormValidateCallback } from 'element-plus';
 import { ref, defineProps } from 'vue';
 import Index from './index.vue';
@@ -20,6 +20,7 @@ interface Props {
 }
 let props = defineProps<Props>()
 const formRef = ref<FormInstance>()
+const emit = defineEmits(["update:modelValue"]);
 const validate = (callback?: FormValidateCallback) => {
   return formRef.value?.validate(callback)
 }
@@ -41,7 +42,11 @@ const prepareSubmit = async () => {
 }
 const widgetType = () => props.widgetForm.type
 defineExpose({ validate, prepareSubmit, widgetType })
-
+const changedItem = (wi: AppWidgets, val: any) => {
+  let copyed = props.modelValue
+  copyed[wi.name] = val
+  emit("update:modelValue", copyed)
+}
 </script>
 <style lang="less">
 .myform {

@@ -161,7 +161,7 @@ const submitForm = async () => {
   if (!pass) { return }
   // submit Form
   console.log("job submit:", appname, appParams.value, runtimeParams.value)
-  return
+  // return
   // change File Format
   const res = await submitAppTask(appname, appParams.value, runtimeParams.value).catch(err => {
     console.log("err", err)
