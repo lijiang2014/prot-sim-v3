@@ -3,7 +3,7 @@
     <el-row class="panel_3d">
       <el-col>
         <el-row style="height: 100%;">
-          <div :key="boxId" class="view_3d" :id="boxId"></div>
+          <div class="view_3d" :id="boxId"></div>
         </el-row>
       </el-col>
     </el-row>
@@ -19,12 +19,12 @@ export default defineComponent({
   name: 'MolstarView',
   props: {
     src: String,
-    boxId: String,
   },
   setup(props, ctx) {
+    let boxId=ref('box'+Number(Math.random().toFixed(6))*1000000)
     const mountMolstar = () => {
       let filename = props.src;
-      var viewer = new molstar.Viewer(props.boxId, {
+      var viewer = new molstar.Viewer(boxId.value, {
         layoutIsExpanded: false,
         layoutShowControls: false,
         layoutShowRemoteState: false,
@@ -45,6 +45,9 @@ export default defineComponent({
         mountMolstar();
       });
     })
+    return {
+      boxId
+    }
   }
 })
 </script>

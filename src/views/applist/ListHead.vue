@@ -55,6 +55,7 @@ let emit = defineEmits<{
 }
 .head-right{
   .view-all{
+    width: 100px;
     padding-right: 10px;
   }
 }

@@ -4,45 +4,45 @@
       <el-col :span="16" :offset="4">
         <div class="demo-collapse">
           <el-collapse v-model="activeNames" @change="changedActive">
-            <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title">
+            <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title" class="collapse-item">
               <div v-if="item.class === 'simple'">
                 <div class="simple-box">
                   {{ item.value }}
                 </div>
               </div>
-              <div v-if="item.class === 'file'">
+              <div v-else-if="item.class === 'file'">
                 <div v-if="item.file.meta.mime === 'text/plain'" class="text">
                   <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri!)">
                     <Document />
                   </el-icon>
                 </div>
-                <div v-if="item.file.meta.mime === 'chemical/pdb'">
+                <div v-else-if="item.file.meta.mime === 'chemical/pdb'">
                   <div class="box">
-                    <db-view :src='item.file.uri' :boxId='item.file.uri'>
+                    <db-view :src='item.file.uri'>
                     </db-view>
                   </div>
                 </div>
-                <div v-if="item.file.meta.mime.indexOf('image') !== -1">
+                <div v-else-if="item.file.meta.mime.indexOf('image') !== -1">
                   <div class="imgbox">
                     <el-image :src="item.file.uri" fit="contain" class="img" :preview-src-list="[item.file.uri!]">
                     </el-image>
                   </div>
                 </div>
               </div>
-              <div v-if="item.class === 'files'">
+              <div v-else-if="item.class === 'files'">
                 <el-scrollbar class="scrollbar-contain" ref="scrollbarRef" @mouseenter="scrollbarUpdate">
                   <div class="scrollbar-flex-content">
-                    <div v-for="(child, childIndex) in item.files" class="scrollbar-demo-item">
+                    <div v-for="(child, childIndex) in item.files" class="scrollbar-item">
                       <div v-if="child.meta.mime === 'text/plain'" class="text">
                         <el-icon size="calc( 100px + 5vw)" @Click="readText(child.uri!)">
                           <Document />
                         </el-icon>
                       </div>
-                      <div v-if="child.meta.mime === 'chemical/pdb'" class="boxs">
-                        <db-view :src='child.uri' :boxId='child.uri! + childIndex + index'></db-view>
+                      <div v-else-if="child.meta.mime === 'chemical/pdb'" class="boxs">
+                        <db-view :src='child.uri'></db-view>
                       </div>
-                      <div v-if="child.meta.mime.indexOf('image') !== -1">
-                        <el-image :src="child.uri" fit="contain" class="img" :preview-src-list="[child.uri!]">
+                      <div v-else-if="child.meta.mime.indexOf('image') !== -1">
+                        <el-image :src="child.uri" fit="cover" class="img" :preview-src-list="[child.uri!]">
                         </el-image>
                       </div>
                     </div>
@@ -132,29 +132,36 @@ let readText = async (uri: string) => {
   width: calc(600px + 2vw);
   position: relative;
 }
-
-.scrollbar-flex-content {
-  display: flex;
+.collapse-item{
+  width: 1200px;
 }
-
-.scrollbar-demo-item {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 10px;
-  // position: relative;
-
-  .boxs {
-    width: calc(350px + 1vw);
-    height: calc(300px + 1vw);
-
+.scrollbar-contain {
+  .scrollbar-flex-content {
+    display: flex;
   }
 
-  .img {
-    height: calc(250px + 1vw);
+  .scrollbar-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    width: 300px;
+    box-sizing: border-box;
+    .boxs {
+      width: calc(350px + 1vw);
+      height: calc(300px + 1vw);
+
+    }
+
+    .img {
+      height: 250px;
+      width: 250px;
+    }
   }
 }
+
+
 
 .imgbox {
   height: 300px;
@@ -165,7 +172,6 @@ let readText = async (uri: string) => {
     height: 100%;
     width: 80%;
     padding-left: 10%;
-    vertical-align: bottom;
   }
 }
 

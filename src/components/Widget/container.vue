@@ -1,8 +1,8 @@
 <template>
   <template v-if="widgetForm.type === 'container' && widgetForm.data && widgetForm.data.length > 0">
     <el-form ref="formRef" label-position="top" label-width="120px" :rules="rules" :model="modelValue">
-      <index v-for="(item, index) in widgetForm.data" :widgetForm="item" ref="children" v-model="modelValue[item.name]"
-        :rules="rules" @update:model-value="(val: baseAppParamsTypes) => changedItem(item, val)">
+      <index v-for="(item, index) in widgetForm.data" :widgetForm="item"
+        ref="children" v-model="modelValue[item.name]" :rules="rules">
       </index>
     </el-form>
   </template>

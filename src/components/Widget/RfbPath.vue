@@ -7,7 +7,7 @@
   <el-upload ref="uploadRef" :auto-upload="false" action="#" :limit="1" :on-exceed="handleExceed"
     :before-upload="beforeUpload" :on-change="handleChange" :accept="widgetForm.attr.extends?.accept">
     <template #trigger>
-      <el-button type="primary">select file</el-button>
+      <el-button type="primary" class="select-btn">select file</el-button>
     </template>
     <!-- <el-button class="ml-3" type="success" @click="() => submitUpload()">
       upload to server
@@ -132,5 +132,8 @@ defineExpose({ widgetType, prepareSubmit })
 
 .item-row {
   width: 100%;
+}
+.select-btn{
+  margin-right: 20px;
 }
 </style>
