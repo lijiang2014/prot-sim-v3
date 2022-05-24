@@ -12,7 +12,9 @@
     <!-- <el-button class="ml-3" type="success" @click="() => submitUpload()">
       upload to server
     </el-button> -->
-    <wrf-btn v-model="wrfFiles" @update:model-value="handleChangedRFB"></wrf-btn>
+    <wrf-btn v-model="wrfFiles" @update:model-value="handleChangedRFB" :workdir="widgetForm.attr.extends?.workdir"
+      :accept="widgetForm.attr.extends?.accept">
+    </wrf-btn>
     <template #tip>
       <div class="el-upload__tip text-red">
         limit 1 file, new file will cover the old file
@@ -23,7 +25,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import { AppWidgets } from '@/app-model'
-import { ElNotification, UploadFiles, UploadInstance, UploadProps, UploadRawFile, } from 'element-plus'
+import { UploadFiles, UploadInstance, UploadProps, UploadRawFile, } from 'element-plus'
 import { genFileId, ElMessage, UploadFile, } from 'element-plus'
 import WrfBtn from '../WebRemoteFinder/input.vue'
 import { FileInfo } from '@/app-model/file'
@@ -32,7 +34,7 @@ import { useStore } from '@/store'
 
 interface Props {
   widgetForm: AppWidgets
-  modelValue: string
+  modelValue?: string
 }
 let props = defineProps<Props>()
 const emit = defineEmits(["update:modelValue"]);
@@ -46,6 +48,8 @@ onMounted(() => {
     if (!props.modelValue) {
       emit("update:modelValue", props.widgetForm.attr.default)
     }
+  } else {
+    emit("update:modelValue", "")
   }
 })
 const beforeUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFile, id: string) => {
@@ -80,10 +84,13 @@ const handleChangedRFB = (val: FileInfo[]) => {
     emit("update:modelValue", "")
   }
 }
-const handleExceed: UploadProps['onExceed'] | any = (uploadFile: UploadRawFile, files: UploadRawFile[], id: string) => {
-  uploadRef.value!.clearFiles()
+
+const handleExceed: UploadProps['onExceed'] | any = (files: UploadRawFile[]) => {
+  if (!uploadRef.value) return
+  uploadRef.value.clearFiles()
   const file = files[0] as UploadRawFile
   file.uid = genFileId()
+  uploadRef.value!.handleStart(file)
 }
 
 const submitUpload = () => {
