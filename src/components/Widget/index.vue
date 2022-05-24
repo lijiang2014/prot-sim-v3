@@ -40,9 +40,10 @@ import Container from './container.vue';
 import RfbPath from './RfbPath.vue';
 import { FormRules, FormValidateCallback } from 'element-plus';
 interface Props {
-  widgetForm: AppWidgets
-  modelValue: AppParams | baseAppParamsTypes | baseAppParamsTypes[]
-  rules: FormRules
+  widgetForm: AppWidgets,
+  // modelValue: AppParams | baseAppParamsTypes | baseAppParamsTypes[]
+  modelValue: any,
+  rules: FormRules,
 }
 let props = defineProps<Props>()
 const containerRef = ref<typeof Container>()
@@ -59,6 +60,7 @@ const validate = (callback?: FormValidateCallback) => {
     return containerRef.value!.validate(callback)
   }
 }
+
 const prepareSubmit = async () => {
   if (rfbPathRef && rfbPathRef.value) {
     return rfbPathRef.value.prepareSubmit()
