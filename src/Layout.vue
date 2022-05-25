@@ -13,7 +13,7 @@
       <el-button type="text" @click="logout" v-if="store.state.isLogin">{{ $t('navbar.logOut') }}</el-button>
       <el-button type="text" @click="loginHandle" v-if="!store.state.isLogin">{{ $t('login.logIn') }}</el-button>
     </el-header>
-    <el-container>
+    <el-container class="container">
       <el-main>
         <router-view></router-view>
       </el-main>
@@ -93,8 +93,12 @@ const rtrans = (instr: string) => trans(instr, 'route.')
       color: #fff;
       background-color: #333744;
       display: inline-flex;
-      ;
+      font-size: 20px;
+      white-space: nowrap;
     }
+  }
+  .container{
+    overflow: auto;
   }
 }
 </style>

@@ -30,12 +30,12 @@ export const routes: Array<RouteRecordRaw> = [
       // 结构预测
       {
         path: '/predict/structure/',
-        meta: { title: '结构预测' },
+        meta: { title: 'structurePrediction' },
         component: () => import('@/views/structure/prediction.vue')
       },
       {
         path: '/predict/structure/queue/',
-        meta: { title: '相似性计算' },
+        meta: { title: 'structureSimilarity' },
         component: () => import('@/views/similarity/structureSimilarity.vue')
       },
     ]
@@ -47,7 +47,7 @@ export const routes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '/queue/all',
-        meta: { title: 'Jobs' },
+        meta: { title: 'List' },
         component: () => import('@/views/queue/all.vue')
       },
       {
@@ -121,7 +121,7 @@ export const routes: Array<RouteRecordRaw> = [
       // },
       {
         path: '/later/test/res',
-        meta: { title: '结果展示' },
+        meta: { title: 'result' },
         component: () => import('@/views/test/res/index.vue')
         // }, {
         //   path: '/later/test/tc',
