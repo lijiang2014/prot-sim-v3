@@ -6,7 +6,7 @@
         <template v-for="item in list" :key="item.name">
           <div class="contain">
             <el-card class="card">
-              <div class="app" @click="appClick(item.name)">
+              <div class="app" @click="appClick(item)">
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
                   <div>{{ item.name }}</div>
@@ -32,11 +32,11 @@ let prop = defineProps<{ title: string; }>();
 let list = ref<AppMeta[]>([])
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
-const transName = (s:string):string =>  {
+const transName = (s: string): string => {
   return trans(s, 'route.')
 }
 onMounted(async () => {
-  list.value = (await getApps(prop.title, { mock: '1' })).spec  
+  list.value = (await getApps(prop.title, { mock: '1' })).spec
 })
 let btnClick = (num: number) => {
   let n = list.value.length;
@@ -45,14 +45,12 @@ let btnClick = (num: number) => {
     transform.value += num;
   }
 };
-let appClick = (name: string) => {
-  let path=''
-  if(name=='structure-prediction' || name=='graph-ppis'){
-    path='/predict/structure'
-  }else if(name=='structure-similarity'){
-    path='/predict/structure/queue'
+let appClick = (app: AppMeta) => {
+  if (app.path) {
+    router.push(app.path)
+    return
   }
-  router.push(path)
+  router.push({ name: 'AppForm', params: { name: app.name } })
 }
 </script>
 

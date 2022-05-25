@@ -52,8 +52,9 @@ export interface AppMeta {
   name: string,
   path?: string,
   title: string,
+  region?: string,
   icon?: string,
-  type: string,
+  type?: 1 | 10,
   id?: number,
   description?: string,
 }

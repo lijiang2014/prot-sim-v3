@@ -11,14 +11,19 @@ export const routes: Array<RouteRecordRaw> = [
       import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
   },
   {
-    path: '/', redirect: '/welcome', meta: { hidden: false, title: 'Home' },
+    path: '/', redirect: '/apps', meta: { hidden: false, title: 'Home' },
     component: Layout,
     children: [
-      // 结构预测
+      // 
+      {
+        path: '/apps',
+        meta: { title: 'Apps' },
+        component: () => import('@/views/applist/index.vue')
+      },
       {
         path: '/welcome',
-        meta: { title: 'Home' },
-        component: () => import('@/views/applist/index.vue')
+        meta: { title: 'Welcome', hidden: true },
+        component: () => import('@/views/Welcome.vue')
       },
     ]
   },
@@ -27,6 +32,13 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/app', meta: { hidden: false, title: 'appList' },
     component: Layout,
     children: [
+      // 通用 动态表单应用
+      {
+        path: '/app/:name',
+        name: 'AppForm',
+        meta: { title: 'AppForm', hidden: true },
+        component: () => import('@/views/app/dynamicForm.vue')
+      },
       // 结构预测
       {
         path: '/predict/structure/',
@@ -40,18 +52,24 @@ export const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
-  // Queue
+  // Job
   {
-    path: '/queue', meta: { hidden: false, title: 'Jobs' },
+    path: '/job', meta: { hidden: false, title: 'Jobs' },
     component: Layout,
     children: [
       {
-        path: '/queue/all',
+        path: '/job/all',
         meta: { title: 'List' },
         component: () => import('@/views/queue/all.vue')
       },
       {
-        path: '/queue/example',
+        path: '/job/result/:id',
+        name: 'jobResult',
+        meta: { title: 'result' },
+        component: () => import('@/views/jobs/result/index.vue')
+      },
+      {
+        path: '/job/example',
         meta: { title: 'Queue' },
         component: () => import('@/views/jobs/index.vue'),
       },
@@ -79,16 +97,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/later', meta: { hidden: false, title: 'Tests' },
     component: Layout,
     children: [
-      // { 
-      //   path: '/later/dataset',
-      //   meta: { title: 'dataset' },
-      //   component: About
-      // },
-      // { 
-      //   path: '/later/Papers',
-      //   meta: { title: 'Papers' },
-      //   component: About
-      // },
       {
         path: '/later/graph-ppis',
         meta: { hidden: false, title: 'graph-ppis' },
@@ -114,25 +122,6 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'wrf' },
         component: () => import('@/components/WebRemoteFinder/input.vue'),
       },
-      // {
-      //   path: '/later/test/svg-msa',
-      //   meta: { title: 'svg-msa' },
-      //   component: ()=>import('@/views/test/svg-msa/index.vue')
-      // },
-      {
-        path: '/later/test/res',
-        meta: { title: 'result' },
-        component: () => import('@/views/test/res/index.vue')
-        // }, {
-        //   path: '/later/test/tc',
-        //   meta: { title: 'tc' },
-        //   component: () => import('@/views/test/tc/index.vue')
-      },
-      // {
-      //   path: '/later/test/res',
-      //   meta: { title: 'Result' },
-      //   component: () => import('@/views/test/res/index.vue')
-      // },
       {
         path: '/later/test/pdbMolstar',
         meta: { title: 'pdb-molstar' },
@@ -142,11 +131,6 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/later/test/example',
         meta: { title: 'example' },
         component: () => import('@/views/test/example/index.vue')
-      },
-      {
-        path: '/later/test/myform',
-        meta: { title: 'AppForm' },
-        component: () => import('@/views/test/myform/dynamicForm.vue')
       },
       {
         path: '/later/test/mockApi',
