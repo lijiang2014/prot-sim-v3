@@ -4,7 +4,8 @@
       <el-col :span="16" :offset="4">
         <div class="demo-collapse">
           <el-collapse v-model="activeNames" @change="changedActive">
-            <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title" class="collapse-item">
+            <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title"
+              class="collapse-item">
               <div v-if="item.class === 'simple'">
                 <div class="simple-box">
                   {{ item.value }}
@@ -97,6 +98,7 @@ onMounted(async () => {
     console.log(err)
   })
   if (!res) return
+  console.log(res)
   for (let key in res.outputs) {
     let outputK = res.outputs[key]
     if (typeof outputK === 'number' || typeof outputK === 'string') {
@@ -132,9 +134,11 @@ let readText = async (uri: string) => {
   width: calc(600px + 2vw);
   position: relative;
 }
-.collapse-item{
+
+.collapse-item {
   width: 1200px;
 }
+
 .scrollbar-contain {
   .scrollbar-flex-content {
     display: flex;
@@ -148,6 +152,7 @@ let readText = async (uri: string) => {
     padding: 20px 10px;
     width: 300px;
     box-sizing: border-box;
+
     .boxs {
       width: calc(350px + 1vw);
       height: calc(300px + 1vw);

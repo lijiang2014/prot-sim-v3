@@ -14,7 +14,8 @@
       {{ runtimeParams }}
       <hr>{{ appParams }}
     </div>
-    <div v-if="loading">数据加载中...</div>
+    <div v-if="!appName">未提供应用名称</div>
+    <div v-else-if="loading">数据加载中...</div>
     <el-row v-else>
       <el-col v-if="app && app.render" :span="app?.render.width" :offset="app?.render.offset">
         <el-form label-position="top" label-width="120px">
@@ -31,15 +32,16 @@
 <script lang="ts" setup>
 import { getAppSpec } from '@/api/api'
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { AppSpec, AppWidgets } from '@/app-model'
 import { FormRules, FormInstance, UploadInstance, ElNotification, } from 'element-plus'
 import { submitAppTask, uploadFile } from '@/api/api'
 import Widget from "@/components/Widget/index.vue"
 import { StarlightRuntimeParams, createJobName, AppParams } from '@/app-model/graph-ppis';
 const route = useRoute()
+const router = useRouter()
 const debug = ref(route.query["debug"] == 'true')
-const appname = 'graph-ppis'
+const appName = route.params.name as string
 const loading = ref(false)
 const runtimeRules = ref<FormRules>({
   jobname: [
@@ -89,7 +91,7 @@ let runtimeForm = ref<AppWidgets>({
     }]
 })
 const runtimeParams = ref<StarlightRuntimeParams>({
-  jobname: createJobName(appname)
+  jobname: createJobName(appName)
 } as StarlightRuntimeParams)
 let app = ref<AppSpec>()
 const appParams = ref<AppParams>({})
@@ -97,7 +99,7 @@ const appParams = ref<AppParams>({})
 
 onMounted(async () => {
   loading.value = true
-  let res = await getAppSpec(appname).catch((err: any) => {
+  let res = await getAppSpec(appName).catch((err: any) => {
     console.log(err)
   })
   loading.value = false
@@ -160,17 +162,17 @@ const submitForm = async () => {
   })
   if (!pass) { return }
   // submit Form
-  console.log("job submit:", appname, appParams.value, runtimeParams.value)
+  console.log("job submit:", appName, appParams.value, runtimeParams.value)
   // return
   // change File Format
-  const res = await submitAppTask(appname, appParams.value, runtimeParams.value).catch(err => {
+  const res = await submitAppTask(appName, appParams.value, runtimeParams.value).catch(err => {
     console.log("err", err)
     pass = false
   })
   console.log(res)
-  // TODO redirect to res..JobID result page
+  // TODO get job ID from res
   // 请求网址: https://starlight.nscc-gz.cn/api/job/running/k8s_venus/graph-ppis-25113148
-
+  router.push({ name: 'jobResult', params: { id: "mockjobid" } })
 }
 </script>
 <style lang="less">

@@ -367,8 +367,8 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
               } as stringFile),
             ]
           },
-          "output10":1365413,
-          "output11":"aaaaaaa",
+          "output10": 1365413,
+          "output11": "aaaaaaa",
         } as OutputMap
       }
       let mockData = Object.assign(outputs, jobMetaExample)
@@ -392,20 +392,20 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
 export const getApps = (region?: string, params?: any,): Promise<ApiResponseItems<AppMeta>> => {
   const mockApps = {
     spec: [
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'structurePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'structureSimilarity' },
-      { name: 'graphppis', path: '/predict/structure', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'structurePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'structureSimilarity' },
-      { name: 'graph-ppis', path: '/predict/structure', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'structureSimilarity' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'structureSimilarity' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'structureSimilarity' },
-      { name: 'graph-ppis', path: '/predict/structure', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'sitePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', type: 'sitePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'sitePrediction' },
-      { name: 'graph-ppis', path: '/predict/structure', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', type: 'sitePrediction' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
+      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
+      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structurePrediction' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
+      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
+      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structureSimilarity' },
+      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
+      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
+      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'sitePrediction' },
+      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
+      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
     ], total: 100
   }
   params = Object.assign({ region }, params)
@@ -414,7 +414,7 @@ export const getApps = (region?: string, params?: any,): Promise<ApiResponseItem
       if (region == "false") {
         reject("false")
       } else {
-        let res = mockApps.spec.filter(item => item.type == region)
+        let res = mockApps.spec.filter(item => item.region == region)
         resolve({ spec: res, total: res.length })
       }
     })
