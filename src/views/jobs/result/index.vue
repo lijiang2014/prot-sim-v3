@@ -1,13 +1,9 @@
 <template>
-  <div>
-    <el-row>
-      <el-col :span="16" :offset="4">
-        <div v-if="loading">数据加载中....</div>
-        <div v-else>
-          <result-show :baseInfo="baseInfo"></result-show>
-        </div>
-      </el-col>
-    </el-row>
+  <div class="page">
+    <div v-if="loading">数据加载中....</div>
+    <div v-else>
+      <result-show :baseInfo="baseInfo"></result-show>
+    </div>
   </div>
 </template>
 
@@ -36,4 +32,16 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="less">
+@media screen and (max-width:1200px) {
+  .page {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width:1200px) {
+  .page {
+    width: 70%;
+    margin: 0 auto;
+  }
+}
 </style>

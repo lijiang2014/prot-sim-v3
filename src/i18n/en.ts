@@ -195,7 +195,6 @@ export default {
     screenfull: 'Screen Full'
   },
   login: {
-    title: 'Login Form',
     logIn: 'Login',
     username: 'Username',
     password: 'Password',
@@ -234,15 +233,12 @@ export default {
     wrongWord: 'Incorrect format of verification code',
     sendFail: 'Failed to send verification code. Please try again later',
     sendSuccess: 'Sent successfully',
-    sendRepeat: 'Repeat sending',
     checkWrong: 'Verification code verification error',
     loginOk: 'Login succeeded',
     loginFail: 'Login failed',
     EmailOrTelephoneNeeded: 'Mailbox cannot be empty',
     VerificationCodeNeeded: 'Verification code cannot be empty',
-    sendFrequently: 'Send frequently',
-    submitFrequently: 'Login frequently, please try again later',
-    waitInfo: 'seconds to be waited',
+    logon:'logon'
   },
   register: {
     EmptyEmail: 'Email can not be empty',

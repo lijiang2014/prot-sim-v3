@@ -47,7 +47,7 @@
     </el-link>
     <slot></slot>
     <span class="f-right">
-      <el-button type="primary" @click="submit" :disabled="loading || !verifiedCode">{{ $t('login.submit') }}
+      <el-button type="primary" @click="submit" :disabled="loading || !verifiedCode">{{ $t('login.logon') }}
       </el-button>
     </span>
   </div>
@@ -66,6 +66,8 @@ import { RedirectLoginURL } from '@/api/starlight'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { utils } from '@/utils/utils'
+import { errorEode } from '@/api/responseCode'
+
 let emit = defineEmits<{
   (event: 'closeWindow'): void
 }>()
@@ -123,7 +125,7 @@ const toSendCode = async () => {
   //     return
   //   }
   // }
-  curTimeSend = new Date().getTime()
+  // curTimeSend = new Date().getTime()
 
   const res = await sendEmailCode(loginForm.username).catch(err => {
     console.log("err:", err)
@@ -133,16 +135,16 @@ const toSendCode = async () => {
   if (!res) { return }
   if (res.code === 200) {
     $Notify({ type: 'success', title: $t('login.sendSuccess'), message: res.info })
-  } else if (res.code === 20002) {
+  } else {
     codeNotTimeout.value = true
-    $Notify({ type: 'info', title: $t('login.sendRepeat'), message: res.info, duration: 60000 })
+    $Notify({ type: 'error', title: errorEode[res.code], message: res.info, duration: 60000 })
   }
   console.log("res", res)
   codeSent.value = true
 }
 
 //频繁提交检查
-let curTimeSubmit: number
+// let curTimeSubmit: number
 
 const submit = async () => {
   // if (curTimeSubmit) {
@@ -162,19 +164,18 @@ const submit = async () => {
     return;
   }
   console.log("res", res);
-  if (res.code === 20005) {
-    $Notify({ type: "error", title: $t('login.loginFail'), message: res.info });
+  if (res.code !== 200) {
+    $Notify({ type: "error", title: errorEode[res.code], message: res.info });
     return
   }
-  if (res.code === 200) {
-    ElMessage({
-      showClose: true,
-      message: $t('login.loginOk'),
-      type: "success",
-      center: true,
-      duration: 1000,
-    });
-  }
+  ElMessage({
+    showClose: true,
+    message: $t('login.loginOk'),
+    type: "success",
+    center: true,
+    duration: 1000,
+  });
+
   // 保存token
   window.sessionStorage.setItem("token", res.spec);
   store.commit('loginChange', true)

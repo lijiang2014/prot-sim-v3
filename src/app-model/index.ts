@@ -121,16 +121,3 @@ export const jobMetaExample = {
   "app_name": "graphppis",
   "job_fee": 0.005,
 }
-
-export interface dataItem extends fileOutput {
-  title: string
-}
-export interface datasItem extends filesOutput {
-  title: string
-}
-export interface simple {
-  title: string,
-  class: 'simple',
-  value: string | number
-}
-export type listItem = dataItem | datasItem | simple

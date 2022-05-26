@@ -26,7 +26,6 @@ export default {
     screenfull: '全屏'
   },
   login: {
-    title: '系统登录',
     logIn: '登录',
     username: '账号',
     password: '密码',
@@ -65,13 +64,10 @@ export default {
     wrongWord:'验证码格式不对',
     sendFail:'验证码发送失败，请稍后再试',
     sendSuccess:'发送成功',
-    sendRepeat:'重复发送',
-    sendFrequently:'频繁发送',
-    submitFrequently:'频繁登录，请稍后再试',
-    waitInfo:'秒后重新发送',
     checkWrong:'验证码校验出错',
     loginOk:'登录成功',
     loginFail:'登录失败',
+    logon:'登录'
   },
   register: {
     EmailNeeded: '邮箱不能为空',
