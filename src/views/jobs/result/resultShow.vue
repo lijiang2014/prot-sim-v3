@@ -10,7 +10,11 @@
                         <div>提交时间：<span class="item-info">{{ parseTime(baseInfo.created_at) }}</span></div>
                         <div>开始时间：<span class="item-info">{{ parseTime(baseInfo.started_at) }}</span></div>
                         <div>结束时间：<span class="item-info">{{ parseTime(baseInfo.end_at) }}</span></div>
-                        <div>运行状态：<span class="item-info">{{ status[baseInfo.status] }}</span></div>
+                        <div>运行状态：<span
+                                :class="{ pending: baseInfo.status < 3, success: baseInfo.status === 3, fail: baseInfo.status > 3 }">{{
+                                        status[baseInfo.status]
+                                }}</span>
+                        </div>
                     </div>
                 </el-collapse-item>
                 <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title"
@@ -202,6 +206,18 @@ let readText = async (uri: string) => {
         color: #29d;
     }
 
+    .pending {
+        color: #29d;
+    }
+
+    .success {
+        color: #43be05
+    }
+
+    .fail {
+        color: #F56C6C
+    }
+
     &>div {
         padding: 20px 0;
         white-space: nowrap;
@@ -241,6 +257,7 @@ let readText = async (uri: string) => {
 
 .simple-box {
     padding: 10px;
+    font-size: 15px
 }
 
 ::v-deep(.el-dialog) {

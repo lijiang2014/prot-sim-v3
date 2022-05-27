@@ -42,7 +42,7 @@ export default defineComponent({
     }
     onMounted(() => {
       nextTick(function () {
-        mountMolstar();
+        setTimeout(()=>mountMolstar())
       });
     })
     return {
