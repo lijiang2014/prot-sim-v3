@@ -121,4 +121,3 @@ export const jobMetaExample = {
   "app_name": "graphppis",
   "job_fee": 0.005,
 }
-

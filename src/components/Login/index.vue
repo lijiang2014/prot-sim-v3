@@ -4,7 +4,7 @@
       <el-row style="width:100%">
         <el-col :span="16">
           <el-input ref="usernameRef" v-model="loginForm['username']" :placeholder="$t('login.emailName')" autofocus
-            style="ime-mode: disabled" class="input">
+            style="ime-mode: disabled" class="input" name="email">
             <template #prefix>
               <el-icon class="icon">
                 <MessageBox />
@@ -13,14 +13,17 @@
           </el-input>
         </el-col>
         <el-col :span="8">
-          <el-button class="btn-code" type="primary" plain :disabled="!verifiedUsername" @click="toSendCode">
-            {{ $t('login.sendCode') }}</el-button>
+          <el-button class="btn-code" type="primary" plain :disabled="loading || !verifiedUsername || codeNotTimeout"
+            @click="toSendCode">
+            <!-- {{ codeNotTimeout ? waitTime + ' ' + $t('login.waitInfo') : $t('login.sendCode') }} -->
+            {{ $t('login.sendCode') }}
+          </el-button>
         </el-col>
       </el-row>
     </el-form-item>
     <el-form-item prop="password">
-      <el-input v-model="loginForm.password" type="password" 
-        :placeholder="$t('login.verificationCode')" :disabled="!codeSent" class="input">
+      <el-input v-model="loginForm.password" type="password" :placeholder="$t('login.verificationCode')"
+        :disabled="!codeSent" class="input">
         <template #prefix>
           <el-icon class="icon">
             <Key />
@@ -44,7 +47,8 @@
     </el-link>
     <slot></slot>
     <span class="f-right">
-      <el-button type="primary" @click="submit" :disabled="!verifiedCode">{{ $t('login.submit') }}</el-button>
+      <el-button type="primary" @click="submit" :disabled="loading || !verifiedCode">{{ $t('login.logon') }}
+      </el-button>
     </span>
   </div>
 </template>
@@ -62,6 +66,8 @@ import { RedirectLoginURL } from '@/api/starlight'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { utils } from '@/utils/utils'
+import { errorEode } from '@/api/responseCode'
+
 let emit = defineEmits<{
   (event: 'closeWindow'): void
 }>()
@@ -92,35 +98,84 @@ watch(() => loginForm, (newVal, oldVal) => {
   verifiedCode.value = regExpCode.test(newVal.password)
   console.log(verifiedUsername.value, verifiedCode.value);
 }, { deep: true })
+
+//频繁发送检查
+let curTimeSend: number
+let loading = ref(false)
+let isQuick = ref(false)
+let codeNotTimeout = ref(false)
+let waitTime = ref(10)
+
 const toSendCode = async () => {
+  loading.value = true
+  // if (curTimeSend) {
+  //   if (new Date().getTime() - curTimeSend < 10000) {
+  //     curTimeSend = new Date().getTime()
+  //     $Notify({ type: 'error', title: $t('login.sendFrequently'), message: '10 ' + $t('login.waitInfo') })
+  //     isQuick.value = true
+  //     let timer: number
+  //     setTimeout(() => {
+  //       isQuick.value = false
+  //       waitTime.value = 10
+  //       clearInterval(timer)
+  //     }, 10000);
+  //     timer = setInterval(() => {
+  //       waitTime.value--
+  //     }, 1000) as any
+  //     return
+  //   }
+  // }
+  // curTimeSend = new Date().getTime()
+
   const res = await sendEmailCode(loginForm.username).catch(err => {
     console.log("err:", err)
     $Notify({ type: 'error', title: $t('login.sendFail'), message: err })
   })
+  loading.value = false
   if (!res) { return }
-  $Notify({ type: 'success', title: $t('login.sendSuccess') })
-  console.log("mock sendCode 123456")
+  if (res.code === 200) {
+    $Notify({ type: 'success', title: $t('login.sendSuccess'), message: res.info })
+  } else {
+    codeNotTimeout.value = true
+    $Notify({ type: 'error', title: errorEode[res.code], message: res.info, duration: 60000 })
+  }
   console.log("res", res)
   codeSent.value = true
 }
+
+//频繁提交检查
+// let curTimeSubmit: number
+
 const submit = async () => {
+  // if (curTimeSubmit) {
+  //   if (new Date().getTime() - curTimeSubmit < 5000) {
+  //     $Notify({ type: "error", title: $t('login.submitFrequently') });
+  //     return
+  //   }
+  // }
+  // curTimeSubmit = new Date().getTime()
+  loading.value = true
   const res = await login(loginForm).catch((err) => {
     console.log("err:", err,);
     $Notify({ type: "error", title: $t('login.checkWrong'), message: err });
-  });
+  })
+  loading.value = false
   if (!res) {
     return;
   }
   console.log("res", res);
-  if (res.status === 200) {
-    ElMessage({
-      showClose: true,
-      message: $t('login.loginOk'),
-      type: "success",
-      center: true,
-      duration: 1000,
-    });
+  if (res.code !== 200) {
+    $Notify({ type: "error", title: errorEode[res.code], message: res.info });
+    return
   }
+  ElMessage({
+    showClose: true,
+    message: $t('login.loginOk'),
+    type: "success",
+    center: true,
+    duration: 1000,
+  });
+
   // 保存token
   window.sessionStorage.setItem("token", res.spec);
   store.commit('loginChange', true)
@@ -164,9 +219,11 @@ if (bihuToken !== "") {
   padding: 0px;
   // font-family: Arial, Helvetica, sans-serif;
   font-size: calc(11px + 1vmin);
-  .input ::v-deep(.el-input__inner){
-    padding-left: 30px!important;
+
+  .input ::v-deep(.el-input__inner) {
+    padding-left: 30px !important;
   }
+
   .btn-code {
     width: 100%;
   }

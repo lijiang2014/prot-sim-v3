@@ -389,43 +389,8 @@ export const getJobResult = (jobindex: string, appname: string): Promise<JobResu
     icon: 图片，如地址为 https://starlight.nscc-gz.cn/api/mei/acorn/2e2f701b-1ee2-4d7e-988e-3d36c8343b80
     type: 类型区分
  */
-export const getApps = (region?: string, params?: any,): Promise<ApiResponseItems<AppMeta>> => {
-  const mockApps = {
-    spec: [
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
-      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structurePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structurePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
-      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'structureSimilarity' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'structureSimilarity' },
-      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
-      { name: 'structure-prediction', path: '/predict/structure', title: '结构预测', icon: '2e2f701b-1ee2-4d7e-988e-3d36c8343b80', region: 'sitePrediction' },
-      { name: 'structure-similarity', path: '/predict/structure/queue', title: '相似性比对', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
-      { name: 'graph-ppis', path: '', title: '位点预测', icon: '513e68a9-d6e0-4014-93af-2c912448e258', region: 'sitePrediction' },
-    ], total: 100
-  }
-  params = Object.assign({ region }, params)
-  if (params.mock) {
-    return new Promise((resolve, reject) => {
-      if (region == "false") {
-        reject("false")
-      } else {
-        let res = mockApps.spec.filter(item => item.region == region)
-        resolve({ spec: res, total: res.length })
-      }
-    })
-  }
-  return http.request({
-    url: '/api/job/submit/',
-    method: 'get',
-    data: {
-      params,
-    }
-  })
+export const getApps = (): Promise<ApiResponseItems<AppMeta>> => {
+  return http.get('/app')
 }
 
 export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {

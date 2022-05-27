@@ -1,9 +1,7 @@
 <template>
   <div class="welcome">
     <div class="content">
-      <app-list :title="state.regions[0]" :appList="state.appList[0]"></app-list>
-      <app-list :title="state.regions[1]" :appList="state.appList[1]"></app-list>
-      <app-list :title="state.regions[2]" :appList="state.appList[2]"></app-list>
+      <app-list v-for="(value,key) in state.appList" :title="(key as string)" :appList="value"></app-list>
     </div>
   </div>
 </template>
@@ -14,19 +12,23 @@ import { reactive } from 'vue'
 import { onMounted } from 'vue';
 import { AppMeta } from '@/app-model';
 
+export interface appList {
+  [key: string]: AppMeta[]
+}
+
 let state = reactive<{
-  appList: AppMeta[][],
-  regions: string[]
+  appList: appList
 }>({
-  appList: [[], [], []],
-  regions: ['structurePrediction', 'structureSimilarity', 'sitePrediction']
+  appList: {},
 })
 onMounted(async () => {
-  for (let i in state.regions) {
-    let res = await getApps(state.regions[i], { mock: '1' }).catch(err => console.log(err))
-    if (res) {
-      state.appList[i] = res.spec
+  let res = await getApps().catch(err => console.log(err))
+  if (!res) return
+  for (let item of res.spec) {
+    if (!state.appList[item.region!]) {
+      state.appList[item.region!] = []
     }
+    state.appList[item.region!].push(item)
   }
 })
 </script>

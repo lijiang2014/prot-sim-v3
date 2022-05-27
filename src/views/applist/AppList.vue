@@ -3,13 +3,13 @@
     <list-head :title="transName(title)" @btnClick="btnClick"></list-head>
     <div class="box">
       <div class="app-list" :style="`transform:translateX(-${transform * (24 + 1.3)}%)`">
-        <template v-for="item in list" :key="item.name">
+        <template v-for="item in props.appList" :key="item.name">
           <div class="contain">
             <el-card class="card">
               <div class="app" @click="appClick(item)">
                 <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
                 <div class="text">
-                  <div>{{ item.name }}</div>
+                  <div>{{ item.title }}</div>
                 </div>
               </div>
             </el-card>
@@ -21,25 +21,22 @@
 </template>
 
 <script lang="ts" setup>
-import { getApps } from "@/api/api";
 import { AppMeta } from "@/app-model";
 import { trans } from "@/i18n";
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
 import listHead from "./ListHead.vue";
+
+
 let router = useRouter()
-let prop = defineProps<{ title: string; }>();
-let list = ref<AppMeta[]>([])
+let props = defineProps<{ title: string; appList: AppMeta[] }>();
 let imgUrl = "https://starlight.nscc-gz.cn/api/mei/acorn/";
 let transform = ref(0);
 const transName = (s: string): string => {
   return trans(s, 'route.')
 }
-onMounted(async () => {
-  list.value = (await getApps(prop.title, { mock: '1' })).spec
-})
 let btnClick = (num: number) => {
-  let n = list.value.length;
+  let n = props.appList.length;
   if (transform.value + num >= n - 3) return;
   if (transform.value + num >= 0) {
     transform.value += num;
