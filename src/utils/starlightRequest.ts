@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 // import { ElNotification } from 'element-plus'
 // 无法在组件外使用 store
 // import {useStore} from '@/store'

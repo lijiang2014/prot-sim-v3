@@ -1,7 +1,7 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, AppMeta, AppSpec, jobMeta, OutputMap, result as JobResult, } from '@/app-model'
+import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, jobMeta, OutputMap, result as JobResult, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
 import axios, { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
@@ -393,7 +393,7 @@ export const getApps = (): Promise<ApiResponseItems<AppMeta>> => {
   return http.get('/app')
 }
 
-export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
+export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> => {
   let mockAppSpec: AppSpec = {
     "id": 1406,
     "name": "graphppis",
@@ -505,7 +505,7 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
     },
     "title": "GraphPPIS",
     "icon": "513e68a9-d6e0-4014-93af-2c912448e258",
-    "type": "1",
+    "type": 1,
     "description": "蛋白质结合位点预测算法"
   }
   if (app === 'graph-ppis') {
@@ -515,23 +515,38 @@ export const getAppSpec = (app: string, params?: any): Promise<AppSpec> => {
       }, mockQueryTime)
     })
   }
-  return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+  // return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+  let ret = await $request({
+    url: '/api/app/app/' + app,
+    method: 'get',
+    params,
+    headers: { 'TIMEOUT': '15' },
+  }).catch(err => {
+    throw (err)
+  })
+  console.log("ret", ret)
+  let appData = ret.data?.spec || (ret as any).spec
+  if (typeof appData.render === "string") {
+    appData.render = JSON.parse(appData.render)
+  }
+  return (appData as AppSpec)
 }
 
 export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
-  const mockData = [
-    jobMetaExample,
-    jobMetaExample,
-    jobMetaExample,
-  ]
-  if (params && params.mock === '1') {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({ spec: mockData, total: 1000 })
-      }, mockQueryTime)
-    })
-  }
-  return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+  // const mockData = [
+  //   jobMetaExample,
+  //   jobMetaExample,
+  //   jobMetaExample,
+  // ]
+  // if (params && params.mock === '1') {
+  //   return new Promise((resolve, reject) => {
+  //     setTimeout(() => {
+  //       resolve({ spec: mockData, total: 1000 })
+  //     }, mockQueryTime)
+  //   })
+  // }
+  // return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+  return http.get('/job/result')
 }
 
 export const getFileSystemList = (params?: any): Promise<any> => {

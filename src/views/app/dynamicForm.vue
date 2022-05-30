@@ -107,6 +107,7 @@ onMounted(async () => {
     return
   }
   // 表单初始化
+  console.log("got app spec", res)
   // * 提取 info
   for (let i = 0; i < res.render.data.length; i++) {
     let widgeti = res.render.data[i]
