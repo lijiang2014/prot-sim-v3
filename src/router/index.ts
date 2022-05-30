@@ -110,7 +110,8 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: '/later/graph-ppis/result/graphppis', name: 'result-graphppis',
         meta: { hidden: true, title: 'graph-ppis-result' },
-        component: () => import('@/views/app/graph-ppis/result.vue')
+        // component: () => import('@/views/app/graph-ppis/result.vue')
+        component: () => import('@/views/jobs/result/index.vue')
       },
       {
         path: '/later/graph-ppis/result/:id',

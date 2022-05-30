@@ -12,6 +12,20 @@ import { onMounted, ref } from 'vue';
 import resultShow from './resultShow.vue'
 import { getJobResult } from '@/api/api'
 import { result } from '@/app-model'
+import { useRoute } from 'vue-router';
+
+
+
+let jobIndex = ref('example')
+let appname = ref('graph-ppis')
+let route=useRoute()
+if (route.query.id) {
+  jobIndex.value = route.query.id as string
+}
+if (route.query.app) {
+  appname.value = route.query.app as string
+}
+
 let baseInfo = ref<result>({
   "id": 0,
   "name": '',
@@ -21,7 +35,7 @@ let baseInfo = ref<result>({
 })
 let loading = ref(true)
 onMounted(async () => {
-  let res = await getJobResult('example', '').catch(err => {
+  let res = await getJobResult(jobIndex.value, appname.value).catch(err => {
     console.log(err)
   })
   if (!res) return
