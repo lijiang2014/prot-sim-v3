@@ -216,7 +216,6 @@ const viewSpecJob = (row:jobMeta) => {
   if ($router.hasRoute('result-'+ row.app_name)) {
     $router.push({ name: 'result-'+ row.app_name, params: { cluster: row.cluster_name ||  "", jobIndex: row.cluster_job_id, jobId: row.id } })
   }
-  $router.push({ name: 'jobSpecResult'})
 }
 </script>
 
