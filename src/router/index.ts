@@ -138,6 +138,11 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: 'MockApi' },
         component: () => import('@/views/test/MockApi/index.vue')
       },
+      {
+        path: '/later/test/edit',
+        meta: { title: '可编辑表单' },
+        component: () => import('@/views/test/edit/index.vue')
+      },
     ]
   },
   // Hidden

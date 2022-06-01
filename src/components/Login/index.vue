@@ -79,7 +79,7 @@ const loginForm: LoginRequest = reactive({
   username: "",
   password: "",
 }) as LoginRequest;
-const regExpEmail = /^\w{3,}(\.\w+)*@[A-z 0-9]+(\.[A-z]{2,5}){1,2}$/;
+const regExpEmail = /^\w{3,}([\. \- \_]\w+)*@[A-z \- \. \_ 0-9]+(\.[A-z]{2,5}){1,2}$/;
 const regExpCode = /^[0-9]{6}$/;
 const loginFormRules = reactive({
   username: [
