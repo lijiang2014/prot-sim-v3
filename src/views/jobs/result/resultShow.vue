@@ -26,7 +26,7 @@
                     </div>
                     <div v-else-if="item.class === 'file'">
                         <div v-if="item.file.meta.mime === 'text/plain'" class="text">
-                            <el-icon size="calc( 100px + 5vw)" @Click="readText(item.file.uri!)">
+                            <el-icon size="calc( 80px + 3vw)" @Click="readText(item.file.uri!)">
                                 <Document />
                             </el-icon>
                         </div>
@@ -49,7 +49,7 @@
                             <div class="scrollbar-flex-content">
                                 <div v-for="(child, childIndex) in item.files" class="scrollbar-item">
                                     <div v-if="child.meta.mime === 'text/plain'" class="text">
-                                        <el-icon size="calc( 100px + 5vw)" @Click="readText(child.uri!)">
+                                        <el-icon size="calc( 80px + 3vw)" @Click="readText(child.uri!)">
                                             <Document />
                                         </el-icon>
                                     </div>

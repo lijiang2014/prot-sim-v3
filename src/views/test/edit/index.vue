@@ -22,9 +22,10 @@
                 <header>节点数量设置</header>
             </div>
             <div class="window" @click="showToggle('', true)">
-                <header>盒子</header>
-                {{tree}}
-                <container :tree="tree" class="root"></container>
+                <header>布局</header>
+                <div>
+                    <container :tree="tree" @active-box-change="activeBoxChange"></container>
+                </div>
             </div>
         </main>
         <aside>
@@ -57,7 +58,7 @@
                     <md-input v-model="nodes.step" type="number">Step</md-input>
                 </div>
                 <div v-show="boxShow">
-                    <container-config v-model:tree="tree"></container-config>
+                    <container-config v-model:tree="tree" :activeId="activeId"></container-config>
                 </div>
             </div>
         </aside>
@@ -82,6 +83,7 @@ let showToggle = (name: string, box?: boolean) => {
         boxShow.value = true
     } else {
         curName.value = name
+        boxShow.value = false
     }
 }
 
@@ -113,6 +115,12 @@ let setGroup = (selectList: any) => {
 }
 
 let tree = ref({})
+let activeId = ref('root')
+let activeBoxChange = (id: any) => {
+    activeId.value = id
+    curName.value = 'box'
+    boxShow.value = true
+}
 </script>
 
 <style lang="less" scoped>
@@ -156,10 +164,13 @@ h1 {
 
     aside {
         width: 25%;
-
         header {
             font-size: 14px;
             color: #409eff
+        }
+        .window{
+            position: sticky;
+            top:0
         }
     }
 }
@@ -170,8 +181,5 @@ h1 {
     &>div {
         margin-bottom: 15px;
     }
-}
-:deep(.root){
-    min-height: 500px;
 }
 </style>

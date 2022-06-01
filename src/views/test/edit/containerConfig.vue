@@ -1,5 +1,6 @@
 <template>
     <div>
+        <p>当前选中：{{ curConfig.label }}</p>
         <el-select placeholder="请选择" v-model="selectType" style="margin-bottom: 15px;">
             <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -52,7 +53,7 @@
             </el-col>
             <el-col class="slider-title">宽度</el-col>
             <el-col :span="23" :offset="1">
-                <el-slider v-model="curConfig.width" show-input :max="24" />
+                <el-slider v-model="curConfig.width" show-input :max="24" :min='1'/>
             </el-col>
         </el-row>
         <el-row>
@@ -60,7 +61,7 @@
                 <md-input disabled>类型: {{ curConfig.boxType }}</md-input>
             </el-col>
             <el-col>
-                <md-input disabled>id: {{ curId }}</md-input>
+                <md-input disabled>id: {{ activeId }}</md-input>
             </el-col>
             <el-col>
                 <md-input v-model="curConfig.name">Name</md-input>
@@ -80,10 +81,11 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { onMounted, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import mdInput from '@/components/MDinput/index.vue'
 let props = defineProps<{
-    tree: any
+    tree: any,
+    activeId: any
 }>()
 let emit = defineEmits<{
     (e: 'update:tree', arg1: any): void
@@ -163,7 +165,7 @@ let treeData = reactive({
 })
 let curId = ref('root')
 let curRoot = ref('root')
-let curConfig = treeData.root.config
+let curConfig = ref(treeData.root.config)
 let find = (tree: any, target: any): any => {
     if (!tree) return
     for (let key in tree) {
@@ -171,6 +173,20 @@ let find = (tree: any, target: any): any => {
             return tree[key]
         } else {
             let isFind = find(tree[key].children, target)
+            if (isFind) {
+                return isFind
+            }
+        }
+    }
+}
+let findParent = (tree: any, target: any, pre: any): any => {
+    if (!tree) return
+    for (let key in tree) {
+        if (key === target) {
+            if (tree[key].config.boxType === 'container') return key
+            return pre
+        } else {
+            let isFind = findParent(tree[key].children, target, key)
             if (isFind) {
                 return isFind
             }
@@ -195,14 +211,20 @@ let add = () => {
     config.boxType = selectType.value
     config.label = id
     find(treeData, curRoot.value).children[id] = { config, children: {} }
-    if (selectType.value === 'container') {
-        curRoot.value = id
-    }
-    console.log(treeData)
 }
 watch(() => treeData, () => {
     emit('update:tree', treeData)
 }, { deep: true, immediate: true })
+
+watch(() => props.activeId, () => {
+    let cur = find(treeData, props.activeId)
+    curConfig.value = cur.config
+    curRoot.value = findParent(treeData, props.activeId, treeData)
+})
+
+let testnode1 = computed(() => find(treeData, props.activeId))
+let testnode3 = computed(() => find(treeData, curRoot.value))
+let testnode2 = computed(() => findParent(treeData, props.activeId, treeData))
 </script>
 <style lang="less">
 .btn {

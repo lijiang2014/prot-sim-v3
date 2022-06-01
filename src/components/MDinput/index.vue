@@ -84,7 +84,6 @@ export default {
     },
     watch: {
         modelValue(newValue) {
-            console.log('sadsdasdasda')
             this.currentValue = newValue
         }
     },
