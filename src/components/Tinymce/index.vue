@@ -1,5 +1,5 @@
  <template>
-  <div class="box">
+  <div class="edit-box">
     <Editor v-model="content" :api-key="apiKey" :init="init"/>
   </div>
 </template>
@@ -106,7 +106,7 @@ export default {
 </script>
 
 <style scoped>
-.box {
+.edit-box {
   padding: 10px;
   box-sizing: border-box;
 }

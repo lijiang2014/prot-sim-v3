@@ -21,11 +21,8 @@
             <div class="window" @click="showToggle('#nodes')">
                 <header>节点数量设置</header>
             </div>
-            <div class="window" @click="showToggle('', true)">
-                <header>布局</header>
-                <div>
-                    <container :tree="tree" @active-box-change="activeBoxChange"></container>
-                </div>
+            <div @click="showToggle('', true)">
+                <container v-model:tree="tree" @active-box-change="activeBoxChange"></container>
             </div>
         </main>
         <aside>
@@ -75,11 +72,11 @@ import Tinymce from '@/components/Tinymce/index.vue'
 import clusterDialog from './clusterDialog.vue'
 import containerConfig from './containerConfig.vue'
 import container from './container.vue'
-let curName = ref('box')
+let curName = ref('layout')
 let boxShow = ref(true)
 let showToggle = (name: string, box?: boolean) => {
     if (box) {
-        curName.value = 'box'
+        curName.value = 'layout'
         boxShow.value = true
     } else {
         curName.value = name
@@ -164,13 +161,15 @@ h1 {
 
     aside {
         width: 25%;
+
         header {
             font-size: 14px;
             color: #409eff
         }
-        .window{
+
+        .window {
             position: sticky;
-            top:0
+            top: 0
         }
     }
 }

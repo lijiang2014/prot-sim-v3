@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>当前选中：{{ curConfig.label }}</p>
+        <p class="top-title">当前选中：{{ curConfig.label }}</p>
         <el-select placeholder="请选择" v-model="selectType" style="margin-bottom: 15px;">
             <el-option v-for="item in typeOption" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
@@ -53,10 +53,8 @@
             </el-col>
             <el-col class="slider-title">宽度</el-col>
             <el-col :span="23" :offset="1">
-                <el-slider v-model="curConfig.width" show-input :max="24" :min='1'/>
+                <el-slider v-model="curConfig.width" show-input :max="24" :min='1' />
             </el-col>
-        </el-row>
-        <el-row>
             <el-col>
                 <md-input disabled>类型: {{ curConfig.boxType }}</md-input>
             </el-col>
@@ -69,14 +67,66 @@
             <el-col>
                 <md-input v-model="curConfig.label">Label</md-input>
             </el-col>
-        </el-row>
-        <el-switch v-model="curConfig.visible" active-color="#13ce66" inactive-color="#ff4949" active-text="提交页显示该控件"
-            inactive-text="提交页隐藏该控件">
-        </el-switch>
-        <el-row>
+            <el-col
+                v-if="curConfig.boxType === 'text' || curConfig.boxType === 'info' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
+                <md-input v-model="curConfig.default">Default</md-input>
+            </el-col>
+            <el-col
+                v-if="curConfig.boxType === 'number'">
+                <md-input v-model="curConfig.default" type="number" :min="curConfig.min" :max="curConfig.max" :step="curConfig.step">Default</md-input>
+            </el-col>
+            <el-col v-if="curConfig.boxType === 'text' || curConfig.boxType === 'password' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
+                <md-input v-model="curConfig.rules">Rules</md-input>
+            </el-col>
+            <el-col>
+                <el-switch v-model="curConfig.visible" active-color="#13ce66" inactive-color="#ff4949"
+                    active-text="提交页显示该控件" inactive-text="提交页隐藏该控件">
+                </el-switch>
+            </el-col>
+            <el-row
+                v-if="curConfig.boxType === 'text' || curConfig.boxType === 'number' || curConfig.boxType === 'password' || curConfig.boxType === 'textarea' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
+                <el-col>
+                    <md-input v-model="curConfig.placeholder">Placeholder</md-input>
+                    <template v-if="curConfig.boxType !== 'rfb'">
+                        <template v-if="curConfig.boxType !== 'rfbPath'">
+                            <template v-if="curConfig.boxType !== 'password'">
+                                <span class="text-title">Disabled：</span>
+                                <el-switch v-model="curConfig.disabled" active-color="#13ce66" inactive-color="#ff4949"
+                                    active-text="是" inactive-text="否">
+                                </el-switch>
+                            </template>
+                        </template>
+                    </template>
+                </el-col>
+                <el-col v-if="curConfig.boxType !== 'textarea'">
+                    <span class="text-title">Required：</span>
+                    <el-switch v-model="curConfig.required" active-color="#13ce66" inactive-color="#ff4949"
+                        active-text="是" inactive-text="否">
+                    </el-switch>
+                </el-col>
+                <el-col v-if="curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
+                    <span class="text-title">FileOrDir：</span>
+                    <el-radio-group v-model="curConfig.fileOrDir" class="ml-4">
+                        <el-radio label="file" size="large">file</el-radio>
+                        <el-radio label="dir" size="large">dir</el-radio>
+                        <el-radio label="all" size="large">all</el-radio>
+                    </el-radio-group>
+                </el-col>
+            </el-row>
             <el-col>
                 <md-input v-model="curConfig.type">Type</md-input>
             </el-col>
+            <template v-if="curConfig.boxType === 'number'">
+                <el-col>
+                    <md-input v-model="curConfig.min" type="number">Min</md-input>
+                </el-col>
+                <el-col>
+                    <md-input v-model="curConfig.max" type="number">Max</md-input>
+                </el-col>
+                <el-col>
+                    <md-input v-model="curConfig.step" type="number">Step</md-input>
+                </el-col>
+            </template>
         </el-row>
     </div>
 </template>
@@ -147,6 +197,55 @@ let baseConfig = {
     visible: true,
     type: '',
 }
+let makeBaseConfig = (type: string) => {
+    let config = JSON.parse(JSON.stringify(baseConfig))
+    switch (type) {
+        case 'info':
+            config.default = ''
+            break;
+        case 'text':
+            config.disabled = false
+            config.required = false
+            config.placeholder = ''
+            config.default = ''
+            config.rules = ''
+            break;
+        case 'password':
+            config.required = false
+            config.placeholder = ''
+            config.rules = ''
+            break;
+        case 'number':
+            config.disabled = false
+            config.required = false
+            config.placeholder = ''
+            config.default = ''
+            config.min = '1'
+            config.max = '10'
+            config.step = '1'
+            break;
+        case 'textarea':
+            config.placeholder = ''
+            config.disabled = false
+            break;
+        case 'rfb':
+            config.placeholder = ''
+            config.required = false
+            config.fileOrDir = 'file'
+            config.default = ''
+            config.rules = ''
+            break;
+        case 'rfbPath':
+            config.placeholder = ''
+            config.required = false
+            config.fileOrDir = 'file'
+            config.default = ''
+            config.rules = ''
+            break;
+    }
+    return config
+}
+
 
 let treeData = reactive({
     root: {
@@ -163,9 +262,8 @@ let treeData = reactive({
         }
     },
 })
-let curId = ref('root')
 let curRoot = ref('root')
-let curConfig = ref(treeData.root.config)
+let curConfig = ref<any>(treeData.root.config)
 let find = (tree: any, target: any): any => {
     if (!tree) return
     for (let key in tree) {
@@ -207,7 +305,7 @@ let makeId = (type: string): number => {
 let add = () => {
     if (!selectType.value) { return alert('请选择控件') }
     let id = selectType.value + makeId(selectType.value)
-    let config = JSON.parse(JSON.stringify(baseConfig))
+    let config = makeBaseConfig(selectType.value)
     config.boxType = selectType.value
     config.label = id
     find(treeData, curRoot.value).children[id] = { config, children: {} }
@@ -222,11 +320,14 @@ watch(() => props.activeId, () => {
     curRoot.value = findParent(treeData, props.activeId, treeData)
 })
 
-let testnode1 = computed(() => find(treeData, props.activeId))
-let testnode3 = computed(() => find(treeData, curRoot.value))
-let testnode2 = computed(() => findParent(treeData, props.activeId, treeData))
 </script>
 <style lang="less">
+.top-title {
+    font-size: 16px;
+    margin-top: -10px;
+    margin-bottom: 5px;
+}
+
 .btn {
     width: 60px;
 }
@@ -234,5 +335,14 @@ let testnode2 = computed(() => findParent(treeData, props.activeId, treeData))
 .slider-title {
     font-size: 14px;
     color: #409eff;
+}
+
+.text-title {
+    display: inline-block;
+    width: 60px;
+    font-size: 14px;
+    font-weight: 400;
+    padding-right: 20px;
+    color: #909399;
 }
 </style>
