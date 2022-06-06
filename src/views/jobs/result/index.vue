@@ -13,34 +13,37 @@ import resultShow from './resultShow.vue'
 import { getJobResult } from '@/api/api'
 import { result } from '@/app-model'
 import { useRoute } from 'vue-router';
+import { ElNotification } from 'element-plus';
 
 
 
 let jobIndex = ref('example')
-let appname = ref('graph-ppis')
-let route=useRoute()
-if (route.query.id) {
-  jobIndex.value = route.query.id as string
+let route = useRoute()
+if (route.params.uuid) {
+  if (typeof route.params.uuid === "string") {
+    jobIndex.value = route.params.uuid
+  } else {
+    jobIndex.value = route.params.uuid[0]
+  }
 }
-if (route.query.app) {
-  appname.value = route.query.app as string
-}
-
+// console.log("route params", route.params)
 let baseInfo = ref<result>({
-  "id": 0,
+  "uuid": '0000',
   "name": '',
   "app_name": '',
   "cluster_job_id": '',
-  "status": 0,
+  "status": "unknown",
 })
 let loading = ref(true)
 onMounted(async () => {
-  let res = await getJobResult(jobIndex.value, appname.value).catch(err => {
+  let res = await getJobResult(jobIndex.value).catch(err => {
     console.log(err)
+    ElNotification(err)
   })
-  if (!res) return
-  baseInfo.value = res
   loading.value = false
+  if (!res) return
+  console.log("res", res)
+  baseInfo.value = res.spec
 })
 
 </script>

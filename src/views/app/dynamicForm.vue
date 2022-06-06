@@ -18,12 +18,13 @@
     <div v-else-if="loading">数据加载中...</div>
     <el-row v-else>
       <el-col v-if="app && app.render" :span="app?.render.width" :offset="app?.render.offset">
-        <el-form label-position="top" label-width="120px">
+        <el-form label-position="top" label-width="120px" :disabled="!userAvailable">
           <widget ref="runtimeFormRef" :widgetForm="runtimeForm" :rules="runtimeRules" v-model="runtimeParams"></widget>
           <widget ref="appFormRef" :widgetForm="app!.render" :rules="appRules" v-model="appParams"></widget>
           <el-form-item>
             <el-button type="primary" @click="submitForm()">Submit</el-button>
           </el-form-item>
+          <span v-if="!userAvailable" class="warning">提交计算任务需要先登录系统</span>
         </el-form>
       </el-col>
     </el-row>
@@ -31,13 +32,16 @@
 </template>
 <script lang="ts" setup>
 import { getAppSpec } from '@/api/api'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { AppSpec, AppWidgets } from '@/app-model'
 import { FormRules, FormInstance, UploadInstance, ElNotification, } from 'element-plus'
 import { submitAppTask, uploadFile } from '@/api/api'
 import Widget from "@/components/Widget/index.vue"
 import { StarlightRuntimeParams, createJobName, AppParams } from '@/app-model/graph-ppis';
+import { useStore } from '@/store'
+
+let store = useStore()
 const route = useRoute()
 const router = useRouter()
 const debug = ref(route.query["debug"] == 'true')
@@ -96,6 +100,7 @@ const runtimeParams = ref<StarlightRuntimeParams>({
 let app = ref<AppSpec>()
 const appParams = ref<AppParams>({})
 
+let userAvailable = computed(() => store.state.user.token !== "")
 
 onMounted(async () => {
   loading.value = true
@@ -168,6 +173,7 @@ const submitForm = async () => {
   // change File Format
   const res = await submitAppTask(appName, appParams.value, runtimeParams.value).catch(err => {
     console.log("err", err)
+    ElNotification.error(err)
     pass = false
   })
   console.log(res)
@@ -183,5 +189,14 @@ const submitForm = async () => {
 
 .item-row {
   width: 100%;
+}
+
+.warning {
+  color: #3a87ad;
+  background: #50bfff;
+  background-color: #ecf8ff;
+  padding: 10px;
+  line-height: 1.6em;
+  font-size: 14px;
 }
 </style>

@@ -1,0 +1,211 @@
+<template>
+  <div v-if="!itemParsed"></div>
+  <div v-else-if="itemParsed.class === 'number'">
+    <div class="simple-box">
+      {{ itemParsed.value }}
+    </div>
+  </div>
+  <div v-else-if="itemParsed.class === 'File'">
+    {{ itemParsed }}
+    <div v-if="itemParsed.meta.mime === 'application/octet-stream'" class="file-box">
+      <el-popover placement="right">
+        <template #reference>
+          <el-icon size="calc( 100px + 5vw)">
+            <Document />
+          </el-icon>
+        </template>
+        <div>此文件可能不支持在线查看，您可以下载到本地查看
+          <hr>
+          <el-button @Click="downloadFile">下载</el-button>
+          <el-button @Click="readText">仍然查看</el-button>
+        </div>
+      </el-popover>
+
+      <span>{{ itemParsed.meta.basename }}</span>
+    </div>
+    <div v-if="itemParsed.meta.mime === 'text/plain'" class="file-box">
+      <el-icon size="calc( 100px + 5vw)" @Click="readText">
+        <Document />
+      </el-icon>
+      <span>{{ itemParsed.meta.basename }}</span>
+    </div>
+    <div v-else-if="itemParsed.meta.mime === 'chemical/pdb'">
+      <div class="box">
+        <db-view :src='itemParsed.location'>
+        </db-view>
+        <span>{{ itemParsed.meta.basename }}</span>
+      </div>
+    </div>
+    <div v-else-if="itemParsed.meta.mime.startsWith('image')">
+      <div class="imgbox">
+        <el-image :src="itemParsed.location" fit="contain" class="img" :preview-src-list="[itemParsed.location!]">
+        </el-image>
+      </div>
+    </div>
+  </div>
+  <div>
+    <el-dialog v-model="showViewFile" title="查看文本" width="50%" :top="'50vh'" class="dialog">
+      <div v-if="fileToView">
+        <view-file :url="fileToView"></view-file>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+<script lang="ts" setup>
+import viewFile from "./viewFile.vue";
+import store, { UserType } from '@/store'
+import dbView from "@/components/common/dbView.vue";
+import type { outputTypes, fileOutput, } from '@/app-model'
+import { ref, onMounted } from "vue";
+import { metaFromName } from "@/utils/meta";
+import { FileMeta, fileVerbose } from "@/app-model/file";
+import { ElNotification } from "element-plus";
+export interface numberValue {
+  class: 'number',
+  value: number
+}
+export interface stringValue {
+  class: 'string',
+  value: string
+}
+export interface warningValue {
+  class: 'warning',
+  value: string
+}
+// export interface fileVerbose extends fileOutput {
+//   meta: FileMeta
+// }
+export type ViewerItem = fileVerbose | numberValue | stringValue | warningValue
+
+const itemParsed = ref<ViewerItem>()
+let props = defineProps<{
+  item: outputTypes
+}>()
+let showViewFile = ref(false)
+let fileToView = ref<fileVerbose>()
+
+const ansysOutput = (spec: outputTypes): ViewerItem => {
+  if (typeof spec === "number") {
+    return { class: "number", value: spec }
+  }
+  if (typeof spec === "string") {
+    return { class: "string", value: spec }
+  }
+  if (Array.isArray(spec)) {
+    return { class: "warning", value: "不支持显示列表" }
+  }
+  if (spec.class === "File") {
+    let fileMeta = { ...spec, meta: metaFromName(spec.location) }
+    // Mock
+    fileMeta.location = "file://@input/nscc-gz_jiangli/test/test.txt"
+    fileMeta.checksum = "98937a5bb80fc3d5e74b252a9195ec1f7ac42d6f"
+    fileMeta.meta.ext = ".txt"
+
+    return fileMeta
+  }
+  return { class: "warning", value: "Unknown output types." }
+}
+
+onMounted(() => {
+  itemParsed.value = ansysOutput(props.item)
+  if (itemParsed.value && itemParsed.value.class === "File") {
+    fileToView.value = itemParsed.value
+  }
+})
+
+const readText = () => {
+  showViewFile.value = true
+}
+const downloadFile = () => {
+  //https://blog.csdn.net/dmlcq/article/details/120416981
+  console.log("TODO downloadFile")
+  var href = `${import.meta.env.VITE_APP_BASE_API}` + '/storage/download?'
+  let fileQuery = "sha1=98937a5bb80fc3d5e74b252a9195ec1f7ac42d6f&ext=.txt&dir=input"
+  if (fileToView.value?.checksum) {
+    fileQuery += "&sha1=" + fileToView.value?.checksum
+  }
+  if (fileToView.value?.meta.ext) {
+    fileQuery += "&ext=" + fileToView.value?.meta.ext
+  }
+  // var params = "file=" + encodeURIComponent(viewFileUrl.value)
+  // var url = href + params
+  var url = href + fileQuery
+  // window.open(href + params)
+  var xhr = new XMLHttpRequest()
+  var fileName = fileToView.value!.meta.basename
+  xhr.open("GET", url, true)
+  xhr.responseType = 'blob'
+  if (store.state.user.type === UserType.StarlightUser) {
+    xhr.setRequestHeader('Bihu-Token', store.state.user.token)
+  } else if (store.state.user.type === UserType.EmailFreeUser) {
+    xhr.setRequestHeader('Authorization', store.state.user.token)
+  }
+  xhr.onload = async function (res) {
+    if (this.status === 200) {
+      var type = xhr.getResponseHeader('Content-Type') || ""
+      // var blob = new Blob([this.response], { type: type })
+      var blob = new Blob([this.response])
+      // var blob = new Blob([this.response], { type: fileToView.value!.meta!.ext })
+      console.log(blob)
+      if (type === "application/json") {
+        let txt = await blob.text().catch(err => {
+          ElNotification.error({ title: "下载文件失败", message: err })
+        })
+        if (!txt) {
+          return
+        }
+        console.log("resp json:", txt)
+        try {
+          let respData = JSON.parse(txt)
+          if (respData && respData.code) {
+            ElNotification.error({ title: "下载文件失败", message: respData.info })
+            return
+          }
+        } catch (e) {
+          console.log("Not Real Json File")
+        }
+      }
+      var URL = window.URL || window.webkitURL
+      var objectUrl = URL.createObjectURL(blob)
+      var a = document.createElement('a')
+      a.href = objectUrl
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+    }
+  }
+  xhr.send()
+}
+</script>
+
+<style scoped lang="less">
+.file-box {
+  padding: 0 50px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.imgbox {
+  width: calc(45px + 30vw);
+  height: calc(30px + 20vw);
+
+  .img {
+
+    height: 100%;
+    width: 80%;
+    padding-left: 10%;
+  }
+}
+
+.simple-box {
+  padding: 10px;
+  font-size: 15px
+}
+
+::v-deep(.el-dialog) {
+  transform: translateY(-50%);
+}
+</style>

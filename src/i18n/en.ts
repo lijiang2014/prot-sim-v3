@@ -238,7 +238,10 @@ export default {
     loginFail: 'Login failed',
     EmailOrTelephoneNeeded: 'Mailbox cannot be empty',
     VerificationCodeNeeded: 'Verification code cannot be empty',
-    logon:'logon'
+    logon: 'logon'
+  },
+  region: {
+    "default": "Popular Applications",
   },
   register: {
     EmptyEmail: 'Email can not be empty',

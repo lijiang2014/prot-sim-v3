@@ -1,12 +1,13 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, jobMeta, OutputMap, result as JobResult, } from '@/app-model'
+import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, fileOutput, jobMeta, OutputMap, PageView, result as JobResult, result, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
-import axios, { AxiosRequestConfig } from 'axios'
+import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
 import { ElNotification } from 'element-plus'
+import { FileMeta, fileVerbose } from '@/app-model/file'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -47,8 +48,7 @@ export const uploadFile = (spath: string, file: File, settings?: AxiosRequestCon
 
 
 export const submitAppTask = (app: string, params: any, runtime_params: any): Promise<any> => {
-  if (app === 'graph-ppis') {
-    app = 'graphppis'
+  if (!runtime_params?.partition) {
     runtime_params = Object.assign(runtime_params, {
       cluster: 'k8s_venus',
       partition: 'venus-cpu',
@@ -57,327 +57,44 @@ export const submitAppTask = (app: string, params: any, runtime_params: any): Pr
       userMode: "starlight",
     })
   }
-  return $request({
-    url: '/api/job/submit',
-    method: 'post',
-    data: {
-      app,
-      params,
-      runtime_params
-    }
+  // return $request({
+  //   url: '/api/job/submit',
+  //   method: 'post',
+  //   data: {
+  //     app,
+  //     params,
+  //     runtime_params
+  //   }
+  // })
+  return http.post('/job/submit', {
+    app,
+    params,
+    runtime_params
   })
 }
 
-export const getJobResult = (jobindex: string, appname: string): Promise<JobResult> => {
+export const getJobResult = (jobindex: string): Promise<ApiResponseSpec<JobResult>> => {
   if (jobindex === 'example') {
     return new Promise((resolve, reject) => {
       let outputs = {
-        "outputs": {
+        "outputs_raw": {
           "output1": {
-            class: "file",
-            file: {
-              uri: "/1.txt",
-              meta: {
-                mime: 'text/plain',
-              }
-            } as stringFile
-          },
-          "output2": {
-            class: "file",
-            file: {
-              uri: "/model_1.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile
-          },
-          "output3": {
-            class: "files",
-            files: [({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/1.jpg",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/1.jpg",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ]
-          },
-          "output4": {
-            class: "files",
-            files: [({
-              uri: "/ranked_0.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_1.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_2.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_3.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_4.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ]
-          },
-          "output5": {
-            class: "files",
-            files: [({
-              uri: "../../src/assets/1.jpg",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "/2.txt",
-              meta: {
-                mime: 'text/plain',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ]
-          },
-          "output6": {
-            class: "files",
-            files: [({
-              uri: "/model_1.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_0.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_1.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/3.txt",
-              meta: {
-                mime: 'text/plain',
-              }
-            } as stringFile),
-            ]
-          },
-
-          "output7": {
-            class: "file",
-            file: {
-              uri: "../../src/assets/1.jpg",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile
-          },
-          "output8": {
-            class: "files",
-            files: [({
-              uri: "/ranked_2.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/ranked_3.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-            ({
-              uri: "/4.txt",
-              meta: {
-                mime: 'text/plain',
-              }
-            } as stringFile),
-
-            ({
-              uri: "../../src/assets/1.jpg",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ({
-              uri: "/model_1.pdb",
-              meta: {
-                mime: 'chemical/pdb',
-              }
-            } as stringFile),
-
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-
-            ({
-              uri: "../../src/assets/logo.png",
-              meta: {
-                mime: 'image/png',
-              }
-            } as stringFile),
-            ]
-          },
-          "output9": {
-            class: "files",
-            files: [
-
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "/model_1.pdb",
-                meta: {
-                  mime: 'chemical/pdb',
-                }
-              } as stringFile),
-
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "/ranked_4.pdb",
-                meta: {
-                  mime: 'chemical/pdb',
-                }
-              } as stringFile),
-
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "/5.txt",
-                meta: {
-                  mime: 'text/plain',
-                }
-              } as stringFile),
-
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-              ({
-                uri: "../../src/assets/logo.png",
-                meta: {
-                  mime: 'image/png',
-                }
-              } as stringFile),
-            ]
+            class: "File",
+            checksum: "sha1$93ecfc6be24744aa31463abb550a83474bf06cfa",
+            location: "file:///GPUFS/app/bihu/spooler/graphppis-26111427j19n/log.job",
+            size: 1165,
           },
           "output10": 1365413,
           "output11": "aaaaaaa",
         } as OutputMap
       }
-      let mockData = Object.assign(outputs, jobMetaExample)
+      let spec = Object.assign(outputs, jobMetaExample)
       setTimeout(() => {
-        resolve(mockData)
+        resolve({ spec, code: 200, uuid: "0000" })
       }, mockQueryTime)
     })
   }
-  return new Promise((resolve, reject) => { reject("Not Ok Yet") })
+  return http.get('/job/result/' + jobindex)
 }
 
 /*  
@@ -515,13 +232,7 @@ export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> =>
       }, mockQueryTime)
     })
   }
-  // return new Promise((resolve, reject) => { reject("Not Ok Yet") })
-  let ret = await $request({
-    url: '/api/app/app/' + app,
-    method: 'get',
-    params,
-    headers: { 'TIMEOUT': '15' },
-  }).catch(err => {
+  let ret = await http.get('/app/' + app).catch(err => {
     throw (err)
   })
   console.log("ret", ret)
@@ -533,19 +244,6 @@ export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> =>
 }
 
 export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
-  // const mockData = [
-  //   jobMetaExample,
-  //   jobMetaExample,
-  //   jobMetaExample,
-  // ]
-  // if (params && params.mock === '1') {
-  //   return new Promise((resolve, reject) => {
-  //     setTimeout(() => {
-  //       resolve({ spec: mockData, total: 1000 })
-  //     }, mockQueryTime)
-  //   })
-  // }
-  // return new Promise((resolve, reject) => { reject("Not Ok Yet") })
   return http.get('/job/result')
 }
 
@@ -611,15 +309,22 @@ export function uploadFileDirectSimple(filename: string, fileObj: File, settings
 }
 
 // 返回文本文件的内容
-export const getText = (url: string, size: number, page: number): Promise<{ text: string, total: number }> => {
-  let text: string
-  return new Promise((resolve, reject) => {
-    axios.get(url).then(res => {
-      text = res.data.slice(size * (page - 1), size * page)
-      resolve({ text, total: res.data.length })
-    }).catch(err => {
-      reject(err)
-    })
+export const previewFile = (url: string | fileVerbose, size: number = 1000, page: number = 1): Promise<ApiResponseSpec<PageView>> => {
+  let file = ""
+  let [sha1, dir, ext] = ["", "", "", ""]
+  if (typeof url === "object") {
+    sha1 = url.checksum || ""
+    // dir = "input"
+    file = url.location
+    ext = url.meta.ext
+    if (file.startsWith("file://@input/")) {
+      dir = "input"
+    }
+  } else {
+    file = url
+  }
+  return http.get("/storage/view", {
+    params: { page, size, file, sha1, dir, ext },
   })
 }
 
