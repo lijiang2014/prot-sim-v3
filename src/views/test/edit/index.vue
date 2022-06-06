@@ -55,7 +55,7 @@
                     <md-input v-model="nodes.step" type="number">Step</md-input>
                 </div>
                 <div v-show="boxShow">
-                    <container-config v-model:tree="tree" :activeId="activeId"></container-config>
+                    <container-config v-model:tree="tree" v-model:activeId="activeId"></container-config>
                 </div>
             </div>
         </aside>

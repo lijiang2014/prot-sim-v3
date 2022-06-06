@@ -13,7 +13,7 @@
                 </el-button>
             </el-tooltip>
             <el-tooltip content="删除控件" placement="top">
-                <el-button color="#ff4949" circle>
+                <el-button color="#ff4949" circle @click="deleteElement">
                     <el-icon color="#fff">
                         <Minus />
                     </el-icon>
@@ -71,11 +71,12 @@
                 v-if="curConfig.boxType === 'text' || curConfig.boxType === 'info' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
                 <md-input v-model="curConfig.default">Default</md-input>
             </el-col>
-            <el-col
-                v-if="curConfig.boxType === 'number'">
-                <md-input v-model="curConfig.default" type="number" :min="curConfig.min" :max="curConfig.max" :step="curConfig.step">Default</md-input>
+            <el-col v-if="curConfig.boxType === 'number'">
+                <md-input v-model="curConfig.default" type="number" :min="curConfig.min" :max="curConfig.max"
+                    :step="curConfig.step">Default</md-input>
             </el-col>
-            <el-col v-if="curConfig.boxType === 'text' || curConfig.boxType === 'password' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
+            <el-col
+                v-if="curConfig.boxType === 'text' || curConfig.boxType === 'password' || curConfig.boxType === 'rfb' || curConfig.boxType === 'rfbPath'">
                 <md-input v-model="curConfig.rules">Rules</md-input>
             </el-col>
             <el-col>
@@ -139,6 +140,7 @@ let props = defineProps<{
 }>()
 let emit = defineEmits<{
     (e: 'update:tree', arg1: any): void
+    (e: 'update:activeId', arg1: any): void
 }
 >()
 let selectType = ref()
@@ -250,6 +252,7 @@ let makeBaseConfig = (type: string) => {
 let treeData = reactive({
     root: {
         config: {
+            id:'root',
             offset: 0,
             width: 24,
             boxType: 'container',
@@ -264,7 +267,7 @@ let treeData = reactive({
 })
 let curRoot = ref('root')
 let curConfig = ref<any>(treeData.root.config)
-let find = (tree: any, target: any): any => {
+let find = (tree: any, target: any): any => {           //获取target节点
     if (!tree) return
     for (let key in tree) {
         if (key === target) {
@@ -277,7 +280,7 @@ let find = (tree: any, target: any): any => {
         }
     }
 }
-let findParent = (tree: any, target: any, pre: any): any => {
+let findParent = (tree: any, target: any, pre: any): any => {            //获取target节点的父容器，如果target本身是容器，返回本身
     if (!tree) return
     for (let key in tree) {
         if (key === target) {
@@ -291,7 +294,7 @@ let findParent = (tree: any, target: any, pre: any): any => {
         }
     }
 }
-let makeId = (type: string): number => {
+let makeId = (type: string): number => {                   //获取递增的id，1,2,3,4,5  如果3已存在，直接获得4
     for (let i in idStore[type]) {
         let index = Number(i)
         if (idStore[type][i] !== index + 1) {
@@ -308,8 +311,72 @@ let add = () => {
     let config = makeBaseConfig(selectType.value)
     config.boxType = selectType.value
     config.label = id
+    config.id = id
     find(treeData, curRoot.value).children[id] = { config, children: {} }
 }
+let deleteElement = () => {
+    let changeId = ''
+    let deleteTree
+    let del = (tree: any, target: any, parent: string): any => {           //删除节点
+        if (!tree) return
+        for (let key in tree) {
+            if (key === target) {
+                console.log('tree-', tree)
+                console.log('key-', key)
+                if (key === 'root') return true      //不删除根组件
+
+                changeId = parent
+
+                deleteTree=tree[key]
+                delete tree[key]
+                return true
+            } else {
+                let isFind = del(tree[key].children, target, key)
+                if (isFind) {
+                    return isFind
+                }
+            }
+        }
+    }
+    let removeId = (id: string) => {  //将idStore中的id删除
+        let boxType = id.match(/[a-z A-Z]/g)!.join('')
+        let number = Number(id.match(/\d/g)!.join(''))
+        for (let i in idStore[boxType]) {
+            let index = Number(i)
+            if (idStore[boxType][i] === number) {
+                idStore[boxType].splice(index, 1)
+            }
+        }
+    }
+    let removeTree = (tree:any) => {               //删除节点的id和子节点的id
+        //递归获取所有子节点id
+        let idArr:any=[]
+        function getId(curTree:any){
+            idArr.push(curTree.config.id)
+            for(let key in curTree.children){
+                if(curTree.children[key]){
+                    getId(curTree.children[key])
+                }
+            }
+        }
+        getId(tree)
+        for(let item of idArr){
+            removeId(item)
+        }
+    }
+
+
+    del(treeData, props.activeId, 'root')
+    if (changeId) {
+        emit('update:activeId', changeId)        //删除节点后，选中上一层的节点
+    }
+    if (deleteTree) {
+        removeTree(deleteTree)
+    }
+}
+
+
+
 watch(() => treeData, () => {
     emit('update:tree', treeData)
 }, { deep: true, immediate: true })
