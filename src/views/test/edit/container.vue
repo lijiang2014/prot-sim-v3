@@ -20,7 +20,8 @@
                     <el-input v-model="inputValue[index]" :placeholder="config.placeholder" clearable type="textarea" />
                 </div>
                 <div v-if="config.boxType === 'number'">
-                    <el-input v-model="config.default" :placeholder="config.placeholder" type="number" :min='config.min' :max='config.max' :step='config.step'/>
+                    <el-input v-model="config.default" :placeholder="config.placeholder" type="number" :min='config.min'
+                        :max='config.max' :step='config.step' />
                 </div>
                 <div v-if="config.boxType === 'info'">
                     <Tinymce v-model="inputValue[index]"></Tinymce>
@@ -34,16 +35,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import Tinymce from '@/components/Tinymce/index.vue'
+import type { treeDataType } from './index.vue'
 let porps = defineProps<{
-    tree: {
-        [key: string]: any
-    }
+    tree: treeDataType
 }>()
 let inputValue = ref([])
 let emit = defineEmits<{
-    (e: 'activeBoxChange', age1: any): void
+    (e: 'activeBoxChange', age1: string): void
 }>()
-let boxClick = (id: any) => {
+let boxClick = (id: string) => {
     emit('activeBoxChange', id)
 }
 </script>

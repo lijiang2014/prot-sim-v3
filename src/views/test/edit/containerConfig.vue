@@ -132,18 +132,20 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import mdInput from '@/components/MDinput/index.vue'
+import type { treeDataType, configType, nodeType } from './index.vue'
+
 let props = defineProps<{
-    tree: any,
-    activeId: any
+    tree: treeDataType,
+    activeId: string
 }>()
 let emit = defineEmits<{
-    (e: 'update:tree', arg1: any): void
-    (e: 'update:activeId', arg1: any): void
+    (e: 'update:tree', arg1: treeDataType): void
+    (e: 'update:activeId', arg1: string): void
 }
 >()
-let selectType = ref()
+let selectType = ref<string>()
 let typeOption = [
     {
         label: 'container',
@@ -190,7 +192,8 @@ let idStore: {
     rfb: [],
     rfbPath: [],
 }
-let baseConfig = {
+let baseConfig: configType = {
+    id: '',
     offset: 0,
     width: 24,
     boxType: '',
@@ -200,7 +203,7 @@ let baseConfig = {
     type: '',
 }
 let makeBaseConfig = (type: string) => {
-    let config = JSON.parse(JSON.stringify(baseConfig))
+    let config: configType = JSON.parse(JSON.stringify(baseConfig))
     switch (type) {
         case 'info':
             config.default = ''
@@ -248,11 +251,10 @@ let makeBaseConfig = (type: string) => {
     return config
 }
 
-
-let treeData = reactive({
+let treeData: treeDataType = reactive({
     root: {
         config: {
-            id:'root',
+            id: 'root',
             offset: 0,
             width: 24,
             boxType: 'container',
@@ -266,9 +268,8 @@ let treeData = reactive({
     },
 })
 let curRoot = ref('root')
-let curConfig = ref<any>(treeData.root.config)
-let find = (tree: any, target: any): any => {           //获取target节点
-    if (!tree) return
+let curConfig = ref<configType>(treeData.root.config)
+let find = (tree: treeDataType, target: string): nodeType | undefined => {           //获取target节点
     for (let key in tree) {
         if (key === target) {
             return tree[key]
@@ -280,8 +281,7 @@ let find = (tree: any, target: any): any => {           //获取target节点
         }
     }
 }
-let findParent = (tree: any, target: any, pre: any): any => {            //获取target节点的父容器，如果target本身是容器，返回本身
-    if (!tree) return
+let findParent = (tree: treeDataType, target: string, pre: string): string | undefined => {            //获取target节点的父容器，如果target本身是容器，返回本身
     for (let key in tree) {
         if (key === target) {
             if (tree[key].config.boxType === 'container') return key
@@ -312,13 +312,12 @@ let add = () => {
     config.boxType = selectType.value
     config.label = id
     config.id = id
-    find(treeData, curRoot.value).children[id] = { config, children: {} }
+    find(treeData, curRoot.value)!.children[id] = { config, children: {} }
 }
 let deleteElement = () => {
     let changeId = ''
     let deleteTree
-    let del = (tree: any, target: any, parent: string): any => {           //删除节点
-        if (!tree) return
+    let del = (tree: treeDataType, target: string, parent: string): any => {           //删除节点
         for (let key in tree) {
             if (key === target) {
                 console.log('tree-', tree)
@@ -327,7 +326,7 @@ let deleteElement = () => {
 
                 changeId = parent
 
-                deleteTree=tree[key]
+                deleteTree = tree[key]
                 delete tree[key]
                 return true
             } else {
@@ -338,7 +337,7 @@ let deleteElement = () => {
             }
         }
     }
-    let removeId = (id: string) => {  //将idStore中的id删除
+    let removeId = (id: string) => {                //将idStore中的id删除
         let boxType = id.match(/[a-z A-Z]/g)!.join('')
         let number = Number(id.match(/\d/g)!.join(''))
         for (let i in idStore[boxType]) {
@@ -348,19 +347,19 @@ let deleteElement = () => {
             }
         }
     }
-    let removeTree = (tree:any) => {               //删除节点的id和子节点的id
+    let removeTree = (tree: nodeType) => {               //删除节点的id和子节点的id
         //递归获取所有子节点id
-        let idArr:any=[]
-        function getId(curTree:any){
+        let idArr: string[] = []
+        function getId(curTree: nodeType) {
             idArr.push(curTree.config.id)
-            for(let key in curTree.children){
-                if(curTree.children[key]){
+            for (let key in curTree.children) {
+                if (curTree.children[key]) {
                     getId(curTree.children[key])
                 }
             }
         }
         getId(tree)
-        for(let item of idArr){
+        for (let item of idArr) {
             removeId(item)
         }
     }
@@ -383,8 +382,8 @@ watch(() => treeData, () => {
 
 watch(() => props.activeId, () => {
     let cur = find(treeData, props.activeId)
-    curConfig.value = cur.config
-    curRoot.value = findParent(treeData, props.activeId, treeData)
+    curConfig.value = cur!.config
+    curRoot.value = findParent(treeData, props.activeId, 'root')!
 })
 
 </script>

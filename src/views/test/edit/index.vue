@@ -72,6 +72,36 @@ import Tinymce from '@/components/Tinymce/index.vue'
 import clusterDialog from './clusterDialog.vue'
 import containerConfig from './containerConfig.vue'
 import container from './container.vue'
+
+export type configType = {
+    id: string,
+    offset: number,
+    width: number,
+    boxType: string,
+    name: string,
+    label: string,
+    visible: true,
+    type: string,
+    default?: string,
+    disabled?: boolean,
+    required?: boolean,
+    placeholder?: string,
+    min?: string,
+    max?: string,
+    step?: string,
+    rules?: string,
+    fileOrDir?: string
+}
+export type nodeType = {
+    config: configType,
+    children: treeDataType
+}
+export interface treeDataType {
+    [key: string]: nodeType
+}
+type selectList = { name: string, value: string[] }[]
+
+
 let curName = ref('layout')
 let boxShow = ref(true)
 let showToggle = (name: string, box?: boolean) => {
@@ -99,7 +129,13 @@ let addCluster = () => {
     clusterDialogVisible.value = true
 }
 
-let nodes = reactive({
+let nodes = reactive<{
+    default: string,
+    visible: boolean,
+    min: string | undefined,
+    max: string | undefined,
+    step: string | undefined,
+}>({
     default: '',
     visible: true,
     min: undefined,
@@ -107,13 +143,14 @@ let nodes = reactive({
     step: undefined
 })
 
-let setGroup = (selectList: any) => {
+let setGroup = (selectList: selectList) => {
+    console.log(selectList)
     cluster.target = JSON.stringify(selectList)
 }
 
-let tree = ref({})
+let tree = ref<treeDataType>({})
 let activeId = ref('root')
-let activeBoxChange = (id: any) => {
+let activeBoxChange = (id: string) => {
     activeId.value = id
     curName.value = 'box'
     boxShow.value = true
