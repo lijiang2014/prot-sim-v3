@@ -20,7 +20,7 @@
                 </el-button>
             </el-tooltip>
             <el-tooltip content="撤销" placement="top">
-                <el-button color="#1890ff" circle>
+                <el-button color="#1890ff" circle @click="historyBack">
                     <el-icon color="#fff">
                         <ArrowLeftBold />
                     </el-icon>
@@ -132,8 +132,9 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref, watch } from 'vue';
+import {  ref, watch, onMounted } from 'vue';
 import mdInput from '@/components/MDinput/index.vue'
+import { copy } from '@/api/api'
 import type { treeDataType, configType, nodeType } from './index.vue'
 
 let props = defineProps<{
@@ -141,8 +142,8 @@ let props = defineProps<{
     activeId: string
 }>()
 let emit = defineEmits<{
-    (e: 'update:tree', arg1: treeDataType): void
-    (e: 'update:activeId', arg1: string): void
+    (e: 'update:tree', arg: treeDataType): void
+    (e: 'update:activeId', arg: string): void
 }
 >()
 let selectType = ref<string>()
@@ -203,7 +204,7 @@ let baseConfig: configType = {
     type: '',
 }
 let makeBaseConfig = (type: string) => {
-    let config: configType = JSON.parse(JSON.stringify(baseConfig))
+    let config: configType = copy(baseConfig)
     switch (type) {
         case 'info':
             config.default = ''
@@ -251,24 +252,8 @@ let makeBaseConfig = (type: string) => {
     return config
 }
 
-let treeData: treeDataType = reactive({
-    root: {
-        config: {
-            id: 'root',
-            offset: 0,
-            width: 24,
-            boxType: 'container',
-            name: '',
-            label: 'root',
-            visible: true,
-            type: '',
-        },
-        children: {
-        }
-    },
-})
 let curRoot = ref('root')
-let curConfig = ref<configType>(treeData.root.config)
+let curConfig = ref<configType>(props.tree.root.config)
 let find = (tree: treeDataType, target: string): nodeType | undefined => {           //获取target节点
     for (let key in tree) {
         if (key === target) {
@@ -305,6 +290,8 @@ let makeId = (type: string): number => {                   //获取递增的id�
     idStore[type].push(idStore[type].length + 1)
     return idStore[type].length
 }
+
+//添加操作
 let add = () => {
     if (!selectType.value) { return alert('请选择控件') }
     let id = selectType.value + makeId(selectType.value)
@@ -312,20 +299,19 @@ let add = () => {
     config.boxType = selectType.value
     config.label = id
     config.id = id
-    find(treeData, curRoot.value)!.children[id] = { config, children: {} }
+    find(props.tree, curRoot.value)!.children[id] = { config, children: {} }
+    pushHistory()            //记录历史操作
 }
+
+//删除操作
 let deleteElement = () => {
+    if (props.activeId === 'root') return alert('不能删除根组件')
     let changeId = ''
-    let deleteTree
+    let deleteTree: nodeType
     let del = (tree: treeDataType, target: string, parent: string): any => {           //删除节点
         for (let key in tree) {
             if (key === target) {
-                console.log('tree-', tree)
-                console.log('key-', key)
-                if (key === 'root') return true      //不删除根组件
-
                 changeId = parent
-
                 deleteTree = tree[key]
                 delete tree[key]
                 return true
@@ -365,25 +351,57 @@ let deleteElement = () => {
     }
 
 
-    del(treeData, props.activeId, 'root')
-    if (changeId) {
-        emit('update:activeId', changeId)        //删除节点后，选中上一层的节点
-    }
-    if (deleteTree) {
-        removeTree(deleteTree)
-    }
+    del(props.tree, props.activeId, 'root')
+    emit('update:activeId', changeId)        //删除节点后，选中上一层的节点
+    removeTree(deleteTree!)
+    pushHistory()                            //记录历史操作
 }
 
+//历史操作保存
+let history: {
+    treeDataCopy: treeDataType,
+    idStoreCopy: {
+        [type: string]: number[]
+    }
+}[] = []
 
+//记录历史操作
+let pushHistory = () => {
+    let treeDataCopy = copy(props.tree)
+    let idStoreCopy = copy(idStore)
+    history.push({ treeDataCopy, idStoreCopy })
+    console.log(history)
+}
 
-watch(() => treeData, () => {
-    emit('update:tree', treeData)
-}, { deep: true, immediate: true })
+//历史回退
+let historyBack = () => {
+    if (history.length === 1) return alert('没有可撤销的操作')
+    history.pop()
+    let last = copy(history[history.length - 1])
+    emit('update:activeId', 'root')
+    emit('update:tree', last.treeDataCopy)
+    idStore = last.idStoreCopy
+    //更新当前curconfig和curroot
+    setTimeout(() => {
+        let cur = find(props.tree, props.activeId)
+        curConfig.value = cur!.config
+        curRoot.value = findParent(props.tree, props.activeId, 'root')!
+    })
+    console.log(history)
+}
+
+onMounted(() => {
+    pushHistory()
+})
+
+watch(() => props.tree, () => {
+    history[history.length - 1].treeDataCopy = copy(props.tree)    //同步更改的数据到历史中
+}, { deep: true })
 
 watch(() => props.activeId, () => {
-    let cur = find(treeData, props.activeId)
+    let cur = find(props.tree, props.activeId)
     curConfig.value = cur!.config
-    curRoot.value = findParent(treeData, props.activeId, 'root')!
+    curRoot.value = findParent(props.tree, props.activeId, 'root')!
 })
 
 </script>

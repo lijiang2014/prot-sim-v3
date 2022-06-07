@@ -1,7 +1,7 @@
 <template>
     <el-row>
         <el-col v-for="({ config, children }, key, index) in tree" :span="config.width" :offset="config.offset"
-            class="box" @click.stop="boxClick(key)">
+            :key="config.id" class="box" @click.stop="boxClick(key as string)">
             <div :class="{ container: config.boxType === 'container', root: key === 'root' }">
                 <div class="title">{{ config.label }}</div>
                 <div v-if="config.boxType === 'text'">

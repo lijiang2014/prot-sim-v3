@@ -148,11 +148,26 @@ let setGroup = (selectList: selectList) => {
     cluster.target = JSON.stringify(selectList)
 }
 
-let tree = ref<treeDataType>({})
+let tree = ref<treeDataType>({
+    root: {
+        config: {
+            id: 'root',
+            offset: 0,
+            width: 24,
+            boxType: 'container',
+            name: '',
+            label: 'root',
+            visible: true,
+            type: '',
+        },
+        children: {
+        }
+    },
+})
 let activeId = ref('root')
 let activeBoxChange = (id: string) => {
     activeId.value = id
-    curName.value = 'box'
+    curName.value = 'layout'
     boxShow.value = true
 }
 </script>

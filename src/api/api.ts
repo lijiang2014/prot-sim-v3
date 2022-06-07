@@ -623,6 +623,10 @@ export const getText = (url: string, size: number, page: number): Promise<{ text
   })
 }
 
+//对象复制
+export const copy=<T>(obj:T):T=>{
+  return JSON.parse(JSON.stringify(obj))
+}
 
 // Orginal API
 export const checkPredictStructureProjectName = (projName: string): Promise<any> => {
