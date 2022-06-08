@@ -109,11 +109,12 @@ import { jobMeta } from '@/app-model';
 import { ref, onMounted } from 'vue';
 import { parseTime } from '@/utils';
 import { getJobs } from '@/api/api';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { ElNotification } from 'element-plus';
 
 const router = useRouter()
-
+const route = useRoute()
+console.log("route.query:", route.query)
 const listQuery = ref({
   page: 1,
   offset: 0,
@@ -122,6 +123,7 @@ const listQuery = ref({
   field_eq_cluster_job_id: '',
   field_ge_created_at: 0,
   field_le_created_at: 0,
+  field_eq_uuid: route.query.uuid || [],
   field_eq_status: []
 })
 const list = ref<jobMeta[]>([])
@@ -133,7 +135,7 @@ const handleFilter = () => {
 }
 const getList = async () => {
   listLoading.value = true
-  let ret = await getJobs().catch(err => {
+  let ret = await getJobs(listQuery.value).catch(err => {
     console.log(err)
     if (typeof err.data?.code === "number") {
       ElNotification(err.data.info + "")

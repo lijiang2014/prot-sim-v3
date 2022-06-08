@@ -1,5 +1,5 @@
 <template>
-  <h1>About {{ store.state.count }} , init {{count}}</h1>
+  <h1>About {{ store.state }} , init {{count}}</h1>
   <button @click="handleClick" >  Add</button>
 </template>
 <script lang="ts" setup>

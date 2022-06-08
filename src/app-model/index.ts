@@ -72,7 +72,7 @@ export interface AppMeta {
 
 export interface AppWidgets {
   id: string,
-  type: "container" | "info" | "text" | "rfbPath" | "list",
+  type: "container" | "info" | "text" | "rfbPath" | "rfb" | "list",
   name: string,
   label: string,
   attr: AppWidgetAttr,
@@ -122,4 +122,45 @@ export const jobMetaExample: jobMeta = {
 export interface PageView {
   Body: string
   Size: number
+}
+
+export const runtimeDefault: AppWidgets = {
+  "id": "runtime-root",
+  "type": "container",
+  "name": "",
+  "offset": 0,
+  "width": 24,
+  "label": "",
+  "attr": {},
+  "data": [
+    {
+      "id": "info-default",
+      "type": "info",
+      "name": "",
+      "offset": 0,
+      "width": 24,
+      "label": "",
+      "attr": {
+        "visible": true,
+        "default": "",
+      },
+      "data": []
+    },
+    {
+      "id": "jobname",
+      "type": "text",
+      "name": "jobname",
+      "offset": 0,
+      "width": 24,
+      "label": "Job Name",
+      "attr": {
+        "placeholder": "",
+        "required": false,
+        "disabled": false,
+        "visible": true,
+        "rules": "",
+        "default": ""
+      },
+      "data": []
+    }]
 }

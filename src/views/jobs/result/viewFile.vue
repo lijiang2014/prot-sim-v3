@@ -25,15 +25,7 @@ let total = ref(0)
 const loading = ref(false)
 let getContent = async () => {
   loading.value = true
-  // let url = "file://@input/nscc-gz_jiangli/test/test.txt"
   let url = props.url
-  // let url = {
-  //   class: "File",
-  //   size: 0,
-  //   checksum: "98937a5bb80fc3d5e74b252a9195ec1f7ac42d6f",
-  //   location: "file://@input/nscc-gz_jiangli/test/test.txt",
-  //   dir: "input",
-  // } as fileOutput
   let res = await previewFile(url, pageSize.value, currentPage.value).catch(
     err => {
       console.log("preview Err", err)
@@ -68,6 +60,9 @@ let handleCurrentChange = (page: number) => {
 <style lang="less" scoped>
 .text {
   padding: 10px;
+  overflow: scroll;
+  max-height: 600px;
+  // max-height: 50%;
 }
 
 .txt-code {

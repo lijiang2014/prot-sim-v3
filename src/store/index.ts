@@ -30,8 +30,8 @@ export const store = createStore<State>({
         token: '',
         type: UserType.AnonymousUser,
         defaultFS: 'GPUFS',
-        home: '/GPUFS/nscc-gz_jiangli',
-        name: 'nscc-gz_jiangli'
+        home: '/GPUFS/default',
+        name: 'default'
       }
     }
   },
@@ -60,8 +60,8 @@ export const store = createStore<State>({
       if (parts.length == 3) {
         state.user.type = UserType.StarlightUser
         let claims = JSON.parse(atob(parts[1]))
-        if (claims && typeof (claims.subject) === "string") {
-          username = claims.subject as string
+        if (claims && typeof (claims.user_name) === "string") {
+          username = claims.user_name as string
         }
       } else {
         const coded = btoa(username).split("=")[0]
@@ -70,6 +70,8 @@ export const store = createStore<State>({
       }
       state.user.token = token
       state.user.name = username
+      state.user.home = "/" + state.user.defaultFS + "/" + state.user.name
+      console.log("username", username)
     },
     increment(state) {
       state.count++

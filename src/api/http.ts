@@ -23,6 +23,13 @@ http.interceptors.request.use(
     } else if (store.state.user.type === UserType.EmailFreeUser) {
       config.headers!['Authorization'] = store.state.user.token
     }
+    if (config.params) {
+      Object.keys(config.params).forEach(item => {
+        if (config.params[item] === 0 || config.params[item] === '' || config.params[item] === undefined || config.params[item] === null || config.params[item] == []) {
+          delete config.params[item]
+        }
+      })
+    }
     return config
   },
   error => {

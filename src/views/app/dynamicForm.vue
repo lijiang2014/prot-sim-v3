@@ -31,10 +31,10 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { getAppSpec } from '@/api/api'
+import { getAppSpec, mkDirInput } from '@/api/api'
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { AppSpec, AppWidgets } from '@/app-model'
+import { AppSpec, AppWidgets, runtimeDefault } from '@/app-model'
 import { FormRules, FormInstance, UploadInstance, ElNotification, } from 'element-plus'
 import { submitAppTask, uploadFile } from '@/api/api'
 import Widget from "@/components/Widget/index.vue"
@@ -54,46 +54,7 @@ const runtimeRules = ref<FormRules>({
   ],
 })
 const appRules = ref<FormRules>({})
-let runtimeForm = ref<AppWidgets>({
-  "id": "runtime-root",
-  "type": "container",
-  "name": "",
-  "offset": 0,
-  "width": 24,
-  "label": "",
-  "attr": {},
-  "data": [
-    {
-      "id": "info-default",
-      "type": "info",
-      "name": "",
-      "offset": 0,
-      "width": 24,
-      "label": "",
-      "attr": {
-        "visible": true,
-        "default": "",
-      },
-      "data": []
-    },
-    {
-      "id": "jobname",
-      "type": "text",
-      "name": "jobname",
-      "offset": 0,
-      "width": 24,
-      "label": "Job Name",
-      "attr": {
-        "placeholder": "",
-        "required": false,
-        "disabled": false,
-        "visible": true,
-        "rules": "",
-        "default": ""
-      },
-      "data": []
-    }]
-})
+let runtimeForm = ref<AppWidgets>(runtimeDefault)
 const runtimeParams = ref<StarlightRuntimeParams>({
   jobname: createJobName(appName)
 } as StarlightRuntimeParams)
@@ -112,7 +73,7 @@ onMounted(async () => {
     return
   }
   // 表单初始化
-  console.log("got app spec", res)
+  // console.log("got app spec", res)
   // * 提取 info
   for (let i = 0; i < res.render.data.length; i++) {
     let widgeti = res.render.data[i]
@@ -161,7 +122,15 @@ const submitForm = async () => {
   if (!pass) { return }
   // check uploads
   console.log("uploding Files if Need...")
-  await appFormRef.value?.prepareSubmit().catch((err: any) => {
+  // init project dir
+  await mkDirInput(runtimeParams.value.jobname).catch(err => {
+    console.log('error create project input dir!', err)
+    ElNotification.error(err)
+    pass = false
+  })
+  if (!pass) { return }
+
+  await appFormRef.value?.prepareSubmit({ project: runtimeParams.value.jobname }).catch((err: any) => {
     console.log('error prepare submit!', err)
     ElNotification.error(err)
     pass = false
@@ -171,15 +140,40 @@ const submitForm = async () => {
   console.log("job submit:", appName, appParams.value, runtimeParams.value)
   // return
   // change File Format
-  const res = await submitAppTask(appName, appParams.value, runtimeParams.value).catch(err => {
+  let params = { ...appParams.value }
+  Object.keys(params).forEach(item => {
+    if (params[item] === undefined || params[item] === null) {
+      delete params[item]
+    }
+  })
+  if (appName.startsWith('alphaFold')) {
+    runtimeParams.value = Object.assign(runtimeParams.value, {
+      cluster: 'k8s_venus',
+      partition: 'venus-gpu-localdisk',
+      gpu: 1,
+      cpu: 5,
+      memory: 32,
+      userMode: "starlight",
+    })
+  }
+  const res = await submitAppTask(appName, params, runtimeParams.value).catch(err => {
     console.log("err", err)
     ElNotification.error(err)
     pass = false
   })
+  if (!res) {
+    return
+  }
   console.log(res)
-  // TODO get job ID from res
-  // 请求网址: https://starlight.nscc-gz.cn/api/job/running/k8s_venus/graph-ppis-25113148
-  router.push({ name: 'jobResult', params: { id: "mockjobid" } })
+  if (!res.spec) {
+    ElNotification.error("未成功创建作业")
+    return
+  }
+  if (res.spec.length == 1) {
+    router.push({ name: 'jobResult', params: { uuid: res.spec[0] } })
+  } else {
+    router.push({ name: 'jobList', query: { uuid: res.spec } })
+  }
 }
 </script>
 <style lang="less">

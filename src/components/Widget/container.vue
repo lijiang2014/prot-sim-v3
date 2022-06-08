@@ -1,8 +1,8 @@
 <template>
   <template v-if="widgetForm.type === 'container' && widgetForm.data && widgetForm.data.length > 0">
     <el-form ref="formRef" label-position="top" label-width="120px" :rules="rules" :model="modelValue">
-      <index v-for="(item, index) in widgetForm.data" :widgetForm="item"
-        ref="children" v-model="modelValue[item.name]" :rules="rules">
+      <index v-for="(item, index) in widgetForm.data" :widgetForm="item" ref="children" v-model="modelValue[item.name]"
+        :rules="rules">
       </index>
     </el-form>
   </template>
@@ -26,13 +26,13 @@ const validate = (callback?: FormValidateCallback) => {
 }
 const children = ref<(typeof Index)[]>([])
 
-const prepareSubmit = async () => {
+const prepareSubmit = async (prepareSetting?: any) => {
   return new Promise(async (resolve, reject) => {
     for (let i = 0; i < children.value.length; i++) {
       let childrenRefI = children.value[i]
       console.log(childrenRefI, '\nxxx:', childrenRefI.widgetType())
-      if (childrenRefI.widgetType() == 'rfbPath') {
-        await childrenRefI.prepareSubmit().catch((err: any) => {
+      if (childrenRefI.widgetType() == 'rfbPath' || childrenRefI.widgetType() == 'rfb') {
+        await childrenRefI.prepareSubmit(prepareSetting).catch((err: any) => {
           reject(err)
         })
       }

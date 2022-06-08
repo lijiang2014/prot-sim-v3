@@ -11,6 +11,7 @@ export type FileInfo = {
   "size": number,
   "type": FileType,
   "perm": string,
+  "checksum"?: string,
   "time"?: string | number,
   "uid": number,
   "gid": number,
@@ -25,4 +26,11 @@ export interface FileMeta {
 
 export interface fileVerbose extends fileOutput {
   meta: FileMeta
+}
+
+export interface FileInput {
+  class: "File"
+  checksum?: string,
+  ext?: string
+  path: string
 }

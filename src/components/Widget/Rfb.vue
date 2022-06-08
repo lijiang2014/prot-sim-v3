@@ -9,11 +9,8 @@
     <template #trigger>
       <el-button type="primary" class="select-btn">select file</el-button>
     </template>
-    <!-- <el-button class="ml-3" type="success" @click="() => submitUpload()">
-      upload to server
-    </el-button> -->
-    <wrf-btn v-model="wrfFiles" @update:model-value="handleChangedRFB" :workdir="widgetForm.attr.extends?.workdir"
-      :accept="widgetForm.attr.extends?.accept">
+    <wrf-btn v-if="isStarlightUser" v-model="wrfFiles" @update:model-value="handleChangedRFB"
+      :workdir="widgetForm.attr.extends?.workdir" :accept="widgetForm.attr.extends?.accept">
     </wrf-btn>
     <template #tip>
       <div class="el-upload__tip text-red">
@@ -28,13 +25,13 @@ import { AppWidgets } from '@/app-model'
 import { UploadFiles, UploadInstance, UploadProps, UploadRawFile, } from 'element-plus'
 import { genFileId, ElMessage, UploadFile, } from 'element-plus'
 import WrfBtn from '../WebRemoteFinder/input.vue'
-import { FileInfo } from '@/app-model/file'
-import { uploadFileDirect, uploadFileDirectSimple } from '@/api/api'
-import { useStore } from '@/store'
+import { FileInfo, FileInput } from '@/app-model/file'
+import { uploadFileDirectSimple } from '@/api/api'
+import { UserType, useStore } from '@/store'
 
 interface Props {
   widgetForm: AppWidgets
-  modelValue?: string
+  modelValue?: FileInput
 }
 let props = defineProps<Props>()
 const emit = defineEmits(["update:modelValue"]);
@@ -42,14 +39,14 @@ const uploadRef = ref<UploadInstance>()
 const files = ref<File[]>()
 const wrfFiles = ref<FileInfo[]>()
 const store = useStore()
-
+const isStarlightUser = store.state.user.type === UserType.StarlightUser
 onMounted(() => {
   if (props.widgetForm.attr.default) {
     if (!props.modelValue) {
-      emit("update:modelValue", props.widgetForm.attr.default)
+      emit("update:modelValue", { class: "File", path: props.widgetForm.attr.default })
     }
   } else {
-    emit("update:modelValue", "")
+    emit("update:modelValue", null)
   }
 })
 const beforeUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFile, id: string) => {
@@ -67,7 +64,7 @@ const handleChange: UploadProps['onChange'] = (uploadFile: UploadFile, uploadFil
     newFiles.push(fi.raw as File)
   })
   files.value = newFiles
-  emit("update:modelValue", "localfile://" + genFileId())
+  emit("update:modelValue", { class: "File", path: "localfile://" + genFileId() })
   // emit("change", "localfile://" + genFileId())
 }
 const handleChangedRFB = (val: FileInfo[]) => {
@@ -79,9 +76,9 @@ const handleChangedRFB = (val: FileInfo[]) => {
     let shadowfile = { ...rawfile, uid: filei.uid }
     shadowfile.name = filei.path
     uploadRef.value?.handleStart(shadowfile)
-    emit("update:modelValue", val[0].path)
+    emit("update:modelValue", { class: "File", path: val[0].path })
   } else {
-    emit("update:modelValue", "")
+    emit("update:modelValue", null)
   }
 }
 
@@ -115,19 +112,18 @@ const prepareSubmit = async (prepareSetting?: any) => {
         if (prepareSetting?.project) {
           params.project = prepareSetting.project
         }
-        console.log("prepareSetting", prepareSetting)
         let ret = await uploadFileDirectSimple(filename, filei, params)
         if (!ret) {
           return
         }
-        // console.log("ret", ret)
+        console.log("ret file", ret.spec)
         let retPath = ret.spec.path
         // TODO Remove HARD CODE
         const projectDir = "/GPUFS/app/share/bio-platform/meta"
         if (retPath.startsWith("@input/")) {
           retPath = projectDir + "/input" + retPath.slice("@input".length)
         }
-        emit("update:modelValue", retPath)
+        emit("update:modelValue", { class: "File", path: retPath, checksum: ret.spec.checksum })
         // })
       }
     }

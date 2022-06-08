@@ -6,7 +6,7 @@
     </div>
   </div>
   <div v-else-if="itemParsed.class === 'File'">
-    {{ itemParsed }}
+    <!-- {{ itemParsed }} -->
     <div v-if="itemParsed.meta.mime === 'application/octet-stream'" class="file-box">
       <el-popover placement="right">
         <template #reference>
@@ -44,7 +44,7 @@
     </div>
   </div>
   <div>
-    <el-dialog v-model="showViewFile" title="查看文本" width="50%" :top="'50vh'" class="dialog">
+    <el-dialog v-model="showViewFile" title="查看文本" width="50%" top="50vh" class="dialog">
       <div v-if="fileToView">
         <view-file :url="fileToView"></view-file>
       </div>
@@ -96,11 +96,6 @@ const ansysOutput = (spec: outputTypes): ViewerItem => {
   }
   if (spec.class === "File") {
     let fileMeta = { ...spec, meta: metaFromName(spec.location) }
-    // Mock
-    fileMeta.location = "file://@input/nscc-gz_jiangli/test/test.txt"
-    fileMeta.checksum = "98937a5bb80fc3d5e74b252a9195ec1f7ac42d6f"
-    fileMeta.meta.ext = ".txt"
-
     return fileMeta
   }
   return { class: "warning", value: "Unknown output types." }
@@ -120,13 +115,27 @@ const downloadFile = () => {
   //https://blog.csdn.net/dmlcq/article/details/120416981
   console.log("TODO downloadFile")
   var href = `${import.meta.env.VITE_APP_BASE_API}` + '/storage/download?'
-  let fileQuery = "sha1=98937a5bb80fc3d5e74b252a9195ec1f7ac42d6f&ext=.txt&dir=input"
-  if (fileToView.value?.checksum) {
-    fileQuery += "&sha1=" + fileToView.value?.checksum
+  let fileQuery = ""
+  let uri = fileToView.value
+  if (!uri) {
+    return
   }
-  if (fileToView.value?.meta.ext) {
-    fileQuery += "&ext=" + fileToView.value?.meta.ext
+  let file = uri.location
+  if (file.startsWith("file://")) {
+    file = file.slice("file://".length)
   }
+  if (file.startsWith("@") || file.startsWith("#")) {
+    let dir = file.split("/")[0]
+    dir = dir.slice(1)
+    fileQuery += "&dir=" + dir
+  }
+  if (uri.meta.ext) {
+    fileQuery += "&ext=" + uri.meta.ext
+  }
+  if (uri.checksum?.startsWith("sha1$")) {
+    fileQuery += "&sha1=" + uri.checksum.slice("sha1$".length)
+  }
+
   // var params = "file=" + encodeURIComponent(viewFileUrl.value)
   // var url = href + params
   var url = href + fileQuery
@@ -205,7 +214,12 @@ const downloadFile = () => {
   font-size: 15px
 }
 
-::v-deep(.el-dialog) {
-  transform: translateY(-50%);
-}
+// .dialog {
+//   // max-height: 98%;
+//   // max-height: 800px;
+// }
+
+// ::v-deep(.el-dialog) {
+//   transform: translateY(-50%);
+// }
 </style>

@@ -57,7 +57,8 @@ onMounted(() => {
 const logout = () => {
   window.sessionStorage.clear()
   window.localStorage.clear()
-  utils.clearCookie('Bihu-Token', 'nscc-gz.cn')
+  utils.clearCookie('Bihu-Token', '.nscc-gz.cn')
+  // utils.clearCookie('Bihu-Token')
   store.commit('setToken', { token: "" })
   $router.push('/login')
 }

@@ -7,7 +7,8 @@ import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
 import { ElNotification } from 'element-plus'
-import { FileMeta, fileVerbose } from '@/app-model/file'
+import { FileInfo, FileMeta, fileVerbose } from '@/app-model/file'
+import store from '@/store'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -47,7 +48,7 @@ export const uploadFile = (spath: string, file: File, settings?: AxiosRequestCon
 }
 
 
-export const submitAppTask = (app: string, params: any, runtime_params: any): Promise<any> => {
+export const submitAppTask = (app: string, params: any, runtime_params: any): Promise<ApiResponseItems<string>> => {
   if (!runtime_params?.partition) {
     runtime_params = Object.assign(runtime_params, {
       cluster: 'k8s_venus',
@@ -57,15 +58,6 @@ export const submitAppTask = (app: string, params: any, runtime_params: any): Pr
       userMode: "starlight",
     })
   }
-  // return $request({
-  //   url: '/api/job/submit',
-  //   method: 'post',
-  //   data: {
-  //     app,
-  //     params,
-  //     runtime_params
-  //   }
-  // })
   return http.post('/job/submit', {
     app,
     params,
@@ -235,7 +227,6 @@ export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> =>
   let ret = await http.get('/app/' + app).catch(err => {
     throw (err)
   })
-  console.log("ret", ret)
   let appData = ret.data?.spec || (ret as any).spec
   if (typeof appData.render === "string") {
     appData.render = JSON.parse(appData.render)
@@ -244,7 +235,8 @@ export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> =>
 }
 
 export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
-  return http.get('/job/result')
+  console.log("params:", params)
+  return http.get('/job/result', { params })
 }
 
 export const getFileSystemList = (params?: any): Promise<any> => {
@@ -269,8 +261,7 @@ export const getDirInfo = (dirpath: string, params?: any): Promise<any> => {
   })
 }
 
-
-export function uploadFileDirect(params: any, data: Blob, settings: any) {
+export function uploadFileDirectToStarlight(params: any, data: Blob, settings: any) {
   if (!settings) {
     settings = {}
   }
@@ -279,7 +270,6 @@ export function uploadFileDirect(params: any, data: Blob, settings: any) {
     url: '/api/storage/upload',
     method: 'put',
     params: params,
-    //  headers: { 'Content-Type': contentType },
     timeout: 0,
     data
   })
@@ -290,22 +280,52 @@ export function uploadFileDirect(params: any, data: Blob, settings: any) {
   return $request(mysettings)
 }
 
-export function uploadFileDirectSimple(filename: string, fileObj: File, settings?: any) {
+
+export function uploadFileDirect(params: any, data: Blob, settings: any): Promise<ApiResponseSpec<FileInfo>> {
+  if (!settings) {
+    settings = {}
+  }
+  var contentType = 'application/octet-stream'
+  var mysettings = Object.assign(settings, {
+    url: '/storage/upload',
+    method: 'put',
+    params: params,
+    timeout: 0,
+    data
+  })
+  if (!mysettings.headers) {
+    mysettings.headers = {}
+  }
+  mysettings.headers['Content-Type'] = contentType
+  // return $request(mysettings)
+  return http.request(mysettings)
+}
+
+export function uploadFileDirectSimple(filename: string, fileObj: File, params?: any, settings?: any): Promise<ApiResponseSpec<FileInfo>> {
   let blob = new Blob([fileObj])
   var filesize = blob.size
-  if (filesize > 1024 * 1024 * 2) {
+  if (filesize > 1024 * 1024 * 5) {
     ElNotification({
-      title: '只允许小于2MB的文件',
+      title: '只允许小于5MB的文件',
       type: 'warning',
       duration: 10000
     })
-    return
+    return Promise.reject("只允许小于5MB的文件")
   }
-  let params = {
+  console.log("parmas ? :", params)
+  let paramsAtt = {
+    ...params,
     file: filename,
     overwrite: false || (settings && settings.overwrite)
   }
-  return uploadFileDirect(params, blob, settings)
+  return uploadFileDirect(paramsAtt, blob, settings)
+}
+
+export function mkDirInput(dirname: string) {
+  let params = {
+    file: "@input/" + store.state.user.name + "/" + dirname
+  }
+  return http.post("/storage/mkdir", null, { params })
 }
 
 // 返回文本文件的内容
@@ -313,13 +333,23 @@ export const previewFile = (url: string | fileVerbose, size: number = 1000, page
   let file = ""
   let [sha1, dir, ext] = ["", "", "", ""]
   if (typeof url === "object") {
-    sha1 = url.checksum || ""
-    // dir = "input"
     file = url.location
-    ext = url.meta.ext
-    if (file.startsWith("file://@input/")) {
-      dir = "input"
+    if (url.checksum?.startsWith("sha1$")) {
+      sha1 = url.checksum.slice("sha1$".length)
+    } else {
+      return http.get("/storage/view", {
+        params: { page, size, file, sha1, dir, ext },
+      })
     }
+    ext = url.meta.ext
+    if (file.startsWith("file://")) {
+      file = file.slice("file://".length)
+    }
+    if (file.startsWith("@") || file.startsWith("#")) {
+      dir = file.split("/")[0]
+      dir = dir.slice(1)
+    }
+    file = ""
   } else {
     file = url
   }
