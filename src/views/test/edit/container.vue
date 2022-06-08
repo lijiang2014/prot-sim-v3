@@ -24,7 +24,7 @@
                         :max='config.max' :step='config.step' />
                 </div>
                 <div v-if="config.boxType === 'info'">
-                    <Tinymce v-model="inputValue[index]"></Tinymce>
+                    <Tinymce v-model="config.default"></Tinymce>
                 </div>
                 <container :tree="children" @active-box-change="(id) => emit('activeBoxChange', id)"></container>
             </div>
