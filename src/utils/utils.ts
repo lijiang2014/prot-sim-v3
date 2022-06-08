@@ -34,14 +34,15 @@ export const utils = {
     let d = new Date()
     d.setTime(-1)
     const expires = "expires=" + d.toUTCString()
-    let delstr = cname + "=''; " + expires
+    // let delstr = cname + "=''; " + expires
+    let delstr = cname + "=; " + expires
     if (domain) {
       delstr += `; domain=${domain}`
     }
     if (pathurl) {
       delstr += `; path=${pathurl}`
     }
-    console.log('clear Cookie', delstr)
+    // console.log('clear Cookie', delstr)
     document.cookie = delstr
   },
   checkStarlightLog(): string {

@@ -2,45 +2,116 @@
   <div class="page">
     <div v-if="loading">数据加载中....</div>
     <div v-else>
-      <result-show :baseInfo="baseInfo"></result-show>
+      <div>
+        <div class="demo-collapse">
+          <el-collapse v-model="activeNames" @change="changedActive">
+            <el-collapse-item title="基本信息" name="基本信息" class="collapse-item">
+              <div class="base-info">
+                <div>名称：<span class="item-info">{{ baseInfo.name }}</span></div>
+                <div>应用：<span class="item-info">{{ baseInfo.app_name }}</span></div>
+                <div>UUID：<span class="item-info">{{ baseInfo.uuid }}</span></div>
+                <div>提交时间：<span class="item-info">{{ parseTime(baseInfo.created_at) }}</span></div>
+                <div>开始时间：<span class="item-info">{{ parseTime(baseInfo.started_at) }}</span></div>
+                <div>结束时间：<span class="item-info">{{ parseTime(baseInfo.end_at) }}</span></div>
+                <div>运行状态：<span>{{ baseInfo.status }}</span></div>
+                <div>
+                  <el-button :loading="loading" :disabled="baseInfo.status.startsWith('Completed')" type="primary"
+                    @click="updateData">刷新
+                  </el-button>
+                </div>
+              </div>
+            </el-collapse-item>
+            <el-collapse-item v-for="(item, index) in resData" :title="item.title" :name="item.title"
+              class="collapse-item">
+              <template v-if="Array.isArray(item)">
+                <el-scrollbar class="scrollbar-contain" ref="scrollbarRef" @mouseenter="scrollbarUpdate">
+                  <div class="scrollbar-flex-content">
+                    <output-viewer v-for="(innerItem, innerIndex) in item" :item="innerItem" />
+                  </div>
+                </el-scrollbar>
+              </template>
+              <output-viewer :item="item.value"></output-viewer>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
-import resultShow from './resultShow.vue'
+import { onMounted, ref, nextTick } from 'vue'
 import { getJobResult } from '@/api/api'
-import { result } from '@/app-model'
-import { useRoute } from 'vue-router';
+import { useRoute } from 'vue-router'
+import { ElNotification } from 'element-plus'
+import { parseTime } from '@/utils/index'
+import { outputTypes, result } from '@/app-model'
+import outputViewer from "./outputViewer.vue";
 
+interface ItemWithTitle {
+  title: string,
+  value: outputTypes,
+}
+
+let resData = ref<ItemWithTitle[]>([])
+let activeNames = ref<string[]>(['基本信息'])
+let scrollbarRef = ref()
 
 
 let jobIndex = ref('example')
-let appname = ref('graph-ppis')
-let route=useRoute()
-if (route.query.id) {
-  jobIndex.value = route.query.id as string
+let route = useRoute()
+if (route.params.uuid) {
+  if (typeof route.params.uuid === "string") {
+    jobIndex.value = route.params.uuid
+  } else {
+    jobIndex.value = route.params.uuid[0]
+  }
 }
-if (route.query.app) {
-  appname.value = route.query.app as string
-}
-
+// console.log("route params", route.params)
 let baseInfo = ref<result>({
-  "id": 0,
+  "uuid": '0000',
   "name": '',
   "app_name": '',
   "cluster_job_id": '',
-  "status": 0,
+  "status": "unknown",
 })
-let loading = ref(true)
-onMounted(async () => {
-  let res = await getJobResult(jobIndex.value, appname.value).catch(err => {
-    console.log(err)
+let loading = ref(false)
+
+const changedActive = () => {
+  nextTick(() => {
+    let myEvent = new Event('resize');
+    window.dispatchEvent(myEvent);
   })
-  if (!res) return
-  baseInfo.value = res
+}
+
+let scrollbarUpdate = () => {            //更新滚动条，防止滚动条不显示的bug
+  for (let item of scrollbarRef.value) {
+    item.update()
+  }
+}
+
+const updateData = async () => {
+  loading.value = true
+  let res = await getJobResult(jobIndex.value).catch(err => {
+    console.log(err)
+    ElNotification(err)
+  })
   loading.value = false
+  if (!res) return
+  console.log("res", res)
+  baseInfo.value = res.spec
+  let data = res.spec
+  resData.value.splice(0)
+  activeNames.value.splice(1)
+  for (let key in data.outputs_raw) {
+    let value = data.outputs_raw[key]
+    resData.value.push({ title: key, value })
+    activeNames.value.push(key)
+  }
+}
+
+onMounted(async () => {
+  updateData()
 })
 
 </script>
@@ -57,5 +128,93 @@ onMounted(async () => {
     width: 70%;
     margin: 0 auto;
   }
+}
+
+.demo-collapse {
+  font-size: 20px;
+}
+
+.collapse-item {
+  width: 100%;
+
+  ::v-deep(.el-collapse-item__header) {
+    font-size: 18px;
+    font-weight: bold;
+  }
+}
+
+.scrollbar-contain {
+  .scrollbar-flex-content {
+    display: flex;
+  }
+
+  .scrollbar-item {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 10px;
+    width: 25%;
+    box-sizing: border-box;
+
+    .boxs {
+      width: calc(35px + 20vw);
+      height: calc(30px + 13vw);
+
+    }
+  }
+}
+
+.base-info {
+  font-size: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding-left: 20px;
+  justify-content: space-between;
+
+  .item-info {
+    color: #29d;
+  }
+
+  &>div {
+    padding: 20px 0;
+    white-space: nowrap;
+    margin-right: 60px;
+    min-width: 270px;
+  }
+
+  &>div:last-child {
+    justify-self: start;
+  }
+
+  .time {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-right: 0;
+
+    &>div {
+      padding: 20px 0;
+      margin-right: 60px;
+    }
+  }
+}
+
+.imgbox {
+  width: calc(45px + 30vw);
+  height: calc(30px + 20vw);
+
+  .img {
+
+    height: 100%;
+    width: 80%;
+    padding-left: 10%;
+  }
+}
+
+::v-deep(.el-dialog) {
+  transform: translateY(-50%);
 }
 </style>

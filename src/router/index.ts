@@ -57,19 +57,20 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/job', meta: { hidden: false, title: 'Jobs' },
     component: Layout,
     children: [
+      // {
+      //   path: '/job/all',
+      //   meta: { title: 'List' },
+      //   component: () => import('@/views/queue/all.vue')
+      // },
       {
-        path: '/job/all',
-        meta: { title: 'List' },
-        component: () => import('@/views/queue/all.vue')
-      },
-      {
-        path: '/job/result/:id',
+        path: '/job/result/:uuid',
         name: 'jobResult',
-        meta: { title: 'result' },
+        meta: { title: 'result', hidden: true },
         component: () => import('@/views/jobs/result/index.vue')
       },
       {
-        path: '/job/example',
+        path: '/job/list',
+        name: 'jobList',
         meta: { title: 'Queue' },
         component: () => import('@/views/jobs/index.vue'),
       },
@@ -108,15 +109,10 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/app/graph-ppis/result.vue')
       },
       {
-        path: '/later/graph-ppis/result/graphppis', name: 'result-graphppis',
+        path: '/later/graph-ppis/result/graphppis/:uuid', name: 'result-graph-ppis',
         meta: { hidden: true, title: 'graph-ppis-result' },
         // component: () => import('@/views/app/graph-ppis/result.vue')
         component: () => import('@/views/jobs/result/index.vue')
-      },
-      {
-        path: '/later/graph-ppis/result/:id',
-        meta: { hidden: true, title: 'graph-ppis-result' },
-        component: () => import('@/views/app/graph-ppis/result.vue'),
       },
       {
         path: '/later/wrf',

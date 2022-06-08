@@ -10,8 +10,8 @@
       <lang-sel style="width:70px"></lang-sel>
       <!-- el-color-picker for Test LANG -->
       <!-- <el-color-picker :model-value="''" style="vertical-align: middle" /> -->
-      <el-button type="text" @click="logout" v-if="store.state.isLogin">{{ $t('navbar.logOut') }}</el-button>
-      <el-button type="text" @click="loginHandle" v-if="!store.state.isLogin">{{ $t('login.logIn') }}</el-button>
+      <el-button type="text" @click="logout" v-if="store.state.user.token">{{ $t('navbar.logOut') }}</el-button>
+      <el-button type="text" @click="loginHandle" v-if="!store.state.user.token">{{ $t('login.logIn') }}</el-button>
     </el-header>
     <el-container class="container">
       <el-main>
@@ -42,24 +42,25 @@ const $router = useRouter()
 
 let store = useStore()
 onMounted(() => {
-  if (window.sessionStorage.getItem('token')) {
-    store.commit('loginChange', true)
-    return
-  }
+  let token = window.localStorage.getItem('token')
   const bihuToken = utils.checkStarlightLog();
   if (bihuToken) {
-    window.sessionStorage.setItem("token", bihuToken);
-    store.commit('loginChange', true)
+    window.localStorage.setItem("token", bihuToken);
+    token = bihuToken
+  }
+  if (token) {
+    store.commit('setToken', { token })
     return
   }
-  store.commit('loginChange', false)
+  store.commit('setToken', { token: "" })
 })
 const logout = () => {
   window.sessionStorage.clear()
   window.localStorage.clear()
-  utils.clearCookie('Bihu-Token', 'nscc-gz.cn')
+  utils.clearCookie('Bihu-Token', '.nscc-gz.cn')
+  // utils.clearCookie('Bihu-Token')
+  store.commit('setToken', { token: "" })
   $router.push('/login')
-  store.commit('loginChange', false)
 }
 
 
@@ -97,7 +98,8 @@ const rtrans = (instr: string) => trans(instr, 'route.')
       white-space: nowrap;
     }
   }
-  .container{
+
+  .container {
     overflow: auto;
   }
 }

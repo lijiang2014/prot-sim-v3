@@ -1,4 +1,4 @@
-import store from '@/store'
+import store, { UserType } from '@/store'
 import axios from 'axios'
 import { ElNotification } from 'element-plus'
 export const commonHeaders = {
@@ -18,13 +18,17 @@ const http = axios.create({
 // 拦截请求，为请求附上token
 http.interceptors.request.use(
   config => {
-    console.log(store)
-    let usernameBase64 = btoa(store.state.user.name)
-    let parts = store.state.user.token.split(".")
-    if (parts.length == 3) {
+    if (store.state.user.type === UserType.StarlightUser) {
       config.headers!['Bihu-Token'] = store.state.user.token
-    } else {
-      config.headers!['Authorization'] = "Bearer " + usernameBase64 + "." + store.state.user.token
+    } else if (store.state.user.type === UserType.EmailFreeUser) {
+      config.headers!['Authorization'] = store.state.user.token
+    }
+    if (config.params) {
+      Object.keys(config.params).forEach(item => {
+        if (config.params[item] === 0 || config.params[item] === '' || config.params[item] === undefined || config.params[item] === null || config.params[item] == []) {
+          delete config.params[item]
+        }
+      })
     }
     return config
   },
@@ -37,14 +41,23 @@ http.interceptors.request.use(
 // 添加响应拦截器
 http.interceptors.response.use(
   response => {
+    if (response.status !== 200) {
+      return Promise.reject(response)
+    }
+    if (response.headers['content-type'] === "application/json") {
+      if (response.data.code === 200) {
+        return response.data
+      }
+      return Promise.reject(response)
+    }
     return Promise.resolve((response.data || {}) as any)
   },
   error => {
     return Promise.reject(error)
   }
 )
-http.interceptors.request.use(config => {
-  (config.headers as any).Authorization = window.sessionStorage.getItem('token')
-  return config
-})
+// http.interceptors.request.use(config => {
+//   (config.headers as any).Authorization = window.sessionStorage.getItem('token')
+//   return config
+// })
 export default http

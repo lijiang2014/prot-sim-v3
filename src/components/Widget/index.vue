@@ -27,6 +27,10 @@
             <rfb-path ref="rfbPathRef" :widget-form="widgetForm" v-model="(modelValue as string)"
               @update:model-value="handleChange"></rfb-path>
           </div>
+          <div v-else-if="widgetForm.type === 'rfb'">
+            <rfb ref="rfbPathRef" :widget-form="widgetForm" v-model="(modelValue as FileInput)"
+              @update:model-value="handleChange"></rfb>
+          </div>
         </el-col>
       </el-row>
     </el-form-item>
@@ -36,8 +40,10 @@
 import { onMounted, ref } from 'vue'
 import { AppWidgets } from '@/app-model'
 import type { AppParams, baseAppParamsTypes } from '@/app-model/graph-ppis';
+import type { FileInput } from '@/app-model/file'
 import Container from './container.vue';
 import RfbPath from './RfbPath.vue';
+import Rfb from './Rfb.vue';
 import { FormRules, FormValidateCallback } from 'element-plus';
 interface Props {
   widgetForm: AppWidgets,
@@ -61,11 +67,11 @@ const validate = (callback?: FormValidateCallback) => {
   }
 }
 
-const prepareSubmit = async () => {
+const prepareSubmit = async (settings: any) => {
   if (rfbPathRef && rfbPathRef.value) {
-    return rfbPathRef.value.prepareSubmit()
+    return rfbPathRef.value.prepareSubmit(settings)
   } else if (containerRef && containerRef.value) {
-    return containerRef.value.prepareSubmit()
+    return containerRef.value.prepareSubmit(settings)
   }
   return new Promise((resolve, reject) => {
     resolve("prepareSubmit ok")
@@ -94,5 +100,9 @@ onMounted(() => {
 
 .item-row {
   width: 100%;
+}
+
+.info {
+  line-height: 1.15;
 }
 </style>

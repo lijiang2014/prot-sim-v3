@@ -36,7 +36,7 @@
             <el-input v-model="ruleForm.email" type="email"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm()" v-if="$store.state.isLogin">Submit</el-button>
+            <el-button type="primary" @click="submitForm()" v-if="$store.state.user.token">Submit</el-button>
             <el-button type="primary" disabled v-else>login to use</el-button>
             <el-button @click="resetForm()">Reset</el-button>
           </el-form-item>
@@ -75,8 +75,8 @@ const ruleForm = ref({
   RoseTTAFold_mode: 'pyrosetta',
 } as structurePredictRequest)
 
-let copy:structurePredictRequest
-onMounted(()=>{
+let copy: structurePredictRequest
+onMounted(() => {
   copy = JSON.parse(JSON.stringify(ruleForm.value))
 })
 
@@ -151,6 +151,6 @@ const submitForm = () => {
 }
 const resetForm = () => {
   ruleForm.value = copy
-  copy=JSON.parse(JSON.stringify(ruleForm.value))
+  copy = JSON.parse(JSON.stringify(ruleForm.value))
 }
 </script>

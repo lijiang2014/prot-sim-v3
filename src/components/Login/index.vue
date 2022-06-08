@@ -108,27 +108,14 @@ let waitTime = ref(10)
 
 const toSendCode = async () => {
   loading.value = true
-  // if (curTimeSend) {
-  //   if (new Date().getTime() - curTimeSend < 10000) {
-  //     curTimeSend = new Date().getTime()
-  //     $Notify({ type: 'error', title: $t('login.sendFrequently'), message: '10 ' + $t('login.waitInfo') })
-  //     isQuick.value = true
-  //     let timer: number
-  //     setTimeout(() => {
-  //       isQuick.value = false
-  //       waitTime.value = 10
-  //       clearInterval(timer)
-  //     }, 10000);
-  //     timer = setInterval(() => {
-  //       waitTime.value--
-  //     }, 1000) as any
-  //     return
-  //   }
-  // }
-  // curTimeSend = new Date().getTime()
-
   const res = await sendEmailCode(loginForm.username).catch(err => {
     console.log("err:", err)
+    if (err.data?.code === 20002) {
+      $Notify({ type: 'error', title: $t('login.sendFail'), message: "请直接使用之前的验证码登录", duration: 60000 })
+      codeNotTimeout.value = true
+      codeSent.value = true
+      return
+    }
     $Notify({ type: 'error', title: $t('login.sendFail'), message: err })
   })
   loading.value = false
@@ -147,13 +134,6 @@ const toSendCode = async () => {
 // let curTimeSubmit: number
 
 const submit = async () => {
-  // if (curTimeSubmit) {
-  //   if (new Date().getTime() - curTimeSubmit < 5000) {
-  //     $Notify({ type: "error", title: $t('login.submitFrequently') });
-  //     return
-  //   }
-  // }
-  // curTimeSubmit = new Date().getTime()
   loading.value = true
   const res = await login(loginForm).catch((err) => {
     console.log("err:", err,);
@@ -177,8 +157,9 @@ const submit = async () => {
   });
 
   // 保存token
-  window.sessionStorage.setItem("token", res.spec);
-  store.commit('loginChange', true)
+  window.localStorage.setItem("token", res.spec);
+  window.localStorage.setItem("username", loginForm.username);
+  store.commit('setToken', { token: res.spec, username: loginForm.username })
   console.log($route.path)
   console.log($route.path == '/login')
   if ($route.path == '/login') {
@@ -201,9 +182,7 @@ console.log("bihuToken:", bihuToken)
 if (bihuToken !== "") {
   // login by Starlight 
   // 保存token
-  window.sessionStorage.setItem("token", bihuToken);
-  store.commit('loginChange', true)
-  store.commit('setToken', bihuToken)
+  store.commit('setToken', { token: bihuToken })
   console.log($route.path)
   if ($route.path == '/login') {
     $router.push('/')

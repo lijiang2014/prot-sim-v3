@@ -1,7 +1,8 @@
 <template>
   <div class="welcome">
     <div class="content">
-      <app-list v-for="(value,key) in state.appList" :title="(key as string)" :appList="value"></app-list>
+      <app-list v-for="(value, key) in state.regions" :title="transRegion(value)" :appList="state.appList[value]">
+      </app-list>
     </div>
   </div>
 </template>
@@ -11,24 +12,39 @@ import { getApps } from '../../api/api'
 import { reactive } from 'vue'
 import { onMounted } from 'vue';
 import { AppMeta } from '@/app-model';
-
-export interface appList {
+import { trans } from "@/i18n";
+interface appList {
   [key: string]: AppMeta[]
+}
+const transRegion = (s: string): string => {
+  return trans(s, 'region.')
 }
 
 let state = reactive<{
-  appList: appList
+  appList: appList,
+  regions: string[],
 }>({
   appList: {},
+  regions: ["default"],
 })
 onMounted(async () => {
   let res = await getApps().catch(err => console.log(err))
   if (!res) return
   for (let item of res.spec) {
-    if (!state.appList[item.region!]) {
-      state.appList[item.region!] = []
+    // 暂不支持非作业类应用
+    if (item.type !== 1 && item.type !== 10) {
+      continue
     }
-    state.appList[item.region!].push(item)
+    // if (item.title.endsWith("GUI")) {
+    //   continue
+    // }
+    if (!item.region) {
+      item.region = "default"
+    }
+    if (!state.appList[item.region]) {
+      state.appList[item.region] = []
+    }
+    state.appList[item.region].push(item)
   }
 })
 </script>
