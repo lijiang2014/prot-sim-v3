@@ -24,7 +24,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   workdir: '',
   multiable: false,
-  accept: ".pdb,.cif,.bcif,.pdb.gz,.cif.gz,.bcif.gz,",
+  accept: "",
   types: () => [FileType.NormalFile],
   modelValue: () => [], // 已经选择的文件
 })

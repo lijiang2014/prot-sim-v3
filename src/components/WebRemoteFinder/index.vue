@@ -165,7 +165,7 @@ import {
 } from '@element-plus/icons-vue'
 
 import { humanByteSize, parseTime } from '@/utils'
-import { getDirInfo, getFileSystemList, uploadFileDirect } from '@/api/api'
+import { getDirInfo, getFileSystemList, uploadFileDirectToStarlight } from '@/api/api'
 import { useStore } from '@/store';
 import { ElNotification } from 'element-plus';
 import { FileInfo, FileType } from '@/app-model/file'
@@ -306,7 +306,7 @@ const uploadQueues = (event: Event) => {
       file: filename,
       overwrite: false
     }
-    uploadFileDirect(params, blob, {
+    uploadFileDirectToStarlight(params, blob, {
       onUploadProgress: (progressEvent: any) => {
         if (!uploadProgresses.value) {
           return
@@ -384,8 +384,9 @@ const itemAcceptFilter = (itemname: string) => {
         return true
       }
     }
+    return false
   }
-  return false
+  return true
 }
 
 const itemSelectable = (item: FileInfo) => {

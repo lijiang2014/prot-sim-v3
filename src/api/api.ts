@@ -304,14 +304,14 @@ export function uploadFileDirect(params: any, data: Blob, settings: any): Promis
 export function uploadFileDirectSimple(filename: string, fileObj: File, params?: any, settings?: any): Promise<ApiResponseSpec<FileInfo>> {
   let blob = new Blob([fileObj])
   var filesize = blob.size
-  if (filesize > 1024 * 1024 * 5) {
-    ElNotification({
-      title: '只允许小于5MB的文件',
-      type: 'warning',
-      duration: 10000
-    })
-    return Promise.reject("只允许小于5MB的文件")
-  }
+  // if (filesize > 1024 * 1024 * 5) {
+  //   ElNotification({
+  //     title: '只允许小于5MB的文件',
+  //     type: 'warning',
+  //     duration: 10000
+  //   })
+  //   return Promise.reject("只允许小于5MB的文件")
+  // }
   console.log("parmas ? :", params)
   let paramsAtt = {
     ...params,

@@ -50,11 +50,11 @@ onMounted(() => {
   }
 })
 const beforeUpload: UploadProps['beforeUpload'] | any = (rawFile: UploadRawFile, id: string) => {
-  if (rawFile.size / 1024 / 1024 > 5) {
-    ElMessage.error('File size can not exceed 2MB!')
+  if (rawFile.size / 1024 / 1024 > 50) {
+    ElMessage.error('File size can not exceed 50MB!')
     return false
   }
-  console.log('本地上传只允许5MB的文件')
+  console.log('本地上传只允许50MB的文件')
   return false
 }
 const handleChange: UploadProps['onChange'] = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
