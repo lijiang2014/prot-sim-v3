@@ -141,7 +141,7 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/later/test/edit',
-        meta: { title: '可编辑表单' },
+        meta: { title: '应用编辑' },
         component: () => import('@/views/test/edit/index.vue')
       },
     ]

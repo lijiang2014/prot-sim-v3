@@ -358,6 +358,10 @@ export const previewFile = (url: string | fileVerbose, size: number = 1000, page
   })
 }
 
+//对象复制
+export const copy=<T>(obj:T):T=>{
+  return JSON.parse(JSON.stringify(obj))
+}
 
 // Orginal API
 export const checkPredictStructureProjectName = (projName: string): Promise<any> => {

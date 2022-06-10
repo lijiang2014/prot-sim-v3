@@ -4,7 +4,7 @@
         <div class="base-box">
             <el-button type="primary" plain>基本信息</el-button>
             <el-button type="primary" plain>配置信息</el-button>
-            <el-button type="primary" plain>提交应用</el-button>
+            <el-button type="primary" plain @click="submitApp">提交应用</el-button>
         </div>
     </div>
     <div class="container">
@@ -12,7 +12,7 @@
             <div class="window" @click="showToggle('#info')">
                 <header>应用说明</header>
                 <div>
-                    <Tinymce v-model="info.content"></Tinymce>
+                    <Tinymce v-model="info.default"></Tinymce>
                 </div>
             </div>
             <div class="window" @click="showToggle('#cluster')">
@@ -21,10 +21,8 @@
             <div class="window" @click="showToggle('#nodes')">
                 <header>节点数量设置</header>
             </div>
-            <div class="window" @click="showToggle('', true)">
-                <header>盒子</header>
-                {{tree}}
-                <container :tree="tree" class="root"></container>
+            <div @click="showToggle('', true)">
+                <container v-model:tree="tree" @active-box-change="activeBoxChange"></container>
             </div>
         </main>
         <aside>
@@ -57,7 +55,8 @@
                     <md-input v-model="nodes.step" type="number">Step</md-input>
                 </div>
                 <div v-show="boxShow">
-                    <container-config v-model:tree="tree"></container-config>
+                    <container-config v-model:tree="tree" v-model:activeId="activeId" ref="containerConfigRef">
+                    </container-config>
                 </div>
             </div>
         </aside>
@@ -68,30 +67,61 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import mdInput from '@/components/MDinput/index.vue'
 import Tinymce from '@/components/Tinymce/index.vue'
 import clusterDialog from './clusterDialog.vue'
 import containerConfig from './containerConfig.vue'
 import container from './container.vue'
-let curName = ref('box')
+import { ElMessage } from 'element-plus';
+
+export type configType = {
+    id: string,
+    offset: number,
+    width: number,
+    boxType: string,
+    name: string,
+    label: string,
+    visible: true,
+    type: string,
+    default?: string,
+    disabled?: boolean,
+    required?: boolean,
+    placeholder?: string,
+    min?: string,
+    max?: string,
+    step?: string,
+    rules?: string,
+    fileOrDir?: string
+}
+export type nodeType = {
+    config: configType,
+    children: treeDataType
+}
+export interface treeDataType {
+    [key: string]: nodeType
+}
+type selectList = { name: string, value: string[] }[]
+
+
+let curName = ref('layout')
 let boxShow = ref(true)
 let showToggle = (name: string, box?: boolean) => {
     if (box) {
-        curName.value = 'box'
+        curName.value = 'layout'
         boxShow.value = true
     } else {
         curName.value = name
+        boxShow.value = false
     }
 }
 
-let info = reactive({
-    default: '',
+let info = ref({
     visible: true,
-    content: ''
+    default: ''
 })
 
-let cluster = reactive({
+let cluster = ref({
     target: '',
     visible: true
 })
@@ -100,7 +130,13 @@ let addCluster = () => {
     clusterDialogVisible.value = true
 }
 
-let nodes = reactive({
+let nodes = ref<{
+    default: string,
+    visible: boolean,
+    min: string | undefined,
+    max: string | undefined,
+    step: string | undefined,
+}>({
     default: '',
     visible: true,
     min: undefined,
@@ -108,11 +144,63 @@ let nodes = reactive({
     step: undefined
 })
 
-let setGroup = (selectList: any) => {
-    cluster.target = JSON.stringify(selectList)
+let setGroup = (selectList: selectList) => {
+    console.log(selectList)
+    cluster.value.target = JSON.stringify(selectList)
 }
 
-let tree = ref({})
+let tree = ref<treeDataType>({
+    root: {
+        config: {
+            id: 'root',
+            offset: 0,
+            width: 24,
+            boxType: 'container',
+            name: '',
+            label: 'root',
+            visible: true,
+            type: '',
+        },
+        children: {
+        }
+    },
+})
+let activeId = ref('root')
+let activeBoxChange = (id: string) => {
+    activeId.value = id
+    curName.value = 'layout'
+    boxShow.value = true
+}
+
+let containerConfigRef = ref<typeof containerConfig>()
+let submitApp = () => {
+    sessionStorage.info = JSON.stringify(info.value)
+    sessionStorage.cluster = JSON.stringify(cluster.value)
+    sessionStorage.nodes = JSON.stringify(nodes.value)
+    sessionStorage.tree = JSON.stringify(tree.value)
+    sessionStorage.idStore = JSON.stringify(containerConfigRef.value!.idStore)
+    ElMessage({
+        message: '更新应用成功',
+        type: 'success'
+    })
+}
+onMounted(() => {
+    if (sessionStorage.info) {
+        info.value = JSON.parse(sessionStorage.info)
+    }
+    if (sessionStorage.cluster) {
+        cluster.value = JSON.parse(sessionStorage.cluster)
+    }
+    if (sessionStorage.nodes) {
+        nodes.value = JSON.parse(sessionStorage.nodes)
+    }
+    if (sessionStorage.tree) {
+        tree.value = JSON.parse(sessionStorage.tree)
+    }
+    if (sessionStorage.idStore) {
+        containerConfigRef.value!.idStore = JSON.parse(sessionStorage.idStore)
+    }
+})
 </script>
 
 <style lang="less" scoped>
@@ -161,6 +249,11 @@ h1 {
             font-size: 14px;
             color: #409eff
         }
+
+        .window {
+            position: sticky;
+            top: 0
+        }
     }
 }
 
@@ -170,8 +263,5 @@ h1 {
     &>div {
         margin-bottom: 15px;
     }
-}
-:deep(.root){
-    min-height: 500px;
 }
 </style>
