@@ -67,8 +67,8 @@ export default defineComponent({
 
     const mountMolstar = async () => {
       let filename = props.src;
-      // filename = await ConvertToObjectUrl(props.src!, "test.pdb")
-      filename = "/ranked_0.pdb"
+      filename = await ConvertToObjectUrl(props.src!, "test.pdb")
+      // filename = "/ranked_0.pdb"
       console.log("new url", filename)
       var viewer = new molstar.Viewer(boxId.value, {
         layoutIsExpanded: false,

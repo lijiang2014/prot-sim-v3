@@ -1,6 +1,6 @@
 <template>
   <div>
-    <db-view src="/model_1.pdb"></db-view>
+    <db-view src="/model_1.pdb" class="box"></db-view>
   </div>
 </template>
 
@@ -9,4 +9,7 @@ import DbView from "@/components/common/dbView.vue";
 </script>
 
 <style lang="less" scoped>
+.box {
+  height: 800px;
+}
 </style>

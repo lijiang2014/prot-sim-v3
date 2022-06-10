@@ -31,8 +31,14 @@
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/pdb'">
       <div class="box">
-        <db-view v-if="fileToView" :src='reovelURI(fileToView)'>
+        <db-view v-if="fileToView" :src='reovelURI(fileToView)' class="box">
         </db-view>
+        <span>{{ itemParsed.meta.basename }}</span>
+      </div>
+    </div>
+    <div v-else-if="itemParsed.meta.mime === 'chemical/cif'">
+      <div class="box">
+        <cif-viewer v-if="fileToView" :url='reovelURI(fileToView)' format="cif" innerRes></cif-viewer>
         <span>{{ itemParsed.meta.basename }}</span>
       </div>
     </div>
@@ -60,6 +66,7 @@ import { ref, onMounted } from "vue";
 import { metaFromName } from "@/utils/meta";
 import { FileMeta, fileVerbose } from "@/app-model/file";
 import { ElNotification } from "element-plus";
+import CifViewer from "@/components/common/cifViewer.vue";
 export interface numberValue {
   class: 'number',
   value: number
@@ -211,6 +218,10 @@ const downloadFile = () => {
 .simple-box {
   padding: 10px;
   font-size: 15px
+}
+
+.box {
+  height: 600px;
 }
 
 // .dialog {

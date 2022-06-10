@@ -8,7 +8,7 @@ import $request from '@/utils/starlightRequest'
 import { stringFile } from '@/app-model/graph-ppis'
 import { ElNotification } from 'element-plus'
 import { FileInfo, FileMeta, fileVerbose } from '@/app-model/file'
-import store from '@/store'
+import store, { UserType } from '@/store'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -370,3 +370,43 @@ export const submitPredictStruct = (r: structurePredictRequest): Promise<any> =>
 
 
 
+export const ConvertToObjectUrl = (url: string, fileName: string) => {
+  return new Promise<string>((resolve, reject) => {
+    var xhr = new XMLHttpRequest()
+    xhr.open("GET", url, true)
+    xhr.responseType = 'blob'
+    if (store.state.user.type === UserType.StarlightUser) {
+      xhr.setRequestHeader('Bihu-Token', store.state.user.token)
+    } else if (store.state.user.type === UserType.EmailFreeUser) {
+      xhr.setRequestHeader('Authorization', store.state.user.token)
+    }
+    xhr.onload = async function (res) {
+      if (this.status === 200) {
+        var type = xhr.getResponseHeader('Content-Type') || ""
+        var blob = new Blob([this.response])
+        console.log(blob)
+        if (type === "application/json") {
+          let txt = await blob.text().catch(err => {
+            reject("下载文件失败" + err)
+          })
+          if (!txt) {
+            return
+          }
+          try {
+            let respData = JSON.parse(txt)
+            if (respData && respData.code) {
+              reject("下载文件失败" + respData.info)
+              return
+            }
+          } catch (e) {
+            console.log("Not Real Json File")
+          }
+        }
+        var URL = window.URL || window.webkitURL
+        var objectUrl = URL.createObjectURL(blob)
+        resolve(objectUrl)
+      }
+    }
+    xhr.send()
+  })
+}
