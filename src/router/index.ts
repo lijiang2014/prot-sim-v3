@@ -120,6 +120,11 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/components/WebRemoteFinder/input.vue'),
       },
       {
+        path: '/later/test/cifMolstar',
+        meta: { title: 'cif-molstar' },
+        component: () => import('@/views/test/cifMolstar/index.vue')
+      },
+      {
         path: '/later/test/pdbMolstar',
         meta: { title: 'pdb-molstar' },
         component: () => import('@/views/test/pdbMolstar/index.vue')
@@ -136,7 +141,7 @@ export const routes: Array<RouteRecordRaw> = [
       },
       {
         path: '/later/test/edit',
-        meta: { title: '可编辑表单' },
+        meta: { title: '应用编辑' },
         component: () => import('@/views/test/edit/index.vue')
       },
     ]

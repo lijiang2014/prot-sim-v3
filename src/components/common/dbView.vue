@@ -14,6 +14,7 @@
 // import { Viewer } from "molstar/build/viewer/molstar";
 // import "molstar/build/viewer/molstar.css";
 import { nextTick, defineComponent, onMounted, ref } from 'vue'
+import { useStore, UserType } from '@/store'
 
 export default defineComponent({
   name: 'MolstarView',
@@ -21,9 +22,54 @@ export default defineComponent({
     src: String,
   },
   setup(props, ctx) {
-    let boxId=ref('box'+Number(Math.random().toFixed(6))*1000000)
-    const mountMolstar = () => {
+    let boxId = ref('box' + Number(Math.random().toFixed(6)) * 1000000)
+    const store = useStore()
+    const ConvertToObjectUrl = (url: string, fileName: string) => {
+      return new Promise<string>((resolve, reject) => {
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", url, true)
+        xhr.responseType = 'blob'
+        if (store.state.user.type === UserType.StarlightUser) {
+          xhr.setRequestHeader('Bihu-Token', store.state.user.token)
+        } else if (store.state.user.type === UserType.EmailFreeUser) {
+          xhr.setRequestHeader('Authorization', store.state.user.token)
+        }
+        xhr.onload = async function (res) {
+          if (this.status === 200) {
+            var type = xhr.getResponseHeader('Content-Type') || ""
+            var blob = new Blob([this.response])
+            console.log(blob)
+            if (type === "application/json") {
+              let txt = await blob.text().catch(err => {
+                reject("下载文件失败" + err)
+              })
+              if (!txt) {
+                return
+              }
+              try {
+                let respData = JSON.parse(txt)
+                if (respData && respData.code) {
+                  reject("下载文件失败" + respData.info)
+                  return
+                }
+              } catch (e) {
+                console.log("Not Real Json File")
+              }
+            }
+            var URL = window.URL || window.webkitURL
+            var objectUrl = URL.createObjectURL(blob)
+            resolve(objectUrl)
+          }
+        }
+        xhr.send()
+      })
+    }
+
+    const mountMolstar = async () => {
       let filename = props.src;
+      filename = await ConvertToObjectUrl(props.src!, "test.pdb")
+      // filename = "/ranked_0.pdb"
+      console.log("new url", filename)
       var viewer = new molstar.Viewer(boxId.value, {
         layoutIsExpanded: false,
         layoutShowControls: false,
@@ -42,7 +88,7 @@ export default defineComponent({
     }
     onMounted(() => {
       nextTick(function () {
-        setTimeout(()=>mountMolstar())
+        setTimeout(() => mountMolstar())
       });
     })
     return {
@@ -61,8 +107,9 @@ export default defineComponent({
     text-align: center;
     justify-content: left;
   }
-  :deep(.msp-plugin .msp-layout-expanded){
-    z-index:9999
+
+  :deep(.msp-plugin .msp-layout-expanded) {
+    z-index: 9999
   }
 }
 

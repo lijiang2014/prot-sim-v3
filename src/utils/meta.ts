@@ -4,8 +4,9 @@ import { FileMeta } from "@/app-model/file";
 import { key } from "@/store";
 // type dict = { [key: string]: string[] }
 let extMap: { [key: string]: string[] } = {
-  "text/plain": [".txt", ".sh", ".log"],
-  "chemical/pdb": [".pdb"]
+  "text/plain": [".txt", ".sh", ".log", ".fasta"],
+  "chemical/pdb": [".pdb"],
+  "chemical/cif": [".cif"]
 }
 
 export function metaFromName(location: string): FileMeta {

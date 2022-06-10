@@ -46,18 +46,18 @@ if ($route.query.app) {
 }
 
 onMounted(async () => {
-  const rest = await getJobResult(jobIndex.value, appname.value).catch(err => {
+  const rest = await getJobResult(jobIndex.value).catch(err => {
     console.log(err)
   })
   if (!rest) {
     return
   }
   console.log(rest)
-  jobResult.value = rest
-  if (rest.outputs) {
+  jobResult.value = rest.spec
+  if (rest.spec.outputs_raw) {
     // show datas
   }
-  if (rest.started_at) {
+  if (rest.spec.started_at) {
     // show job time infos
   }
 })

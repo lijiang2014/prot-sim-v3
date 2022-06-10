@@ -1,22 +1,22 @@
  <template>
-  <div class="box">
-    <Editor v-model="content" :api-key="apiKey" :init="init"/>
+  <div class="edit-box">
+    <Editor v-model="content" :api-key="apiKey" :init="init" />
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Editor from "@tinymce/tinymce-vue";
 import { reactive, ref, toRefs } from "@vue/reactivity";
-import {watch} from 'vue'
+import { watch } from 'vue'
 export default {
   name: "About",
   components: {
     Editor,
   },
-  props:{
-    modelValue:String
+  props: {
+    modelValue: String
   },
-  setup(props,{emit}) {
+  setup(props:any, { emit }:any) {
     const content = ref(""); //默认文字
     const tiny = reactive({
       apiKey: "qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc", //https://github.com/tinymce/tinymce-vue/blob/main/src/demo/views/Iframe.vue
@@ -44,7 +44,7 @@ export default {
         // images_upload_base_path: '/demo',  //相对基本路径--关于图片上传建议查看--http://tinymce.ax-z.cn/general/upload-images.php
         paste_data_images: true, //图片是否可粘贴
         //此处为图片上传处理函数
-        images_upload_handler: (blobInfo, success, failure) => {
+        images_upload_handler: (blobInfo:any, success:any, failure:any) => {
           // 这里用base64的图片形式上传图片,
           let reader = new FileReader(); //本地预览
           reader.readAsDataURL(blobInfo.blob());
@@ -56,7 +56,7 @@ export default {
 
         file_picker_types: "file image media", //file image media分别对应三个类型文件的上传：link插件，image和axupimgs插件，media插件。想屏蔽某个插件的上传就去掉对应的参数
         // 文件上传处理函数
-        file_picker_callback: function (callback, value, meta) {
+        file_picker_callback: function (callback:any, value:any, meta:any) {
           // 使用案例http://tinymce.ax-z.cn/general/upload-images.php
           // meta.filetype  //根据这个判断点击的是什么file image media
 
@@ -74,7 +74,7 @@ export default {
           inputElem.setAttribute("accept", filetype);
           inputElem.click();
           inputElem.onchange = () => {
-            let file = inputElem.files[0]; //获取文件信息
+            let file = inputElem.files![0]; //获取文件信息
 
             // 所有都转成base64文件流,来自官方文档https://www.tiny.cloud/docs/configure/file-image-upload/#file_picker_callback
             let reader = new FileReader();
@@ -85,7 +85,7 @@ export default {
               // necessary, as we are looking to handle it internally.
               let id = "blobid" + new Date().getTime();
               let blobCache = tinymce.activeEditor.editorUpload.blobCache;
-              let base64 = reader.result.split(",")[1];
+              let base64 = (reader.result as any).split(",")[1];
               let blobInfo = blobCache.create(id, file, base64);
               blobCache.add(blobInfo);
 
@@ -96,7 +96,8 @@ export default {
         },
       },
     })
-    watch(content,()=>emit('update:modelValue',content.value))
+    watch(() => props.modelValue, (newVal) => content.value = newVal, { immediate: true })
+    watch(content, () => emit('update:modelValue', content.value))
     return {
       content,
       ...toRefs(tiny),
@@ -106,7 +107,7 @@ export default {
 </script>
 
 <style scoped>
-.box {
+.edit-box {
   padding: 10px;
   box-sizing: border-box;
 }

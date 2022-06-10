@@ -31,8 +31,14 @@
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/pdb'">
       <div class="box">
-        <db-view :src='itemParsed.location'>
+        <db-view v-if="fileToView" :src='reovelURI(fileToView)' class="box">
         </db-view>
+        <span>{{ itemParsed.meta.basename }}</span>
+      </div>
+    </div>
+    <div v-else-if="itemParsed.meta.mime === 'chemical/cif'">
+      <div class="box">
+        <cif-viewer v-if="fileToView" :url='reovelURI(fileToView)' format="cif" innerRes></cif-viewer>
         <span>{{ itemParsed.meta.basename }}</span>
       </div>
     </div>
@@ -60,6 +66,7 @@ import { ref, onMounted } from "vue";
 import { metaFromName } from "@/utils/meta";
 import { FileMeta, fileVerbose } from "@/app-model/file";
 import { ElNotification } from "element-plus";
+import CifViewer from "@/components/common/cifViewer.vue";
 export interface numberValue {
   class: 'number',
   value: number
@@ -111,15 +118,10 @@ onMounted(() => {
 const readText = () => {
   showViewFile.value = true
 }
-const downloadFile = () => {
-  //https://blog.csdn.net/dmlcq/article/details/120416981
-  console.log("TODO downloadFile")
-  var href = `${import.meta.env.VITE_APP_BASE_API}` + '/storage/download?'
+
+const reovelURI = (uri: fileVerbose): string => {
+  let href = `${import.meta.env.VITE_APP_BASE_API}` + '/storage/download?'
   let fileQuery = ""
-  let uri = fileToView.value
-  if (!uri) {
-    return
-  }
   let file = uri.location
   if (file.startsWith("file://")) {
     file = file.slice("file://".length)
@@ -135,11 +137,15 @@ const downloadFile = () => {
   if (uri.checksum?.startsWith("sha1$")) {
     fileQuery += "&sha1=" + uri.checksum.slice("sha1$".length)
   }
+  return href + fileQuery
+}
 
-  // var params = "file=" + encodeURIComponent(viewFileUrl.value)
-  // var url = href + params
-  var url = href + fileQuery
-  // window.open(href + params)
+const downloadFile = () => {
+  if (!fileToView.value) {
+    return
+  }
+  var url = reovelURI(fileToView.value)
+  //https://blog.csdn.net/dmlcq/article/details/120416981
   var xhr = new XMLHttpRequest()
   var fileName = fileToView.value!.meta.basename
   xhr.open("GET", url, true)
@@ -212,6 +218,10 @@ const downloadFile = () => {
 .simple-box {
   padding: 10px;
   font-size: 15px
+}
+
+.box {
+  height: 600px;
 }
 
 // .dialog {

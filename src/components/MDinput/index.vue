@@ -31,10 +31,12 @@
     </div>
 </template>
 
-<script>
+<script lang="ts">
 // source:https://github.com/wemake-services/vue-material-input/blob/master/src/components/MaterialInput.vue
 
-export default {
+import { defineComponent } from "vue"
+
+export default defineComponent({
     name: 'MdInput',
     props: {
         /* eslint-disable */
@@ -70,7 +72,7 @@ export default {
         return {
             currentValue: this.modelValue,
             focus: false,
-            fillPlaceHolder: null
+            fillPlaceHolder: ''
         }
     },
     computed: {
@@ -84,40 +86,39 @@ export default {
     },
     watch: {
         modelValue(newValue) {
-            console.log('sadsdasdasda')
             this.currentValue = newValue
         }
     },
     methods: {
-        handleModelInput(event) {
+        handleModelInput(event: any) {
             const value = event.target.value
             this.$emit('update:modelValue', value)
-            if (this.$parent.$options.componentName === 'ElFormItem') {
+            if (this.$parent!.$options.componentName === 'ElFormItem') {
                 if (this.validateEvent) {
-                    this.$parent.$emit('el.form.change', [value])
+                    this.$parent!.$emit('el.form.change', [value])
                 }
             }
             this.$emit('change', value)
         },
-        handleMdFocus(event) {
+        handleMdFocus(event: any) {
             this.focus = true
             this.$emit('focus', event)
             if (this.placeholder && this.placeholder !== '') {
-                this.fillPlaceHolder = this.placeholder
+                (this.fillPlaceHolder as any) = this.placeholder
             }
         },
-        handleMdBlur(event) {
+        handleMdBlur(event: any) {
             this.focus = false
-            this.$emit('blur', event)
-            this.fillPlaceHolder = null
-            if (this.$parent.$options.componentName === 'ElFormItem') {
+            this.$emit('blur', event);
+            (this.fillPlaceHolder as any) = null
+            if (this.$parent!.$options.componentName === 'ElFormItem') {
                 if (this.validateEvent) {
-                    this.$parent.$emit('el.form.blur', [this.currentValue])
+                    this.$parent!.$emit('el.form.blur', [this.currentValue])
                 }
             }
         }
     }
-}
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,6 +1,9 @@
 <template>
     <div class="box">
-        <el-dialog v-model="modelValue" title="目标集群与分区配置" class="dialog">
+        <el-dialog v-model="modelValue">
+            <template #title>
+                <div>目标集群与分区配置</div>
+            </template>
             <el-row>
                 <el-col :span="10">
                     <div class="cluster-title">集群名称</div>
@@ -14,7 +17,7 @@
                 <el-col :span="10" class="t-c m-2">{{ item.name }}</el-col>
                 <el-col :span="10" class="t-c m-2">{{ item.value }}</el-col>
                 <el-col :span="2">
-                    <el-button type="danger"  @click="del(item.name)">删除</el-button>
+                    <el-button type="danger" @click="del(item.name)">删除</el-button>
                 </el-col>
             </el-row>
             <el-row :gutter="20">
@@ -109,10 +112,13 @@ let confirm = () => {
 </script>
 
 <style lang="less" scoped>
-.dialog {
-    padding: 10px 30px
+.box{
+    :deep(.el-dialog__header){
+        background: linear-gradient(90deg,#727cf5,rgba(255,0,0,0));
+        color:#fff;
+        font-size: 18px;
+    }
 }
-
 .sel {
     width: 100%;
 }
@@ -141,7 +147,7 @@ let confirm = () => {
 }
 </style>
 <style>
-.el-popper{
+.el-popper {
     z-index: 3000 !important;
 }
 </style>

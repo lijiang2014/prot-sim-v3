@@ -52,7 +52,7 @@
           </el-form-item>
 
           <el-form-item>
-            <el-button v-if="$store.state.isLogin" type="primary" @click="submitForm()">Summit</el-button>
+            <el-button v-if="$store.state.user.token" type="primary" @click="submitForm()">Summit</el-button>
             <el-button v-else type="primary" disabled>Login To Use</el-button>
             <el-button @click="resetForm()">Reset</el-button>
           </el-form-item>
