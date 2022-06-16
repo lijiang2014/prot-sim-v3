@@ -166,15 +166,15 @@ let processObj = reactive({
   checkAll: false,
   cities: ["TMalign", 'test'],
 })
-let handleCheckAllChange = (val: boolean) => {
+let handleCheckAllChange = (val: string | number | boolean) => {
   processObj.checkedCities = val ? processObj.cities : [];
   processObj.isIndeterminate = false;
 };
-let handleCheckedCitiesChange = (value: string[]) => {
-  let checkedCount = value.length;
-  processObj.checkAll = checkedCount === processObj.cities.length;
-  processObj.isIndeterminate =
-    checkedCount > 0 && checkedCount < processObj.cities.length;
+let handleCheckedCitiesChange = (checked: string | number | boolean) => {
+  //let checkedCount = value.length;
+  //processObj.checkAll = checkedCount === processObj.cities.length;
+  //processObj.isIndeterminate =
+  //  checkedCount > 0 && checkedCount < processObj.cities.length;
 }
 
 

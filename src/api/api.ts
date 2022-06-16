@@ -98,8 +98,9 @@ export const getJobResult = (jobindex: string): Promise<ApiResponseSpec<JobResul
     icon: 图片，如地址为 https://starlight.nscc-gz.cn/api/mei/acorn/2e2f701b-1ee2-4d7e-988e-3d36c8343b80
     type: 类型区分
  */
-export const getApps = (): Promise<ApiResponseItems<AppMeta>> => {
-  return http.get('/app')
+export const getApps = (params?: any): Promise<ApiResponseItems<AppMeta>> => {
+  // not use direct after ...
+  return http.get('/app', { params })
 }
 
 export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> => {
@@ -359,7 +360,7 @@ export const previewFile = (url: string | fileVerbose, size: number = 1000, page
 }
 
 //对象复制
-export const copy=<T>(obj:T):T=>{
+export const copy = <T>(obj: T): T => {
   return JSON.parse(JSON.stringify(obj))
 }
 

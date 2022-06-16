@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "esnext",
     "useDefineForClassFields": true,
-     // 解析非相对模块名的基准目录
-     "baseUrl": ".",
+    // 解析非相对模块名的基准目录
+    "baseUrl": ".",
     // 从 tslib 导入辅助工具函数（比如 __extends， __rest等）
     "importHelpers": true,
     // 模块名到基于 baseUrl的路径映射的列表。
@@ -20,13 +20,30 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "types": ["element-plus/global"],
-    "lib": ["esnext", "dom","DOM.Iterable","ScriptHost"],
+    "types": [
+      "element-plus/global",
+      "@intlify/vite-plugin-vue-i18n/client",
+    ],
+    "lib": [
+      "esnext",
+      "dom",
+      "DOM.Iterable",
+      "ScriptHost"
+    ],
     "skipLibCheck": true, // 针对 element plus 的 ts 打包教研
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue"
+  ],
   "exclude": [
     "node_modules"
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }

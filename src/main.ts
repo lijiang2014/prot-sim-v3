@@ -2,8 +2,8 @@ import { createApp } from 'vue'
 import { store, key } from './store'
 import App from './App.vue'
 import router from './router'
-// import ElementPlus from 'element-plus'
-// import 'element-plus/dist/index.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import * as icons from '@element-plus/icons-vue'
 import initStorePersistence from '@/store/persistence'
 
@@ -20,7 +20,7 @@ for (const name in icons) {
 
 initStorePersistence(store)
 app.use(store, key)
-// app.use(ElementPlus).
+app.use(ElementPlus)
 app.use(i18n)
 app.use(router)
 app.mount('#app')
