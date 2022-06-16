@@ -8,7 +8,7 @@ export const routes: Array<RouteRecordRaw> = [
     name: 'Login',
     meta: { hidden: true, title: 'login' },
     component: () =>
-      import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
+      import('../views/Login.vue'),
   },
   {
     path: '/', redirect: '/apps', meta: { hidden: false, title: 'Home' },
@@ -98,6 +98,11 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/later', meta: { hidden: false, title: 'Tests' },
     component: Layout,
     children: [
+      {
+        path: '/later/saguaro',
+        meta: { hidden: false, title: 'saguaro' },
+        component: () => import('@/views/test/saguaro/index.vue')
+      },
       {
         path: '/later/graph-ppis',
         meta: { hidden: false, title: 'graph-ppis' },

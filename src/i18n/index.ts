@@ -1,11 +1,12 @@
-import {createI18n, useI18n } from 'vue-i18n'
+import { createI18n, useI18n } from 'vue-i18n'
 import elementEnLocale from 'element-plus/lib/locale/lang/en'
 import elementZhLocale from 'element-plus/lib/locale/lang/zh-CN'
 // import elementEsLocal from 'element-plus/lib/locale/lang/es'
 // import elementJaLocal from 'element-plus/lib/locale/lang/ja'
 import zhLocale from './zh'
 import enLocale from './en'
-import {utils} from '@/utils/utils'
+import { utils } from '@/utils/utils'
+// import messages from '@intlify/vite-plugin-vue-i18n/messages'
 
 const messages = {
   en: {
@@ -41,15 +42,16 @@ export function getLanguage() {
   return 'en'
 }
 
-let i18n=createI18n({
-    locale: getLanguage(),
-    // fallbackLocal: 'en',
-    messages,
+let i18n = createI18n({
+  locale: getLanguage(),
+  globalInjection: true,
+  // fallbackLocal: 'en',
+  messages,
 })
 
 
-export function trans(instr: string, prefix: string) :string{
-  let i18=useI18n()
+export function trans(instr: string, prefix: string): string {
+  let i18 = useI18n()
   const inkey = prefix + instr
   if (i18.te(inkey)) {
     return i18.t(inkey)
