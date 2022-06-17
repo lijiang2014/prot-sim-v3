@@ -7,27 +7,18 @@
   </div>
   <div v-else-if="itemParsed.class === 'File'">
     <!-- {{ itemParsed }} -->
-    <div v-if="itemParsed.meta.mime === 'application/octet-stream'" class="file-box">
-      <el-popover placement="right">
-        <template #reference>
-          <el-icon size="calc( 100px + 5vw)">
-            <Document />
-          </el-icon>
-        </template>
-        <div>此文件可能不支持在线查看，您可以下载到本地查看
-          <hr>
-          <el-button @Click="downloadFile">下载</el-button>
-          <el-button @Click="readText">仍然查看</el-button>
-        </div>
-      </el-popover>
-
-      <span>{{ itemParsed.meta.basename }}</span>
-    </div>
     <div v-if="itemParsed.meta.mime === 'text/plain'" class="file-box">
       <el-icon size="calc( 100px + 5vw)" @Click="readText">
         <Document />
       </el-icon>
       <span>{{ itemParsed.meta.basename }}</span>
+    </div>
+    <div v-else-if="itemParsed.meta.mime === 'chemical/fasta-predict'">
+      <div>
+        <saguaro v-if="fileToView" :url='reovelURI(fileToView)'>
+        </saguaro>
+        <span>{{ itemParsed.meta.basename }}</span>
+      </div>
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/pdb'">
       <div class="box">
@@ -48,6 +39,23 @@
         </el-image>
       </div>
     </div>
+    <div v-else class="file-box">
+      <!-- ="itemParsed.meta.mime === 'application/octet-stream'" -->
+      <el-popover placement="right">
+        <template #reference>
+          <el-icon size="calc( 100px + 5vw)">
+            <Document />
+          </el-icon>
+        </template>
+        <div>此文件可能不支持在线查看，您可以下载到本地查看
+          <hr>
+          <el-button @Click="downloadFile">下载</el-button>
+          <el-button @Click="readText">仍然查看</el-button>
+        </div>
+      </el-popover>
+
+      <span>{{ itemParsed.meta.basename }}</span>
+    </div>
   </div>
   <div>
     <el-dialog v-model="showViewFile" title="查看文本" width="50%" top="50vh" class="dialog">
@@ -67,6 +75,7 @@ import { metaFromName } from "@/utils/meta";
 import { FileMeta, fileVerbose } from "@/app-model/file";
 import { ElNotification } from "element-plus";
 import CifViewer from "@/components/common/cifViewer.vue";
+import Saguaro from "@/components/common/saguaro.vue";
 export interface numberValue {
   class: 'number',
   value: number

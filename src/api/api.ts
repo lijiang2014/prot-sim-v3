@@ -1,7 +1,7 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, fileOutput, jobMeta, OutputMap, PageView, result as JobResult, result, } from '@/app-model'
+import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, fileOutput, jobMeta, OutputMap, PageView, result as JobResult, result, UserInfo, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
 import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
@@ -9,6 +9,7 @@ import { stringFile } from '@/app-model/graph-ppis'
 import { ElNotification } from 'element-plus'
 import { FileInfo, FileMeta, fileVerbose } from '@/app-model/file'
 import store, { UserType } from '@/store'
+import { reject } from 'lodash'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -22,6 +23,10 @@ export const sendEmailCode = (email: string): Promise<any> => {
 
 export const login = (r: LoginRequest): Promise<any> => {
   return http.post('login', r)
+}
+
+export const getUserInfo = (params?: any): Promise<ApiResponseSpec<UserInfo>> => {
+  return http.get('user/info', { params })
 }
 
 export const uploadFile = (spath: string, file: File, settings?: AxiosRequestConfig): Promise<any> => {
@@ -104,127 +109,6 @@ export const getApps = (params?: any): Promise<ApiResponseItems<AppMeta>> => {
 }
 
 export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> => {
-  let mockAppSpec: AppSpec = {
-    "id": 1406,
-    "name": "graphppis",
-    "render": {
-      "id": "widgets-root",
-      "type": "container",
-      "name": "",
-      "offset": 0,
-      "width": 24,
-      "label": "根组件",
-      "attr": {},
-      "data": [
-        {
-          "id": "info1",
-          "type": "info",
-          "name": "",
-          "offset": 0,
-          "width": 24,
-          "label": "",
-          "attr": {
-            "visible": true,
-            "default": "<h2 style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; text-align: center;\" data-v-67dea2ff=\"\"><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; letter-spacing: normal; orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #000000; font-family: 'Microsoft Yahei', 微软雅黑, 宋体; font-size: 36px; font-weight: 600; text-align: justify; background-color: #ffffff; float: none; display: inline !important;\">GraphPPIS  : 基于深度图卷积网络的结构感知的蛋白质相互作用位点预测</span><br style=\"box-sizing: inherit; color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;\" /><span style=\"color: #303133; font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif; font-size: 18.72px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; display: inline !important; float: none;\">ref:&nbsp;</span><span style=\"box-sizing: inherit; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: bold; letter-spacing: normal; orphans: 2; text-align: center; text-indent: 0px; text-transform: none; white-space: normal; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; background-color: #ffffff; text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial; color: #333333; font-family: arial; font-size: 16px;\">https://doi.org/10.1093/bioinformatics/btab643</span></h2>"
-          },
-          "data": []
-        },
-        {
-          "id": "text1",
-          "type": "text",
-          "name": "pdbID",
-          "offset": 0,
-          "width": 24,
-          "label": "pdbID",
-          "attr": {
-            "placeholder": "",
-            "required": false,
-            "disabled": false,
-            "visible": true,
-            "rules": "",
-            "default": "1r8s"
-          },
-          "data": []
-        },
-        {
-          "id": "rfbPath1",
-          "type": "rfbPath",
-          "name": "pdb",
-          "offset": 0,
-          "width": 24,
-          "label": "pdb",
-          "attr": {
-            "placeholder": "",
-            "default": "",
-            "visible": true,
-            "required": false,
-            "extends": {
-              "accept": ".pdb",
-            },
-            "rules": ""
-          },
-          "data": []
-        },
-        {
-          "id": "text2",
-          "type": "text",
-          "name": "chain",
-          "offset": 0,
-          "width": 24,
-          "label": "chain",
-          "attr": {
-            "placeholder": "",
-            "required": true,
-            "disabled": false,
-            "visible": true,
-            "rules": "",
-            "default": "E"
-          },
-          "data": []
-        },
-        {
-          "id": "list1",
-          "type": "list",
-          "name": "mode",
-          "offset": 0,
-          "width": 24,
-          "label": "mode",
-          "attr": {
-            "required": false,
-            "disabled": false,
-            "visible": true,
-            "options": [
-              {
-                "label": "fast",
-                "value": "fast",
-                "number": false,
-                "disabled": false,
-                "selected": false
-              },
-              {
-                "label": "slow",
-                "value": "slow",
-                "disabled": false
-              }
-            ],
-            "default": "fast"
-          },
-          "data": []
-        },
-      ]
-    },
-    "title": "GraphPPIS",
-    "icon": "513e68a9-d6e0-4014-93af-2c912448e258",
-    "type": 1,
-    "description": "蛋白质结合位点预测算法"
-  }
-  if (app === 'graph-ppis') {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(mockAppSpec)
-      }, mockQueryTime)
-    })
-  }
   let ret = await http.get('/app/' + app).catch(err => {
     throw (err)
   })
@@ -233,6 +117,14 @@ export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> =>
     appData.render = JSON.parse(appData.render)
   }
   return (appData as AppSpec)
+}
+
+export const createApp = async (app: AppSpec): Promise<ApiResponseSpec<AppSpec>> => {
+  if (typeof app.render !== "string") {
+    let rawrender = JSON.stringify(app.render)
+    app.render = rawrender as any
+  }
+  return http.post('/app', app)
 }
 
 export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
@@ -410,6 +302,28 @@ export const ConvertToObjectUrl = (url: string, fileName: string) => {
         var URL = window.URL || window.webkitURL
         var objectUrl = URL.createObjectURL(blob)
         resolve(objectUrl)
+      }
+    }
+    xhr.send()
+  })
+}
+
+export const downloadStream = (url: string): Promise<Blob> => {
+  //https://blog.csdn.net/dmlcq/article/details/120416981
+  return new Promise((resolve, reject) => {
+    let xhr = new XMLHttpRequest()
+    xhr.open("GET", url, true)
+    xhr.responseType = 'blob'
+    if (store.state.user.type === UserType.StarlightUser) {
+      xhr.setRequestHeader('Bihu-Token', store.state.user.token)
+    } else if (store.state.user.type === UserType.EmailFreeUser) {
+      xhr.setRequestHeader('Authorization', store.state.user.token)
+    }
+    xhr.onload = async function (res) {
+      if (this.status === 200) {
+        var type = xhr.getResponseHeader('Content-Type') || ""
+        var blob = new Blob([this.response])
+        resolve(blob)
       }
     }
     xhr.send()

@@ -2,18 +2,25 @@
   <div class="list-head">
     <el-row justify="space-between">
       <el-col :span='2' class="head-left">
-        <div><div class="line"></div></div>
+        <div>
+          <div class="line"></div>
+        </div>
         <div class="title">{{ title }}</div>
       </el-col>
-      <el-col :span='6' class="head-right">
+      <el-col :span='8' class="head-right">
         <el-row :gutter="20">
-          <el-col :span="10">
-            <div class="next">
+          <el-col :span="6">
+            <div v-if="store.state.user.isAdmin" class="flex-right">
+              <el-button round size='small' class="view-all" @click="router.push({ name: 'appManager' })">+</el-button>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="flex-right">
               <el-button round size='small' class="view-all">浏览全部</el-button>
             </div>
           </el-col>
-          <el-col :span="14">
-            <div class="next">
+          <el-col :span="12">
+            <div class="flex-right">
               <el-button size='small' @click="emit('btnClick', -1)" class="btn">
                 <el-icon>
                   <arrow-left-bold />
@@ -33,6 +40,12 @@
 </template>
 
 <script lang='ts' setup>
+import { useStore } from '@/store'
+import { useRouter } from 'vue-router'
+
+let store = useStore()
+const router = useRouter()
+
 defineProps<{ title: string }>()
 let emit = defineEmits<{
   (e: 'btnClick', num: number): void
@@ -50,17 +63,19 @@ let emit = defineEmits<{
   height: 35px;
   background-color: rgb(85, 2, 85);
 }
-.head-left{
+
+.head-left {
   display: flex;
 }
-.head-right{
-  .view-all{
+
+.head-right {
+  .view-all {
     width: 100px;
     padding-right: 10px;
   }
 }
 
-.next {
+.flex-right {
   display: flex;
   justify-content: flex-end;
   width: 100%;

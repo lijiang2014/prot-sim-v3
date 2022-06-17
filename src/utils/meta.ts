@@ -12,6 +12,9 @@ let extMap: { [key: string]: string[] } = {
 export function metaFromName(location: string): FileMeta {
   let parts = location.split('/')
   let basename = parts[parts.length - 1]
+  if (basename.endsWith("pred_results.txt")) {
+    return { basename, ext: ".txt", mime: "chemical/fasta-predict" }
+  }
   let ext = ""
   let i = basename.lastIndexOf(".")
   if (i !== -1) {

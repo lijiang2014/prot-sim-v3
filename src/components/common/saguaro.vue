@@ -16,7 +16,7 @@ let props = withDefaults(defineProps<{
   label: string, // 属性 
   threshold: number
 }>(), {
-  url: "http://10.127.48.27:8000/storage/download?&sha1=d14e6aa72be80d75ebbd973786af584f7425156b&dir=output&ext=.txt",
+  // url: "http://10.127.48.27:8000/storage/download?&sha1=d14e6aa72be80d75ebbd973786af584f7425156b&dir=output&ext=.txt",
   label: "PROB",
   threshold: 0.24
 })
