@@ -1,4 +1,5 @@
 
+import { UserType } from '@/store'
 import * as gp from './graph-ppis'
 
 export interface fileOutputMeta {
@@ -164,3 +165,24 @@ export const runtimeDefault: AppWidgets = {
       "data": []
     }]
 }
+
+export interface JobState {
+  total: number
+  running: number
+  pending: number
+}
+
+export interface UserInfo {
+  userType: UserType
+  Name: string
+  isAdmin?: boolean
+  // 默认配置
+  defaultFS?: string
+  home?: string
+  // 统计信息
+  jobState?: JobState
+}
+
+// export interface UserCtx extends UserInfo {
+//   token: string
+// }

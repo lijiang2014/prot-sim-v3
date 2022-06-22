@@ -38,6 +38,7 @@ import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { utils } from './utils/utils';
 import { trans } from './i18n'
+import { getUserInfo } from './api/api'
 const $router = useRouter()
 
 let store = useStore()
@@ -50,6 +51,11 @@ onMounted(() => {
   }
   if (token) {
     store.commit('setToken', { token })
+    if (typeof store.state.user.isAdmin == "undefined") {
+      getUserInfo().then(res => {
+        store.commit('setUserInfo', res.spec)
+      })
+    }
     return
   }
   store.commit('setToken', { token: "" })

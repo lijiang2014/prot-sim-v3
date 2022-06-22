@@ -1,3 +1,4 @@
+import { UserInfo } from '@/app-model'
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store } from 'vuex'
 
@@ -14,6 +15,7 @@ export interface State {
     defaultFS: string
     name: string
     home: string
+    isAdmin: boolean | undefined
   }
   // isLogin: boolean
 }
@@ -31,7 +33,8 @@ export const store = createStore<State>({
         type: UserType.AnonymousUser,
         defaultFS: 'GPUFS',
         home: '/GPUFS/default',
-        name: 'default'
+        name: 'default',
+        isAdmin: undefined,
       }
     }
   },
@@ -39,9 +42,10 @@ export const store = createStore<State>({
     // loginChange(state, payload) {
     //   state.isLogin = payload
     // },
+
     setToken(state, params) {
       let { token, username } = params
-      console.log("token, username", token, params, username)
+      // console.log("token, username", token, params, username)
       if (token === "") {
         // logout clear
         window.localStorage.clear()
@@ -71,7 +75,10 @@ export const store = createStore<State>({
       state.user.token = token
       state.user.name = username
       state.user.home = "/" + state.user.defaultFS + "/" + state.user.name
-      console.log("username", username)
+      // console.log("username", username)
+    },
+    setUserInfo(state, userInfo: UserInfo) {
+      state.user.isAdmin = userInfo.isAdmin || false
     },
     increment(state) {
       state.count++

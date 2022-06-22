@@ -1,49 +1,27 @@
 <template>
-  <h1>Saguaro </h1>
-  <div id="pfv" style="margin-top:50px"></div>
-  <button @click="handleClick"> Add</button>
+  <!-- <h1>Saguaro </h1> -->
+  <div v-if="loading">Data is loading ...</div>
+  <div id="pfv"></div>
+  <!-- <button @click="handleClick"> Add</button> -->
 </template>
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useStore } from '@/store';
 import { RcsbFv, RcsbFvDisplayTypes, RcsbFvTrackDataElementInterface } from '@rcsb/rcsb-saguaro';
 import type { RcsbFvRowConfigInterface } from '@rcsb/rcsb-saguaro';
+import { downloadStream } from '@/api/api';
 
-const store = useStore()
-const count = ref(store.state.count)
-const handleClick = () => {
-  store.commit("increment")
-  console.log(store.state.count)
-}
-
-
-const sequence = "MTEYKLVVVGAGGVGKSALTIQLIQNHFVDEYDPTIEDSYRKQVVIDGETCLLDILDTAGQ" +
-  "EEYSAMRDQYMRTGEGFLCVFAINNTKSFEDIHQYREQIKRVKDSDDVPMVLVGNKCDLAA" +
-  "RTVESRQAQDLARSYGIPYIETSAKTRQGVEDAFYTLVREIRQHKLRKLNPPDESGPGCMS"
-
-
-
-const blockTrack: RcsbFvRowConfigInterface = {
-  trackId: "blockTrack",
-  trackHeight: 20,
-  trackColor: "#F9F9F9",
-  displayType: "block" as RcsbFvDisplayTypes,
-  displayColor: "#FF0000",
-  rowTitle: "BLOCK",
-  trackData: [{
-    begin: 30,
-    end: 60,
-    gaps: [{
-      begin: 40,
-      end: 50,
-      isConnected: false,
-    }]
-  }, {
-    begin: 80,
-    end: 90,
-    openEnd: true
-  }]
-}
+let props = withDefaults(defineProps<{
+  url: string, // 文件源
+  label: string, // 属性 
+  threshold: number
+}>(), {
+  url: "http://10.127.48.27:8000/storage/download?&sha1=d14e6aa72be80d75ebbd973786af584f7425156b&dir=output&ext=.txt",
+  label: "PROB",
+  threshold: 0.24
+})
+let loading = ref(false)
+let errMsg = ref("")
 
 const htmlElementId = "pfv"
 
@@ -143,7 +121,7 @@ const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]]
   }
   const comment = lines.shift()
   const titles = lines.shift()?.split('\t')
-  let threshold = 0.24
+  let threshold = props.threshold
   let sequence = ''
   let probs: RcsbFvTrackDataElementInterface[] = []
   if (titles?.length === 3 && titles[0] === 'AA' && titles[1] === 'Prob') {
@@ -162,10 +140,26 @@ const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]]
   throw new Error("Not a excepted file format [A P P]")
 }
 
-const render = () => {
-  // let example = { "type": "DISORDER", "display": "area", "color": { "thresholds": [0.5], "colors": ["#8484FF", "#FF8484"] }, "height": 45, "title": "DISORDER", "domain": [0, 1] }
-  let [seq, props] = resoveTxt(dataTxt)
-  console.log(props)
+const render = async () => {
+  loading.value = true
+  let blob = await downloadStream(props.url).catch(err => {
+    errMsg.value = "读取数据出错" + err
+  })
+  if (!blob) {
+    loading.value = false
+    return
+  }
+  let text = await blob.text().catch(err => {
+    errMsg.value = "读取数据出错" + err
+  })
+  loading.value = false
+  console.log("text", text)
+  if (!text) {
+    return
+  }
+  // let [seq, Dprops] = resoveTxt(dataTxt)
+  let [seq, Dprops] = resoveTxt(text)
+  console.log(Dprops)
   const sequenceTrack: RcsbFvRowConfigInterface = {
     trackId: "sequenceTrack",
     trackHeight: 20,
@@ -186,25 +180,18 @@ const render = () => {
       "thresholds": [0.24],
       "colors": ["#8484FF", "#FF8484"]
     },
-    rowTitle: "PPIS",
+    rowTitle: props.label,
     trackHeight: 80,
     // minRatio: 0.01,
-    trackData: props,
-    // trackData: [{
-    //   begin: 1,
-    //   value: 0.1,
-    //   // values: props,
-    // }, { value: 0.2, begin: 2 }]
+    trackData: Dprops,
   }
   const boardConfig = {
     range: {
-      // min: 20,
-      // max: 110,
       min: 0,
       max: seq.length,
     },
-    trackWidth: 940,
-    rowTitleWidth: 260,
+    // trackWidth: 840,
+    // rowTitleWidth: 120,
     includeAxis: true
   };
 

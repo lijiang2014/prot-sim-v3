@@ -21,6 +21,11 @@ export const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/applist/index.vue')
       },
       {
+        path: '/apps/man', name: "appManager",
+        meta: { title: 'Apps Manager', hidden: true },
+        component: () => import('@/views/applist/AppMan.vue')
+      },
+      {
         path: '/welcome',
         meta: { title: 'Welcome', hidden: true },
         component: () => import('@/views/Welcome.vue')
@@ -143,6 +148,11 @@ export const routes: Array<RouteRecordRaw> = [
         path: '/later/test/mockApi',
         meta: { title: 'MockApi' },
         component: () => import('@/views/test/MockApi/index.vue')
+      },
+      {
+        path: '/later/test/userInfo', name: "userInfo",
+        meta: { title: 'userInfo' },
+        component: () => import('@/views/test/userInfo.vue')
       },
       {
         path: '/later/test/edit',

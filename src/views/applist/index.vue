@@ -44,6 +44,9 @@ onMounted(async () => {
     if (!state.appList[item.region]) {
       state.appList[item.region] = []
     }
+    if (state.regions.indexOf(item.region) === -1) {
+      state.regions.push(item.region)
+    }
     state.appList[item.region].push(item)
   }
 })
