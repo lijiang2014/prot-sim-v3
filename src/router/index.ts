@@ -159,6 +159,11 @@ export const routes: Array<RouteRecordRaw> = [
         meta: { title: '应用编辑' },
         component: () => import('@/views/test/edit/index.vue')
       },
+      {
+        path: '/later/test/enigma',
+        meta: { title: 'enigma' },
+        component: () => import('@/views/test/enigma/index.vue')
+      },
     ]
   },
   // Hidden
