@@ -33,7 +33,7 @@
 import LoginForm from './components/Login/index.vue'
 import HeadNav from './components/Nav/index.vue'
 import LangSel from './components/common/LangSel.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useStore } from '@/store'
 import { useRouter } from 'vue-router'
 import { utils } from './utils/utils';
@@ -61,12 +61,14 @@ onMounted(() => {
   store.commit('setToken', { token: "" })
 })
 const logout = () => {
-  window.sessionStorage.clear()
-  window.localStorage.clear()
-  utils.clearCookie('Bihu-Token', '.nscc-gz.cn')
-  // utils.clearCookie('Bihu-Token')
-  store.commit('setToken', { token: "" })
-  $router.push('/login')
+  nextTick(() => {
+    window.sessionStorage.clear()
+    window.localStorage.clear()
+    utils.clearCookie('Bihu-Token', '.nscc-gz.cn')
+    // utils.clearCookie('Bihu-Token')
+    store.commit('setToken', { token: "" })
+    $router.push('/login')
+  })
 }
 
 
