@@ -5,7 +5,7 @@
       <div class="filter-tools">
         <el-input v-model="listQuery.field_lk_name" class="filter-x" clearable style="width: 150px;"
           placeholder="作业名称" />
-        <el-input v-model="listQuery.field_eq_cluster_job_id" class="filter-x" clearable style="width: 150px;"
+        <el-input v-model="listQuery.field_lk_uuid" class="filter-x" clearable style="width: 150px;"
           placeholder="作业ID" />
         <el-select class="filter-x" v-model="listQuery.field_eq_status" placeholder="作业状态" filterable clearable>
           <el-option value="0">排队</el-option>
@@ -120,12 +120,13 @@ const listQuery = ref({
   offset: 0,
   limit: 10,
   field_lk_name: '',
-  field_eq_cluster_job_id: '',
+  field_lk_uuid: '',
   field_ge_created_at: 0,
   field_le_created_at: 0,
   field_eq_uuid: route.query.uuid || [],
   field_eq_status: []
 })
+
 const list = ref<jobMeta[]>([])
 const total = ref(0)
 const listLoading = ref(false)
