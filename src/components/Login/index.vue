@@ -111,7 +111,7 @@ const toSendCode = async () => {
   const res = await sendEmailCode(loginForm.username).catch(err => {
     console.log("err:", err)
     if (err.data?.code === 20002) {
-      $Notify({ type: 'error', title: $t('login.sendFail'), message: "请直接使用之前的验证码登录", duration: 60000 })
+      $Notify({ type: 'info', title: $t('login.warning'), message: "请直接使用之前的验证码登录", duration: 60000 })
       codeNotTimeout.value = true
       codeSent.value = true
       return

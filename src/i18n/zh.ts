@@ -62,6 +62,8 @@ export default {
     explainBook: '《星光平台第三方授权说明》（链接到星光说明页面（暂无））',
     wrongName: '邮箱格式不正确',
     wrongWord: '验证码格式不对',
+    warning: "提示",
+    useLastCode: "请直接使用之前的验证码登录",
     sendFail: '验证码发送失败，请稍后再试',
     sendSuccess: '发送成功',
     checkWrong: '验证码校验出错',
