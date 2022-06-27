@@ -126,6 +126,9 @@ const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]]
   let probs: RcsbFvTrackDataElementInterface[] = []
   if (titles?.length === 3 && titles[0] === 'AA' && titles[1] === 'Prob') {
     lines.forEach((line, index) => {
+      if (line === "") {
+        return
+      }
       let [AA, Prob, Pred] = line.split('\t')
       sequence += AA
       let value = parseFloat(Prob)

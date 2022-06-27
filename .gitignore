@@ -24,3 +24,9 @@ dist-ssr
 *.sw?
 # Auto Generate Files
 components.d.ts
+# tar files
+*.tar
+*.gz
+# CI Files
+.ci/
+ci/
