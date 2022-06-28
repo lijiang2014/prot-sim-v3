@@ -4,23 +4,23 @@
     <div class="filter-container">
       <div class="filter-tools">
         <el-input v-model="listQuery.field_lk_name" class="filter-x" clearable style="width: 150px;"
-          placeholder="作业名称" />
+          :placeholder="$t('table.name')" />
         <el-input v-model="listQuery.field_lk_uuid" class="filter-x" clearable style="width: 150px;"
-          placeholder="作业ID" />
-        <el-select class="filter-x" v-model="listQuery.field_eq_status" placeholder="作业状态" filterable clearable>
-          <el-option value="0">排队</el-option>
-          <el-option value="1">运行</el-option>
-          <el-option value="2">成功</el-option>
-          <el-option value="3">失败</el-option>
+          :placeholder="$t('table.UUID')" />
+        <el-select class="filter-x" v-model="listQuery.field_eq_status" :placeholder="$t('table.taskStatus')" filterable
+          clearable>
+          <el-option value="Pending">{{ $t('task.Pending') }}</el-option>
+          <el-option value="Running">{{ $t('task.Running') }}</el-option>
+          <el-option value="CompletedSuccess">{{ $t('task.CompletedSuccess') }}</el-option>
+          <el-option value="CompletedFailed">{{ $t('task.Running') }}</el-option>
         </el-select>
-        <el-tooltip class="item" effect="dark" content="选择 提交时间范围 可查看更多记录" placement="right-start">
+        <el-tooltip placement="bottom" content="选择提交时间范围可查看更多记录">
           <el-date-picker v-model="listQuery.field_ge_created_at" class="filter-x" type="datetime"
-            placeholder="提交时间From" style="width: 150px;" />
+            :placeholder="$t('table.createdAtFrom')" style="width: 180px;" />
         </el-tooltip>
         <el-date-picker v-if="listQuery.field_ge_created_at" class="filter-x" v-model="listQuery.field_le_created_at"
-          type="datetime" placeholder="提交时间To" style="width: 150px;" />
-        <el-button type="primary" class="filter-x" icon="el-icon-search" :loading="listLoading" @click="handleFilter">
-          {{ $t('table.search') }}
+          type="datetime" :placeholder="$t('table.createdAtTo')" style="width: 180px;" />
+        <el-button type="primary" class="filter-x" :icon="Search" :loading="listLoading" @click="handleFilter">
         </el-button>
       </div>
     </div>
@@ -28,7 +28,7 @@
       <el-table key="0" v-loading="listLoading" :data="list" stripe border fit highlight-current-row
         style="width: 100%">
 
-        <el-table-column min-width="170px" label="名称" align="center">
+        <el-table-column min-width="170px" :label="$t('table.name')" align="center">
           <template #default="scope">
             <div class="span-monospace">
               <span v-if="scope.row.name">
@@ -37,16 +37,7 @@
             </div>
           </template>
         </el-table-column>
-        <!-- <el-table-column min-width="170px" label="ID" align="center">
-          <template #default="scope">
-            <div class="span-monospace">
-              <span v-if="scope.row.name">
-                {{ scope.row.cluster_job_id }}
-              </span>
-            </div>
-          </template>
-        </el-table-column> -->
-        <el-table-column min-width="170px" label="应用" align="center">
+        <el-table-column min-width="170px" :label="$t('table.app')" align="center">
           <template #default="scope">
             <div class="span-monospace">
               <span v-if="scope.row.app_name">
@@ -55,7 +46,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="提交时间" min-width="200px">
+        <el-table-column align="center" :label="$t('table.createdAt')" min-width="200px">
           <template #default="scope">
             <div class="span-monospace">
               <span v-if="scope.row.created_at">
@@ -64,7 +55,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="开始时间" min-width="170px">
+        <el-table-column align="center" :label="$t('table.startedAt')" min-width="170px">
           <template #default="scope">
             <div class="span-monospace">
               <span v-if="scope.row.started_at"> {{ parseTime(scope.row.started_at, '{y}-{m}-{d} {h}:{i}:{s}')
@@ -72,25 +63,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" label="结束时间" min-width="170px">
+        <el-table-column align="center" :label="$t('table.endedAt')" min-width="170px">
           <template #default="scope">
             <div class="span-monospace">
               <span v-if="scope.row.end_at"> {{ parseTime(scope.row.end_at, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column align="center" class-name="status-col" label="运行状态" min-width="100px">
+        <el-table-column align="center" class-name="status-col" :label="$t('table.taskStatus')" min-width="100px">
           <template #default="scope">
             <el-tag>{{ scope.row.status }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="center" :label="$t('table.actions')" width="80" fixed="right"
+        <el-table-column align="center" :label="$t('table.actions')" min-width="120" fixed="right"
           class-name="small-padding">
           <template #default="scope">
             <el-button
               v-if="(scope.row.type !== 1 && scope.row.cluster_job_id) || (scope.row.type === 1 && scope.row.uuid)"
-              type="primary" size="small" icon="el-icon-view" plain @click="viewSpecJob(scope.row)">
-              查看
+              type="primary" size="small" :icon="View" plain @click="viewSpecJob(scope.row)">
             </el-button>
           </template>
         </el-table-column>
@@ -105,6 +95,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {
+  Search,
+  View,
+} from '@element-plus/icons-vue'
 import { jobMeta } from '@/app-model';
 import { ref, onMounted } from 'vue';
 import { parseTime } from '@/utils';
@@ -207,9 +201,10 @@ const viewSpecJob = (row: jobMeta) => {
       }
 
       display: inline-block;
-      padding: 5px;
+      padding-right: 1em;
     }
 
+    padding-bottom: 1em;
     display: flex;
     flex-wrap: wrap;
     align-items: center;

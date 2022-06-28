@@ -1,12 +1,9 @@
 import { createI18n, useI18n } from 'vue-i18n'
 import elementEnLocale from 'element-plus/lib/locale/lang/en'
 import elementZhLocale from 'element-plus/lib/locale/lang/zh-CN'
-// import elementEsLocal from 'element-plus/lib/locale/lang/es'
-// import elementJaLocal from 'element-plus/lib/locale/lang/ja'
 import zhLocale from './zh'
 import enLocale from './en'
 import { utils } from '@/utils/utils'
-// import messages from '@intlify/vite-plugin-vue-i18n/messages'
 
 const messages = {
   en: {
@@ -17,19 +14,12 @@ const messages = {
     ...zhLocale,
     ...elementZhLocale
   },
-  // es: {
-  //   ...esLocale,
-  //   ...elementEsLocale
-  // },
-  // ja: {
-  //   ...jaLocale,
-  //   ...elementJaLocale
-  // }
 }
 
 export function getLanguage() {
   const chooseLanguage = utils.getCookie('language')
   if (chooseLanguage) return chooseLanguage
+  if (window.localStorage.lang) return window.localStorage.lang
 
   // if has not choose language
   const language = (navigator.language).toLowerCase()
@@ -45,7 +35,6 @@ export function getLanguage() {
 let i18n = createI18n({
   locale: getLanguage(),
   globalInjection: true,
-  // fallbackLocal: 'en',
   messages,
 })
 

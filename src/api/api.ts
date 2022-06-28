@@ -1,15 +1,12 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, fileOutput, jobMeta, OutputMap, PageView, result as JobResult, result, UserInfo, } from '@/app-model'
+import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, jobMeta, OutputMap, PageView, result as JobResult, UserInfo, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
-import axios, { AxiosPromise, AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
-import { stringFile } from '@/app-model/graph-ppis'
-import { ElNotification } from 'element-plus'
-import { FileInfo, FileMeta, fileVerbose } from '@/app-model/file'
+import { FileInfo, fileVerbose } from '@/app-model/file'
 import store, { UserType } from '@/store'
-import { reject } from 'lodash'
 // Mock apis
 const mockQueryTime = 1000 * 1.5
 export interface LoginRequest {
@@ -126,6 +123,19 @@ export const createApp = async (app: AppSpec): Promise<ApiResponseSpec<AppSpec>>
   }
   return http.post('/app', app)
 }
+
+export const deleteApp = async (appId: number, mode: 'platform' | 'soft' | 'hard' = 'platform'): Promise<ApiResponseSpec<null>> => {
+  return http.delete('/app/' + appId + "?mode=" + mode, { data: {} })
+}
+
+export const updateApp = async (app: AppSpec): Promise<ApiResponseSpec<AppSpec>> => {
+  if (typeof app.render !== "string") {
+    let rawrender = JSON.stringify(app.render)
+    app.render = rawrender as any
+  }
+  return http.patch('/app/' + app.id, app)
+}
+
 
 export const getJobs = (params?: any): Promise<ApiResponseItems<jobMeta>> => {
   console.log("params:", params)

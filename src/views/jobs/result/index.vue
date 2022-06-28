@@ -1,22 +1,32 @@
 <template>
   <div class="page">
-    <div v-if="loading">数据加载中....</div>
+    <div v-if="loading">{{ $t('table.loading') }}</div>
     <div v-else>
       <div>
         <div class="demo-collapse">
           <el-collapse v-model="activeNames" @change="changedActive">
-            <el-collapse-item title="基本信息" name="基本信息" class="collapse-item">
+            <el-collapse-item :title="$t('table.taskInfos')" name="basicInfos" class="collapse-item">
               <div class="base-info">
-                <div>名称：<span class="item-info">{{ baseInfo.name }}</span></div>
-                <div>应用：<span class="item-info">{{ baseInfo.app_name }}</span></div>
-                <div>UUID：<span class="item-info">{{ baseInfo.uuid }}</span></div>
-                <div>提交时间：<span class="item-info">{{ parseTime(baseInfo.created_at) }}</span></div>
-                <div>开始时间：<span class="item-info">{{ parseTime(baseInfo.started_at) }}</span></div>
-                <div>结束时间：<span class="item-info">{{ parseTime(baseInfo.end_at) }}</span></div>
-                <div>运行状态：<span>{{ baseInfo.status }}</span></div>
+                <div><span class="label">{{ $t('table.name') }}</span><span class="item-info">{{ baseInfo.name }}</span>
+                </div>
+                <div><span class="label">{{ $t('table.app') }}</span><span class="item-info">{{ baseInfo.app_name
+                }}</span></div>
+                <div><span class="label">{{ $t('table.UUID') }}</span><span class="item-info">{{ baseInfo.uuid }}</span>
+                </div>
+                <div><span class="label">{{ $t('table.createdAt') }}</span><span class="item-info">{{
+                    parseTime(baseInfo.created_at)
+                }}</span></div>
+                <div><span class="label">{{ $t('table.startedAt') }}</span><span class="item-info">{{
+                    parseTime(baseInfo.started_at)
+                }}</span></div>
+                <div><span class="label">{{ $t('table.endedAt') }}</span><span class="item-info">{{
+                    parseTime(baseInfo.end_at)
+                }}</span></div>
+                <div><span class="label">{{ $t('table.taskStatus') }}</span><span class="item-info">{{ baseInfo.status
+                }}</span></div>
                 <div>
                   <el-button :loading="loading" :disabled="baseInfo.status.startsWith('Completed')" type="primary"
-                    @click="updateData">刷新
+                    @click="updateData">{{ $t('table.refresh') }}
                   </el-button>
                 </div>
               </div>
@@ -54,7 +64,7 @@ interface ItemWithTitle {
 }
 
 let resData = ref<ItemWithTitle[]>([])
-let activeNames = ref<string[]>(['基本信息'])
+let activeNames = ref<string[]>(['basicInfos'])
 let scrollbarRef = ref()
 
 
@@ -172,6 +182,10 @@ onMounted(async () => {
   align-items: center;
   padding-left: 20px;
   justify-content: space-between;
+
+  .label {
+    margin-right: 1em;
+  }
 
   .item-info {
     color: #29d;

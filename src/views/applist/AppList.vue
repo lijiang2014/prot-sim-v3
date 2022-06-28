@@ -6,12 +6,14 @@
         <template v-for="item in props.appList" :key="item.name">
           <div class="contain">
             <el-card class="card">
-              <div class="app" @click="appClick(item)">
-                <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
-                <div class="text">
-                  <div>{{ item.title }}</div>
+              <el-tooltip placement="bottom" :content="item.description">
+                <div class="app" @click="appClick(item)">
+                  <el-image :src="imgUrl + item.icon" fit="scale-down" class="img" />
+                  <div class="text">
+                    <div>{{ item.title }}</div>
+                  </div>
                 </div>
-              </div>
+              </el-tooltip>
             </el-card>
           </div>
         </template>

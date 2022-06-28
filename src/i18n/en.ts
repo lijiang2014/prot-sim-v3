@@ -245,81 +245,12 @@ export default {
   region: {
     "default": "Popular Applications",
   },
-  register: {
-    EmptyEmail: 'Email can not be empty',
-    EmailAvailable: 'The Email can be registered',
-    EmailFormatError: 'Email format error',
-    EmailMaxLengthExceeded: 'Email cannot exceed 60 Characters',
-    EmailMinLengthRequired: 'Email requires at least 5 characters',
-    DupEmail: 'The email has been registered',
-    TickAgreement: 'Please tick the agreement',
-    CorrectPhone: 'Please input correct phone number',
-    DupPhone: 'The phone has been registered',
-    PhoneAvaliable: 'The phone can be registered',
-    PhoneNumberNeeded: 'Need Phone Number',
-    VerifyCodeNeeded: 'Need verify code',
-    UsernameAvaliable: 'The username can be registered',
-    UsernameMinLengthRequired: 'Username requires at least 5 characters',
-    UsernameMaxLengthExceeded: 'Username cannot exceed 27 Characters',
-    UsernameFormatError: 'Username format error',
-    DupUsername: 'The username has been registered',
-    UsernameNeeded: 'Need username',
-    PasswordNeeded: 'Password can not be blank',
-    PasswordMinLengthRequired: 'Password requires at least 8 characters',
-    PasswordMaxLengthExceeded: 'Password cannot exceed 20 Characters',
-    ReenterPassword: 'Please re-enter Password',
-    InconsistentPassword: 'Inconsistent password entered twice',
-    HumanRecognition: 'Please perform human-computer identification verification',
-    Agreement: '<Terms Of Starlight Service>',
-    SignUp: 'Sign Up',
-    PasswordFormatError: 'Password format error'
-  },
-  forgetpass: {
-    notice: 'Forget password ?',
-    EmailRetrievePassword: 'Email can retrieve the password',
-    PhoneRetrievePassword: 'Phone can retrieve the password',
-    EnterPhoneNumber: 'Please enter phone number',
-    NextStep: 'Next Step',
-    LogIn: 'Log In',
-    EmptyEmail: 'Email can not be empty',
-    EmailFormatError: 'Email format error',
-    RegisteredEmail: 'Fill in the registered email',
-    CorrectPhone: 'Please input correct phone number',
-    RegisterPhone: 'Fill in the registered Phone',
-    PhoneNumberNeeded: 'Need Phone Number',
-    VerifyCodeNeeded: 'Need verify code',
-    PasswordMinLengthRequired: 'Password requires at least 5 characters',
-    PasswordMaxLengthExceeded: 'Password cannot exceed 32 Characters',
-    PasswordNeeded: 'Password can not be blank',
-    ReenterPassword: 'Please re-enter Password',
-    InconsistentPassword: 'Inconsistent password entered twice'
-  },
-  documentation: {
-    documentation: 'Documentation',
-    github: 'Github Repository'
-  },
-  permission: {
-    addRole: 'New Role',
-    editPermission: 'Edit',
-    roles: 'Your roles',
-    switchRoles: 'Switch roles',
-    tips: 'In some cases, using v-permission will have no effect. For example: Element-UI  el-tab or el-table-column and other scenes that dynamically render dom. You can only do this with v-if.',
-    delete: 'Delete',
-    confirm: 'Confirm',
-    cancel: 'Cancel'
-  },
-  guide: {
-    description: 'The guide page is useful for some people who entered the project for the first time. You can briefly introduce the features of the project. Demo is based on ',
-    button: 'Show Guide'
-  },
-  components: {
-    documentation: 'Documentation',
-    tinymceTips: 'Rich text is a core feature of the management backend, but at the same time it is a place with lots of pits. In the process of selecting rich texts, I also took a lot of detours. The common rich texts on the market have been basically used, and I finally chose Tinymce. See the more detailed rich text comparison and introduction.',
-    dropzoneTips: 'Because my business has special needs, and has to upload images to qiniu, so instead of a third party, I chose encapsulate it by myself. It is very simple, you can see the detail code in @/components/Dropzone.',
-    stickyTips: 'when the page is scrolled to the preset position will be sticky on the top.',
-    backToTopTips1: 'When the page is scrolled to the specified position, the Back to Top button appears in the lower right corner',
-    backToTopTips2: 'You can customize the style of the button, show / hide, height of appearance, height of the return. If you need a text prompt, you can use element-ui el-tooltip elements externally',
-    imageUploadTips: 'Since I was using only the vue@1 version, and it is not compatible with mockjs at the moment, I modified it myself, and if you are going to use it, it is better to use official version.'
+  task: {
+    "Pending": "Pending",
+    "Running": "Running",
+    "CompletedSuccess": "Success",
+    "CompletedFailed": "Failed",
+    "tipUnknownFileView": "This file format may not supported, you can download the file to view.",
   },
   table: {
     dynamicTips1: 'Fixed header, sorted by header order',
@@ -346,50 +277,28 @@ export default {
     delete: 'Delete',
     cancel: 'Cancel',
     confirm: 'Confirm',
-    bind: 'Bind'
-  },
-  example: {
-    warning: 'Creating and editing pages cannot be cached by keep-alive because keep-alive include does not currently support caching based on routes, so it is currently cached based on component name. If you want to achieve a similar caching effect, you can use a browser caching scheme such as localStorage. Or do not use keep-alive include to cache all pages directly. See details'
+    bind: 'Bind',
+    // app form
+    taskInfos: 'Task Info',
+    name: 'Name',
+    app: 'App',
+    UUID: 'UUID',
+    createdAt: 'Created At',
+    startedAt: 'Started At',
+    endedAt: 'Ended At',
+    taskStatus: 'Status',
+    refresh: 'Refresh',
+    loading: 'Data is loading...',
+    viewAll: 'More',
+    createdAtFrom: 'Created At (From)',
+    createdAtTo: 'Created At (To)',
+    download: "Download",
+    stillView: "StillView",
+    viewContent: "File Content",
   },
   errorLog: {
     tips: 'Please click the bug icon in the upper right corner',
     description: 'Now the management system are basically the form of the spa, it enhances the user experience, but it also increases the possibility of page problems, a small negligence may lead to the entire page deadlock. Fortunately Vue provides a way to catch handling exceptions, where you can handle errors or report exceptions.',
     documentation: 'Document introduction'
   },
-  excel: {
-    export: 'Export',
-    selectedExport: 'Export Selected Items',
-    placeholder: 'Please enter the file name (default excel-list)'
-  },
-  zip: {
-    export: 'Export',
-    placeholder: 'Please enter the file name (default file)'
-  },
-  pdf: {
-    tips: 'Here we use window.print() to implement the feature of downloading PDF.'
-  },
-  theme: {
-    change: 'Change Theme',
-    documentation: 'Theme documentation',
-    tips: 'Tips: It is different from the theme-pick on the navbar is two different skinning methods, each with different application scenarios. Refer to the documentation for details.'
-  },
-  tagsView: {
-    refresh: 'Refresh',
-    close: 'Close',
-    closeOthers: 'Close Others',
-    closeAll: 'Close All'
-  },
-  settings: {
-    title: 'Page style setting',
-    theme: 'Theme Color',
-    tagsView: 'Open Tags-View',
-    fixedHeader: 'Fixed Header',
-    sidebarLogo: 'Sidebar Logo'
-  },
-  bind: {
-    SystemNameNeeded: 'hpc name needed',
-    CanNotBeEmail: 'cannot be email',
-    CanNotBeTelephone: 'cannot be email',
-    UsernameFormatError: 'hpc username format error'
-  }
 }
