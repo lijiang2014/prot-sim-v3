@@ -16,7 +16,7 @@
           </el-col>
           <el-col :span="6">
             <div class="flex-right">
-              <el-button round size='small' class="view-all">浏览全部</el-button>
+              <el-button round size='small' class="view-all">{{ $t('table.viewAll') }}</el-button>
             </div>
           </el-col>
           <el-col :span="12">

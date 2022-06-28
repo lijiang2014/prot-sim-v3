@@ -3,17 +3,17 @@ import { Store } from "vuex"
 export default <T>(store: Store<T>): void => {
   // data session lifecircle
   if (sessionStorage.getItem('store')) {
-    store.replaceState(
-      Object.assign(
-        {},
-        store.state,
-        JSON.parse(sessionStorage.getItem('store') as string)
-      )
-    )
-    sessionStorage.removeItem("store")
+    // store.replaceState(
+    //   Object.assign(
+    //     {},
+    //     store.state,
+    //     JSON.parse(sessionStorage.getItem('store') as string)
+    //   )
+    // )
+    // sessionStorage.removeItem("store")
   }
   // store data before page flash
-  window.addEventListener('beforeunload', () => {
-    sessionStorage.setItem('store', JSON.stringify(store.state))
-  })
+  // window.addEventListener('beforeunload', () => {
+  //   sessionStorage.setItem('store', JSON.stringify(store.state))
+  // })
 }

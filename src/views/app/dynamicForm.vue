@@ -14,8 +14,8 @@
       {{ runtimeParams }}
       <hr>{{ appParams }}
     </div>
-    <div v-if="!appName">未提供应用名称</div>
-    <div v-else-if="loading">数据加载中...</div>
+    <div v-if="!appName">Need App Name...</div>
+    <div v-else-if="loading">loading...</div>
     <el-row v-else>
       <el-col v-if="app && app.render" :span="app?.render.width" :offset="app?.render.offset">
         <el-form label-position="top" label-width="120px" :disabled="!userAvailable">
@@ -25,6 +25,9 @@
             <el-button type="primary" @click="submitForm()">Submit</el-button>
           </el-form-item>
           <span v-if="!userAvailable" class="warning">提交计算任务需要先登录系统</span>
+          <div class="text-refs" v-html="appRefs">
+
+          </div>
         </el-form>
       </el-col>
     </el-row>
@@ -60,7 +63,7 @@ const runtimeParams = ref<StarlightRuntimeParams>({
 } as StarlightRuntimeParams)
 let app = ref<AppSpec>()
 const appParams = ref<AppParams>({})
-
+const appRefs = ref<string>("")
 let userAvailable = computed(() => store.state.user.token !== "")
 
 onMounted(async () => {
@@ -75,12 +78,20 @@ onMounted(async () => {
   // 表单初始化
   // console.log("got app spec", res)
   // * 提取 info
+  let gotFirstInfo = false
   for (let i = 0; i < res.render.data.length; i++) {
     let widgeti = res.render.data[i]
     if (widgeti.type == 'info') {
-      runtimeForm.value.data[0].attr.default = widgeti.attr.default
-      res.render.data.splice(i, 1)
-      break
+      if (widgeti.name == 'refs') {
+        appRefs.value = widgeti.attr.default
+        res.render.data.splice(i, 1)
+        continue
+      } else if (!gotFirstInfo) {
+        runtimeForm.value.data[0].attr.default = widgeti.attr.default
+        res.render.data.splice(i, 1)
+        gotFirstInfo = true
+        continue
+      }
     }
   }
   // * 创建 AppRules

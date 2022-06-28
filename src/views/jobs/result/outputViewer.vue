@@ -17,7 +17,16 @@
       <div>
         <saguaro v-if="fileToView" :url='reovelURI(fileToView)'>
         </saguaro>
-        <span>{{ itemParsed.meta.basename }}</span>
+        <el-popover placement="right">
+          <template #reference>
+            <span>{{ itemParsed.meta.basename }}</span>
+          </template>
+          <div>
+            <hr>
+            <el-button @Click="downloadFile" :icon="Download">{{ $t('table.download') }}</el-button>
+          </div>
+        </el-popover>
+
       </div>
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/pdb'">
@@ -47,10 +56,10 @@
             <Document />
           </el-icon>
         </template>
-        <div>此文件可能不支持在线查看，您可以下载到本地查看
+        <div>{{ $t('task.tipUnknownFileView') }}
           <hr>
-          <el-button @Click="downloadFile">下载</el-button>
-          <el-button @Click="readText">仍然查看</el-button>
+          <el-button @Click="downloadFile" :icon="Download">{{ $t('table.download') }}</el-button>
+          <el-button @Click="readText" :icon="View">{{ $t('table.stillView') }}</el-button>
         </div>
       </el-popover>
 
@@ -58,7 +67,7 @@
     </div>
   </div>
   <div>
-    <el-dialog v-model="showViewFile" title="查看文本" width="50%" top="50vh" class="dialog">
+    <el-dialog v-model="showViewFile" :title="$t('table.viewContent')" width="50%" top="50vh" class="dialog">
       <div v-if="fileToView">
         <view-file :url="fileToView"></view-file>
       </div>
@@ -66,6 +75,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import {
+  Download,
+  View,
+} from '@element-plus/icons-vue'
 import viewFile from "./viewFile.vue";
 import store, { UserType } from '@/store'
 import dbView from "@/components/common/dbView.vue";
@@ -88,9 +101,6 @@ export interface warningValue {
   class: 'warning',
   value: string
 }
-// export interface fileVerbose extends fileOutput {
-//   meta: FileMeta
-// }
 export type ViewerItem = fileVerbose | numberValue | stringValue | warningValue
 
 const itemParsed = ref<ViewerItem>()

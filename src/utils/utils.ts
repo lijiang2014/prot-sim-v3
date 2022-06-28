@@ -42,7 +42,7 @@ export const utils = {
     if (pathurl) {
       delstr += `; path=${pathurl}`
     }
-    // console.log('clear Cookie', delstr)
+    console.log('clear Cookie', delstr)
     document.cookie = delstr
   },
   checkStarlightLog(): string {
