@@ -186,3 +186,8 @@ export interface UserInfo {
 // export interface UserCtx extends UserInfo {
 //   token: string
 // }
+
+export interface AppCounts {
+  appName: string
+  cnt: number
+}

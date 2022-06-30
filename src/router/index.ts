@@ -62,11 +62,6 @@ export const routes: Array<RouteRecordRaw> = [
     path: '/job', meta: { hidden: false, title: 'Jobs' },
     component: Layout,
     children: [
-      // {
-      //   path: '/job/all',
-      //   meta: { title: 'List' },
-      //   component: () => import('@/views/queue/all.vue')
-      // },
       {
         path: '/job/result/:uuid',
         name: 'jobResult',
@@ -81,18 +76,21 @@ export const routes: Array<RouteRecordRaw> = [
       },
     ]
   },
-  // BLAST
+  // Statistic
   {
-    path: '/blast', redirect: '/blast/submit', meta: { hidden: false, title: 'BLAST' },
+    path: '/statistic', meta: { hidden: false, title: 'Statistic' },
     component: Layout,
     children: [
-      // 序列相似性 blast
-      { path: '/blast/submit', component: About, meta: { hidden: false, title: 'BLAST' } },
+      {
+        path: '/statistic/app',
+        component: () => import('@/views/statistic/index.vue'),
+        meta: { hidden: false, title: 'Statistic' }
+      },
     ]
   },
   // About
   {
-    path: '/about', redirect: '/about/about', meta: { hidden: false, title: 'About' },
+    path: '/about', redirect: '/about/about', meta: { hidden: true, title: 'About' },
     component: Layout,
     children: [
       { path: '/about/about', component: About, meta: { hidden: false, title: 'About' } },
