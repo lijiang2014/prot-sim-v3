@@ -1,7 +1,7 @@
 <template>
   <!-- <h1>Saguaro </h1> -->
   <div v-if="loading">Data is loading ...</div>
-  <div id="pfv"></div>
+  <div id="pfv" class="pfv"></div>
   <!-- <button @click="handleClick"> Add</button> -->
 </template>
 <script lang="ts" setup>
@@ -112,7 +112,7 @@ E	0.0459	0
 L	0.0043	0
 S	0`
 
-const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]] => {
+const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[], number] => {
   const commentLineCount = 1
   const titleLineCount = 1
   const lines = dataTxt.split('\n')
@@ -120,8 +120,9 @@ const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]]
     throw new Error("Not a excepted file format [C T D]")
   }
   const comment = lines.shift()
+  let endWord = comment?.split(' ').pop()
+  let threshold = endWord ? parseFloat(endWord) : props.threshold
   const titles = lines.shift()?.split('\t')
-  let threshold = props.threshold
   let sequence = ''
   let probs: RcsbFvTrackDataElementInterface[] = []
   if (titles?.length === 3 && titles[0] === 'AA' && titles[1] === 'Prob') {
@@ -138,7 +139,7 @@ const resoveTxt = (dataTxt: string): [string, RcsbFvTrackDataElementInterface[]]
         // color: value > threshold ? "#8484FF" : "#FF8484",
       })
     })
-    return [sequence, probs]
+    return [sequence, probs, threshold]
   }
   throw new Error("Not a excepted file format [A P P]")
 }
@@ -161,7 +162,7 @@ const render = async () => {
     return
   }
   // let [seq, Dprops] = resoveTxt(dataTxt)
-  let [seq, Dprops] = resoveTxt(text)
+  let [seq, Dprops, threshold] = resoveTxt(text)
   console.log(Dprops)
   const sequenceTrack: RcsbFvRowConfigInterface = {
     trackId: "sequenceTrack",
@@ -180,7 +181,7 @@ const render = async () => {
     trackId: "ppisTrack",
     displayType: "area" as RcsbFvDisplayTypes,
     displayColor: {
-      "thresholds": [0.24],
+      "thresholds": [threshold],
       "colors": ["#8484FF", "#FF8484"]
     },
     rowTitle: props.label,
@@ -211,4 +212,8 @@ onMounted(() => {
 
 </script>
 <style lang="less" scoped>
+.pfv {
+  width: 1085px;
+  overflow: scroll;
+}
 </style>

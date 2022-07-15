@@ -157,6 +157,17 @@ const submitForm = async () => {
       delete params[item]
     }
   })
+  // TODO Need more nice runtime set function
+  if (app.value?.configs?.requirements?.gpuMin >= 1) {
+    runtimeParams.value = Object.assign(runtimeParams.value, {
+      cluster: 'k8s_venus',
+      partition: 'venus-gpu',
+      gpu: 1,
+      cpu: 6,
+      memory: 60,
+      userMode: "starlight",
+    })
+  }
   if (appName.startsWith('alphaFold')) {
     runtimeParams.value = Object.assign(runtimeParams.value, {
       cluster: 'k8s_venus',

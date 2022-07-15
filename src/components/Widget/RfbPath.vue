@@ -123,7 +123,7 @@ const prepareSubmit = async (prepareSetting?: any) => {
         // console.log("ret", ret)
         let retPath = ret.spec.path
         // TODO Remove HARD CODE
-        const projectDir = "/GPUFS/app/share/bio-platform/meta"
+        const projectDir = `${import.meta.env.VITE_APP_PROJ_DIR}meta`
         if (retPath.startsWith("@input/")) {
           retPath = projectDir + "/input" + retPath.slice("@input".length)
         }
