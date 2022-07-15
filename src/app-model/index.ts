@@ -104,6 +104,7 @@ export interface AppWidgetOption {
 
 export interface AppSpec extends AppMeta {
   render: AppWidgets,
+  configs?: any,
 }
 
 export const jobMetaExample: jobMeta = {
@@ -186,3 +187,8 @@ export interface UserInfo {
 // export interface UserCtx extends UserInfo {
 //   token: string
 // }
+
+export interface AppCounts {
+  appName: string
+  cnt: number
+}

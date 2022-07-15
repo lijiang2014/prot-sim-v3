@@ -57,7 +57,7 @@
     <template #footer>
       <span class="footer">
         <el-button @click="displayDialog = false">{{ $t('login.cancel') }}</el-button>
-        <el-button type="primary" @click="confirmAdd">{{ $t('login.confirm') }}</el-button>
+        <el-button type="primary" @click="confirmDialog">{{ $t('login.confirm') }}</el-button>
       </span>
     </template>
   </el-dialog>
@@ -74,7 +74,7 @@ import {
 } from '@element-plus/icons-vue'
 import { onMounted, ref } from 'vue';
 import { useStore } from '@/store';
-import { getApps, getAppSpec, createApp, deleteApp } from '@/api/api';
+import { getApps, getAppSpec, createApp, deleteApp, updateApp } from '@/api/api';
 import { AppMeta } from '@/app-model';
 import { ElNotification } from 'element-plus';
 const store = useStore()
@@ -163,6 +163,7 @@ const confirmAdd = async () => {
   if (!retApp) {
     return
   }
+  retApp = Object.assign(retApp, appMetaForm.value)
   let retApp2 = await createApp(retApp).catch(err => {
     console.log(err)
     ElNotification.error(err.data?.info || err)
@@ -204,7 +205,8 @@ const confirmUpdateApp = async () => {
   if (!retApp) {
     return
   }
-  let retApp2 = await createApp(retApp).catch(err => {
+  retApp = Object.assign(retApp, appMetaForm.value)
+  let retApp2 = await updateApp(retApp).catch(err => {
     console.log(err)
     ElNotification.error(err.data?.info || err)
   })
@@ -212,9 +214,8 @@ const confirmUpdateApp = async () => {
   if (!retApp2) {
     return
   }
-  ElNotification.success("添加成功")
+  ElNotification.success("更新成功")
   // 成功添加
-  listPlatform.value.push(appMetaForm.value)
   displayDialog.value = false
 }
 

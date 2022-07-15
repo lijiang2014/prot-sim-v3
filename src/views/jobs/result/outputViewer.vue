@@ -13,7 +13,7 @@
       </el-icon>
       <span>{{ itemParsed.meta.basename }}</span>
     </div>
-    <div v-else-if="itemParsed.meta.mime === 'chemical/fasta-predict'">
+    <div v-else-if="itemParsed.meta.mime === 'chemical/fasta-predict'" class="overflow-contents">
       <div>
         <saguaro v-if="fileToView" :url='reovelURI(fileToView)'>
         </saguaro>
@@ -241,6 +241,22 @@ const downloadFile = () => {
 
 .box {
   height: 600px;
+}
+
+.overflow-contents {
+  overflow-x: scroll;
+}
+
+.overflow-contents::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+  background-color: #aaa;
+  /* or add it to the track */
+}
+
+.overflow-contents::-webkit-scrollbar-thumb {
+  background: #222;
+  /* or add it to the track */
 }
 
 // .dialog {

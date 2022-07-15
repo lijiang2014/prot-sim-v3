@@ -1,7 +1,7 @@
 import http from '@/api/http'
 // import { AxiosPromise } from 'axios'
 import { structurePredictRequest } from '@/app-model/structure'
-import type { ApiResponseItems, ApiResponseSpec, AppMeta, AppSpec, jobMeta, OutputMap, PageView, result as JobResult, UserInfo, } from '@/app-model'
+import type { ApiResponseItems, ApiResponseSpec, AppCounts, AppMeta, AppSpec, jobMeta, OutputMap, PageView, result as JobResult, UserInfo, } from '@/app-model'
 import { jobMetaExample } from '@/app-model'
 import { AxiosRequestConfig } from 'axios'
 import $request from '@/utils/starlightRequest'
@@ -106,7 +106,7 @@ export const getApps = (params?: any): Promise<ApiResponseItems<AppMeta>> => {
 }
 
 export const getAppSpec = async (app: string, params?: any): Promise<AppSpec> => {
-  let ret = await http.get('/app/' + app).catch(err => {
+  let ret = await http.get('/app/' + app, { params }).catch(err => {
     throw (err)
   })
   let appData = ret.data?.spec || (ret as any).spec
@@ -259,6 +259,11 @@ export const previewFile = (url: string | fileVerbose, size: number = 1000, page
   return http.get("/storage/view", {
     params: { page, size, file, sha1, dir, ext },
   })
+}
+
+//
+export const getAppCounts = (params?: any): Promise<ApiResponseItems<AppCounts>> => {
+  return http.get("/statistic/app", { params })
 }
 
 //对象复制

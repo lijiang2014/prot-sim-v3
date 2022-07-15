@@ -40,7 +40,7 @@
                   </div>
                 </el-scrollbar>
               </template>
-              <output-viewer :item="item.value"></output-viewer>
+              <output-viewer class="collapse-item" :item="item.value"></output-viewer>
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -157,6 +157,8 @@ onMounted(async () => {
   .scrollbar-flex-content {
     display: flex;
   }
+
+  overflow-x: scroll;
 
   .scrollbar-item {
     flex-shrink: 0;
