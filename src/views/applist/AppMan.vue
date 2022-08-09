@@ -35,7 +35,7 @@
           <el-button type="primary" @click="updateAppHandler(scope.row)" :icon="Edit" />
         </div>
         <div v-else>
-          <el-button :disabled="[1, 10].indexOf(scope.row.type) == -1" type="success" @click="addApp(scope.row)">+
+          <el-button :disabled="[1, 10, 32].indexOf(scope.row.type) == -1" type="success" @click="addApp(scope.row)">+
           </el-button>
         </div>
       </template></el-table-column>
