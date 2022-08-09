@@ -75,12 +75,20 @@ onMounted(async () => {
   if (!res) {
     return
   }
+  if (!res.render.id) {
+    res.render.id = 'root'
+  }
   // 表单初始化
-  // console.log("got app spec", res)
+  // console.log("got app spec", res.render)
+  res.render.attr = {}
+
   // * 提取 info
   let gotFirstInfo = false
   for (let i = 0; i < res.render.data.length; i++) {
     let widgeti = res.render.data[i]
+    if (typeof widgeti.attr === 'undefined') {
+      widgeti.attr = {}
+    }
     if (widgeti.type == 'info') {
       if (widgeti.name == 'refs') {
         appRefs.value = widgeti.attr.default
@@ -109,8 +117,8 @@ onMounted(async () => {
     }
   }
   app.value = res
-})
 
+})
 const runtimeFormRef = ref<typeof Widget>()
 const appFormRef = ref<typeof Widget>()
 const submitForm = async () => {
