@@ -2,7 +2,7 @@
   <div v-if="!itemParsed"></div>
   <div v-else-if="itemParsed.class === 'number'">
     <div class="simple-box">
-      {{ itemParsed.value }}
+      {{  itemParsed.value  }}
     </div>
   </div>
   <div v-else-if="itemParsed.class === 'File'">
@@ -11,7 +11,7 @@
       <el-icon size="calc( 100px + 5vw)" @Click="readText">
         <Document />
       </el-icon>
-      <span>{{ itemParsed.meta.basename }}</span>
+      <span>{{  itemParsed.meta.basename  }}</span>
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/fasta-predict'" class="overflow-contents">
       <div>
@@ -19,11 +19,11 @@
         </saguaro>
         <el-popover placement="right">
           <template #reference>
-            <span>{{ itemParsed.meta.basename }}</span>
+            <span>{{  itemParsed.meta.basename  }}</span>
           </template>
           <div>
             <hr>
-            <el-button @Click="downloadFile" :icon="Download">{{ $t('table.download') }}</el-button>
+            <el-button @Click="downloadFile" :icon="Download">{{  $t('table.download')  }}</el-button>
           </div>
         </el-popover>
 
@@ -33,13 +33,17 @@
       <div class="box">
         <db-view v-if="fileToView" :src='reovelURI(fileToView)' class="box">
         </db-view>
-        <span>{{ itemParsed.meta.basename }}</span>
+        <span>{{  itemParsed.meta.basename  }} <el-icon class="pointer" @Click="downloadFile">
+            <Download />
+          </el-icon></span>
       </div>
     </div>
     <div v-else-if="itemParsed.meta.mime === 'chemical/cif'">
       <div class="box">
         <cif-viewer v-if="fileToView" :url='reovelURI(fileToView)' format="cif" innerRes></cif-viewer>
-        <span>{{ itemParsed.meta.basename }}</span>
+        <span>{{  itemParsed.meta.basename  }} <el-icon class="pointer" @Click="downloadFile">
+            <Download />
+          </el-icon></span>
       </div>
     </div>
     <div v-else-if="itemParsed.meta.mime.startsWith('image')">
@@ -56,14 +60,14 @@
             <Document />
           </el-icon>
         </template>
-        <div>{{ $t('task.tipUnknownFileView') }}
+        <div>{{  $t('task.tipUnknownFileView')  }}
           <hr>
-          <el-button @Click="downloadFile" :icon="Download">{{ $t('table.download') }}</el-button>
-          <el-button @Click="readText" :icon="View">{{ $t('table.stillView') }}</el-button>
+          <el-button @Click="downloadFile" :icon="Download">{{  $t('table.download')  }}</el-button>
+          <el-button @Click="readText" :icon="View">{{  $t('table.stillView')  }}</el-button>
         </div>
       </el-popover>
 
-      <span>{{ itemParsed.meta.basename }}</span>
+      <span>{{  itemParsed.meta.basename  }}</span>
     </div>
   </div>
   <div>
@@ -257,6 +261,10 @@ const downloadFile = () => {
 .overflow-contents::-webkit-scrollbar-thumb {
   background: #222;
   /* or add it to the track */
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 // .dialog {

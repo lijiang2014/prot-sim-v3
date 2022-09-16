@@ -32,9 +32,9 @@ onMounted(async () => {
   if (!res) return
   for (let item of res.spec) {
     // 暂不支持非作业类应用
-    if (item.type !== 1 && item.type !== 10) {
-      continue
-    }
+    // if (item.type !== 1 && item.type !== 10) {
+    //   continue
+    // }
     // if (item.title.endsWith("GUI")) {
     //   continue
     // }
